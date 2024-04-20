@@ -33,9 +33,23 @@ const apiInstance = axios.create({
 // }
 
 
-////Advertisement
-export async function getAllTruck() {
-  const response = await apiInstance.post(`truck/getAllTruck`);
+////Trucks
+export async function getAllTruck(data) {
+  const response = await apiInstance.post(`truck/getAllTruck`,data);
+  console.log(response.data);
+  return response.data;
+}
+
+export async function updateTruck(data) {
+  const response = await apiInstance.post(`truck/updateTruckStatus`,data);
+  console.log(response.data);
+  return response.data;
+}
+
+
+//parties
+export async function getAllParties(data) {
+  const response = await apiInstance.post(`party/getAllParty`,data);
   console.log(response.data);
   return response.data;
 }

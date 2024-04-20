@@ -1,11 +1,13 @@
 // assets
-import {IconAd2,IconNote,IconDiscount2 } from '@tabler/icons';
+import {IconAd2,IconNote,IconClockEdit,IconDiscount2,IconTruckDelivery } from '@tabler/icons';
 
 // constant
 const icons = {
   IconNote,
   IconAd2,
-  IconDiscount2
+  IconDiscount2,
+  IconTruckDelivery,
+  IconClockEdit
 };
 
 
@@ -22,18 +24,27 @@ const pages = {
   title: 'Pages',
   type: 'group',
   children: [
+    //transporter routes
     {
       id: 'manageTrucks',
       title: 'Manage Trucks',
       type: 'item',
       url: '/manageTrucks',
-      icon: icons.IconAd2,
+      icon: icons.IconTruckDelivery,
     },
     {
-      id: 'log',
-      title: 'Log',
+      id: 'allocatedTrucks',
+      title: 'Allocated Trucks',
       type: 'item',
-      url: '/logs',
+      url: '/allocatedTrucks',
+      icon: icons.IconClockEdit,
+    },
+    //fowarder routes
+    {
+      id: 'parties',
+      title: 'Parties',
+      type: 'item',
+      url: '/parties',
       icon: icons.IconNote,
     },
     {
@@ -56,10 +67,10 @@ pages.children = pages.children.filter((item) => {
     return true; // Render all items for 'Both' role
   }
   if (isTransporter) {
-    return item.id === 'manageTrucks'; // Render only 'Advertisements' for 'Transporter' role
+    return item.id === 'manageTrucks' || item.id === "allocatedTrucks"; // Render for 'Transporter' role
   }
   if (isForwarder) {
-    return item.id === 'log' || item.id === 'offer'; // Render 'Log' and 'Offers' for 'Forwarder' role
+    return item.id === 'parties' || item.id === 'offer'; // Render 'Log' and 'Offers' for 'Forwarder' role
   }
   return false; // Default case: do not render any item
 });

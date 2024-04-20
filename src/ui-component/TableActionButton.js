@@ -3,7 +3,7 @@ import { styled, alpha } from '@mui/material/styles';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import EditIcon from '@mui/icons-material/Edit';
-import { Delete, MoreVert, Preview, Settings } from '@mui/icons-material';
+import { Delete, MoreVert, Cancel, Preview, Settings } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 
 const StyledMenu = styled((props) => (
@@ -96,6 +96,14 @@ export default function TableActionButton({ data, actions = ['Edit', 'Delete'], 
                                 <MenuItem key={ind} onClick={() => handleClose(item)}>
                                     <Preview />
                                     View
+                                </MenuItem>
+                            )
+                        }
+                        else if (item.toUpperCase() == "CANCEL") {
+                            return (
+                                <MenuItem sx={{color:'red'}}  key={ind} onClick={() => handleClose(item)}>
+                                    <Cancel color="primary"  style={{ color: 'red' }} />
+                                    Cancel
                                 </MenuItem>
                             )
                         } else {

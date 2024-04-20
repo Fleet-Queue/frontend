@@ -4,7 +4,7 @@ import Content from './content'
 import Tools from './tools'
 import { Stack } from '@mui/material'
 import AdsForm from './TruckAdForm'
-import {getAllTruck,deleteAd,createAds} from '../../../utils/Service'
+import {getAllTruck} from '../../../utils/Service'
 
 
 
@@ -24,9 +24,9 @@ const getTrucks = () =>{
   }, [])
   return (
     <Stack direction={'column'} gap={2}>
-      <AdsForm open={formOpen} getAds={getTrucks} createAds={createAds} onClose={() => { setFormOpen(false) }} />
+      <AdsForm open={formOpen} getTrucks={getTrucks}  onClose={() => { setFormOpen(false) }} />
       <Tools buttonClick={()=>setFormOpen(true)}/>
-      <Content deleteAd={deleteAd} data={truckData} updateData={getTrucks}/>
+      <Content  data={truckData} updateData={getTrucks}/>
     </Stack>
   )
 }

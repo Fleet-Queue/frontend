@@ -1,0 +1,47 @@
+import React from 'react';
+import StyledTable from 'ui-component/StyledTable';
+import { tableHeaderReplace } from 'utils/tableHeaderReplace';
+// import { useState } from 'react';
+import { toast } from 'react-toastify';
+
+const tableHeader = ['name', 'RegNo', 'category','truckType', 'status'];
+
+export default function Content({ data, updateStatus,  updateData }) {
+
+  // const [selectedData, setselectedData] = useState();
+  const tableData = tableHeaderReplace(data, ['name', 'registrationNumber', 'category', 'truckType','status' ], tableHeader);
+
+  const actionHandle = (e) => {
+    console.log(e);
+    if (e.action == 'cancel') {
+      console.log(e.data._id);
+      
+      updateStatus( {truckId:"661bf9b734601df26a2d1bc3", status:"inqueue" })
+        .then((res) => {
+          console.log(res.message)
+          toast.success(res.message)
+          updateData({status:"allocated"});
+        })
+        .catch((error) => {
+          console.error(error);
+          toast.error("Error occured while updating");
+        });
+    } 
+    console.log("hehehheh updating88888888888888888888888888888888888888888888")
+  
+  };
+
+  return (
+    <>
+      
+      <StyledTable
+        data={tableData}
+        header={tableHeader}
+        isShowSerialNo={true}
+        isShowAction={true}
+        actions={['cancel']}
+        onActionChange={actionHandle}
+      />
+    </>
+  );
+}

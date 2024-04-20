@@ -6,7 +6,7 @@ import { AttachFile } from '@mui/icons-material';
 import { toast } from 'react-toastify';
 import StyledDialog from 'ui-component/StyledDialog';
 
-export default function TruckAdForm({ getTrucks, open, onClose, isEdit = false, data={} }) {
+export default function PartyAddForm({ getTrucks, open, onClose, isEdit = false, data={} }) {
     const [file, selectFile] = useState(isEdit && data["Image"])
     console.log(isEdit && data["Image"]);
     const {
