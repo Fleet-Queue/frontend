@@ -1,5 +1,5 @@
 // assets
-import {IconAd2,IconNote,IconClockEdit,IconDiscount2,IconTruckDelivery } from '@tabler/icons';
+import {IconAd2,IconNote,IconClockEdit,IconLocation,IconCash,IconNavigationOff,IconDiscount2,IconTruckDelivery,IconTruckLoading } from '@tabler/icons';
 
 // constant
 const icons = {
@@ -7,7 +7,11 @@ const icons = {
   IconAd2,
   IconDiscount2,
   IconTruckDelivery,
-  IconClockEdit
+  IconClockEdit,
+  IconLocation,
+  IconCash,
+  IconTruckLoading,
+  IconNavigationOff
 };
 
 
@@ -48,11 +52,32 @@ const pages = {
       icon: icons.IconNote,
     },
     {
-      id: 'offer',
-      title: 'Offers',
+      id: 'location',
+      title: 'Locations',
       type: 'item',
-      url: '/offers',
-      icon: icons.IconDiscount2,
+      url: '/location',
+      icon: icons.IconLocation,
+    },
+    {
+      id: 'doBooking',
+      title: 'All Do Booking',
+      type: 'item',
+      url: '/doBooking',
+      icon: icons.IconTruckDelivery,
+    },
+    {
+      id: 'allocatedDo',
+      title: 'allocated Booking',
+      type: 'item',
+      url: '/allocatedBooking',
+      icon: icons.IconTruckLoading,
+    },
+    {
+      id: 'canceledDo',
+      title: 'canceled Booking',
+      type: 'item',
+      url: '/canceledBooking',
+      icon: icons.IconNavigationOff,
     }
   ]
 };
@@ -70,7 +95,7 @@ pages.children = pages.children.filter((item) => {
     return item.id === 'manageTrucks' || item.id === "allocatedTrucks"; // Render for 'Transporter' role
   }
   if (isForwarder) {
-    return item.id === 'parties' || item.id === 'offer'; // Render 'Log' and 'Offers' for 'Forwarder' role
+    return item.id === 'parties' || item.id === 'location' || item.id === 'rateMap' || item.id === 'doBooking' || item.id === 'allocatedDo'  || item.id === 'canceledDo'; // Render 'Log' and 'Offers' for 'Forwarder' role
   }
   return false; // Default case: do not render any item
 });

@@ -80,6 +80,13 @@ export async function getInQueueTruck() {
 }
 
 
+////allocation 
+export async function getAllocationDetails(data) {
+  const response = await apiInstance.post(`allocation/getAllocationDetails`,data);
+  console.log(response.data);
+  return response.data;
+}
+
 
 export async function deleteOffer(data) {
  
@@ -112,20 +119,24 @@ export async function getAllUsers() {
 
 export async function adminLogin(data) {
   const response = await apiInstance.post(`user/login`,data);
+  console.log("heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+  console.log(response)
   console.log(response.data);
   return response.data;
 }
 
-//daily Limit
-
-export async function createDailyLimit(data) {
-  const response = await apiInstance.post(`dailyLimit`,data);
+//location
+export async function gellAllLocation(data) {
+  const response = await apiInstance.post(`location/getAllLocation`,data);
   console.log(response.data);
   return response.data;
 }
 
-export async function getDailyLimit() {
-  const response = await apiInstance.get(`dailyLimit`);
+
+
+//doBooking
+export async function gellAllBooking(data) {
+  const response = await apiInstance.post(`doBooking/getAllDO`,data);
   console.log(response.data);
   return response.data;
 }

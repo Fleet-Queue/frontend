@@ -1,16 +1,16 @@
 import React from 'react';
 import StyledTable from 'ui-component/StyledTable';
 import { tableHeaderReplace } from 'utils/tableHeaderReplace';
-import PartyAddForm from './PartyAddForm';
+import PartyAddForm from './AddForm';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-const tableHeader = ['name', 'address',  'contactPerson','contactNumber' ];
+const tableHeader = ['name', 'kilometer', 'isHighRangeArea','tripType'];
 
-export default function Content({ data, deleteAd, updateData, navigation }) {
+export default function Content({ data, deleteAd, updateData }) {
   const [formOpen, setFormOpen] = useState(false);
   const [selectedData, setselectedData] = useState();
-  const tableData = tableHeaderReplace(data, ['name', 'address', 'contactPerson','contactNumber' ], tableHeader);
+  const tableData = tableHeaderReplace(data, ['name', 'kilometer', 'isHighRangeArea','tripType' ], tableHeader);
 
   const actionHandle = (e) => {
     console.log(e);
@@ -41,12 +41,11 @@ export default function Content({ data, deleteAd, updateData, navigation }) {
         isEdit={true}
       />
       <StyledTable
-      onClickAction={navigation}
         data={tableData}
         header={tableHeader}
         isShowSerialNo={true}
         isShowAction={true}
-        actions={['delete','Edit','UpdateStatus']}
+        actions={['delete']}
         onActionChange={actionHandle}
       />
     </>

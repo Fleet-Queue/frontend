@@ -9,7 +9,8 @@ const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')))
 const ManageTrucks = Loadable(lazy(() => import('views/pages/manageTrucks')));
 const AllocatedTrucks = Loadable(lazy(() => import('views/pages/allocatedTrucks')));
 const Parties = Loadable(lazy(() => import('views/pages/parties')));
-const Offers = Loadable(lazy(() => import('views/pages/offers')));
+const Locations = Loadable(lazy(() => import('views/pages/location')));
+const DoBooking = Loadable(lazy(() => import('views/pages/doBooking')));
 // ==============================|| MAIN ROUTING ||============================== //
 
 
@@ -38,8 +39,21 @@ const MainRoutes = {
       element: <Parties />
     },
     {
-      path: 'offers',
-      element: <Offers />
+      path: 'location',
+      element: <Locations />
+    },
+    {
+      path: 'doBooking',
+      element: <DoBooking />
+    },
+    {
+      path: 'doBooking/:partyId',
+      element: <DoBooking />
+    },
+    // 404 route
+    {
+      path: '*',
+      element: <DoBooking />
     }
   ]
 };
