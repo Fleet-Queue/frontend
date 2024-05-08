@@ -155,7 +155,7 @@ const ProfileSection = () => {
                           {admin}
                         </Typography>
                       </Stack>
-                      <Typography variant="subtitle2">{role}</Typography>
+                      <Typography variant="subtitle2">User Type: {role}</Typography>
                     </Stack>
                    
                  

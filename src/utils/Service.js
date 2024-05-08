@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 // const baseURL = `http://${window.location.hostname}:3005/`;
-//const baseURL = `http://192.168.1.17:3005/`;
-const baseURL = `http://localhost:5000/`;
+const baseURL = `https://container-terminal-backend.onrender.com/`;
+//const baseURL = `http://localhost:5000/`;
 console.log(window.location.hostname);
 
 const apiInstance = axios.create({
