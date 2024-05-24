@@ -32,7 +32,7 @@ navigate("/doBooking/"+id);
 
   return (
     <Stack direction={'column'} gap={2}>
-      <PartyAddForm open={formOpen} getTrucks={getParties} onClose={() => setFormOpen(false)} />
+      <PartyAddForm open={formOpen} getParty={getParties}  onClose={() => setFormOpen(false)} />
       <Tools buttonClick={() => setFormOpen(true)} />
       <Content navigation={partyOnClick} data={data} updateData={getParties} />
     </Stack>

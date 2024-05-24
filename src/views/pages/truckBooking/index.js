@@ -3,7 +3,7 @@ import React, { useState,useEffect } from 'react'
 import Content from './content'
 import Tools from './tools'
 import { Stack } from '@mui/material'
-import {getTruckBasedOnStatus,updateTruck} from '../../../utils/Service'
+import {getTruckBooking,updateTruckBooking} from '../../../utils/Service'
 
 
 
@@ -12,7 +12,7 @@ export default function Index() {
   const [truckData, setTruckData] = useState([])
 
 const getTrucks = (data) =>{
-  getTruckBasedOnStatus(data).then((res)=>{
+  getTruckBooking(data).then((res)=>{
     console.log("caleddddddddddddddddddddddddddddddddddddddddddddd")
     setTruckData(res)
    }).catch((err) => {
@@ -20,13 +20,13 @@ const getTrucks = (data) =>{
    })
 }
   useEffect(() => {
-    getTrucks({status:"allocated"})
+    getTrucks({status:"inqueue"})
   }, [])
   return (
     <Stack direction={'column'} gap={2}>
      
       <Tools />
-      <Content  data={truckData} updateStatus={updateTruck} updateData={getTrucks}/>
+      <Content  data={truckData} updateStatus={updateTruckBooking} updateData={getTrucks}/>
     </Stack>
   )
 }

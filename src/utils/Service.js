@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 // const baseURL = `http://${window.location.hostname}:3005/`;
-const baseURL = `https://container-terminal-backend.onrender.com/`;
-//const baseURL = `http://localhost:5000/`;
+//const baseURL = `https://container-terminal-backend.onrender.com/`;
+const baseURL = `http://localhost:5000/`;
 console.log(window.location.hostname);
 
 const apiInstance = axios.create({
@@ -34,6 +34,12 @@ const apiInstance = axios.create({
 
 
 ////Trucks
+export async function addTruck(data) {
+  const response = await apiInstance.post(`truck`,data);
+  console.log(response.data);
+  return response.data;
+}
+
 export async function getAllTruck(data) {
   const response = await apiInstance.post(`truck/getAllTruck`,data);
   console.log(response.data);
@@ -46,6 +52,24 @@ export async function updateTruck(data) {
   return response.data;
 }
 
+//Truck Booking API
+export async function updateTruckBooking(data) {
+  const response = await apiInstance.post(`truck/updateTruckBookingStatus`,data);
+  console.log(response.data);
+  return response.data;
+}
+
+export async function getTruckBooking(data) {
+  const response = await apiInstance.post(`truck/getAllTruckBookings`,data);
+  console.log(response.data);
+  return response.data;
+}
+
+export async function AddTruckBooking(data) {
+  const response = await apiInstance.post(`truck/addTruckToBooking`,data);
+  console.log(response.data);
+  return response.data;
+}
 
 //parties
 export async function getAllParties(data) {
@@ -54,14 +78,8 @@ export async function getAllParties(data) {
   return response.data;
 }
 
-export async function createAds(data) {
-  const response = await apiInstance.post(`ads`,data);
-  console.log(response.data);
-  return response.data;
-}
-
-export async function deleteAd(data) {
-  const response = await apiInstance.delete(`ads/${data}`);
+export async function addParty(data) {
+  const response = await apiInstance.post(`party`,data);
   console.log(response.data);
   return response.data;
 }
@@ -69,15 +87,11 @@ export async function deleteAd(data) {
 
 
 //////Dashboard API
-export async function getOngoingTruck() {
-  const response = await apiInstance.post(`truck/getAllTruck`,{status:'ongoing'});
+export async function getTruckBasedOnStatus(data) {
+  const response = await apiInstance.post(`truck/getAllTruckBookings`,{status:data.status});
   return response.data;
 }
 
-export async function getInQueueTruck() {
-  const response = await apiInstance.post(`truck/getAllTruck`,{status:'inqueue'});
-  return response.data;
-}
 
 
 ////allocation 
@@ -126,8 +140,13 @@ export async function adminLogin(data) {
 }
 
 //location
-export async function gellAllLocation(data) {
+export async function getAllLocation(data) {
   const response = await apiInstance.post(`location/getAllLocation`,data);
+  console.log(response.data);
+  return response.data;
+}
+export async function addLocation(data) {
+  const response = await apiInstance.post(`location`,data);
   console.log(response.data);
   return response.data;
 }
@@ -137,6 +156,14 @@ export async function gellAllLocation(data) {
 //doBooking
 export async function gellAllBooking(data) {
   const response = await apiInstance.post(`doBooking/getAllDO`,data);
+  console.log(response.data);
+  return response.data;
+}
+
+
+//driver
+export async function getCompanyDrivers() {
+  const response = await apiInstance.get(`driver/getCompanyDrivers`);
   console.log(response.data);
   return response.data;
 }

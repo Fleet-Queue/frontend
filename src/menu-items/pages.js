@@ -1,5 +1,5 @@
 // assets
-import {IconAd2,IconNote,IconClockEdit,IconLocation,IconCash,IconNavigationOff,IconDiscount2,IconTruckDelivery,IconTruckLoading } from '@tabler/icons';
+import {IconAd2,IconBrandBooking,IconNote,IconClockEdit,IconLocation,IconCash,IconNavigationOff,IconDiscount2,IconTruckDelivery,IconTruckLoading } from '@tabler/icons';
 
 // constant
 const icons = {
@@ -11,7 +11,8 @@ const icons = {
   IconLocation,
   IconCash,
   IconTruckLoading,
-  IconNavigationOff
+  IconNavigationOff,
+  IconBrandBooking
 };
 
 
@@ -35,6 +36,13 @@ const pages = {
       type: 'item',
       url: '/manageTrucks',
       icon: icons.IconTruckDelivery,
+    },
+    {
+      id: 'truckBooking',
+      title: 'Manage Truck Booking',
+      type: 'item',
+      url: '/truckBooking',
+      icon: icons.IconBrandBooking,
     },
     {
       id: 'allocatedTrucks',

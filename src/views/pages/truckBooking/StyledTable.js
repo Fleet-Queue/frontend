@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import MainCard from './cards/MainCard';
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import TableActionButton from './TableActionButton';
-import VehicleSelectDialog from './dialogs/VehicleSelectDialog';
-import AllocatedDetailsDialog from './dialogs/AllocatedDetailsDialog';
+import MainCard from 'ui-component/cards/MainCard';
+import {  Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import TableActionButton from 'ui-component/TableActionButton';
+import VehicleSelectDialog from 'ui-component/dialogs/VehicleSelectDialog';
+import AllocatedDetailsDialog from 'ui-component/dialogs/AllocatedDetailsDialog';
 
+const formatDate = (dateString) => {
+  const options = { day: 'numeric', month: 'short', year: 'numeric' };
+  return new Date(dateString).toLocaleDateString('en-US', options);
+};
 export default function StyledTable({
   data,
   header,
@@ -24,22 +28,13 @@ if(onClickAction){
   }
   const [open, setOpen] = useState(false);
 
-  const handleSelectTruckType = (truckType) => {
-    setSelectedTruckType(truckType);
-    console.log(truckType);
-    setOpen(true)
-  };
 
   const handleTruckDetailClose = () => {
     setSelectedTruckType(null);
     setOpen(false)
   };
 
- 
-  const handleSelectDoId = (doId) => {
-    setSelectedDo(doId);
-    setOpen(true)
-  };
+
 
   const handleDoClose = () => {
     setSelectedDo(null);
@@ -67,44 +62,17 @@ if(onClickAction){
               return (
                 <TableRow onClick={()=>handleClick(dt._id)} key={ind}>
                   {isShowSerialNo && <TableCell>{ind + 1}</TableCell>}
-                  {header.map((head, i) => {
-                    if (head.toUpperCase() === 'IMAGE') {
-                      return (
-                        <TableCell key={i}>
-                          <img style={{ height: '100px' }} src={`${dt[`${head}`]}`} alt="img" />
-                        </TableCell>
-                      );
-                    } else if (dt.status != 'allocated' && head.toUpperCase() === 'ALLOCATION') {
-                      return (
-                        <TableCell key={i}>
-                          <Button variant="contained" onClick={() => handleSelectTruckType(dt.truckType)}>
-                            Allocate
-                          </Button>
-                
-                        </TableCell>
-                      );
-                    } else if (dt.status == 'allocated' && head.toUpperCase() === 'ALLOCATION') {
-                      return (
-                        <TableCell key={i}>
-                          <Button variant="contained" onClick={() => handleSelectDoId(dt._id)}>
-                          View Allocation
-                          </Button>
-                        </TableCell>
-                      );
-                      
-                    }
-                    else if (dt.status != 'isHighRangeArea' && head.toUpperCase() === 'ISHIGHRANGEAREA') {
-                      return (
-                        <TableCell key={i}>
-                    {dt[`${head}`]?'Yes':'No'}
-                
-                        </TableCell>
-                      );
-                    }
-                     else {
+                  {/* {header.map((head, i) => {
+                   
                       return <TableCell key={i}>{dt[`${head}`]}</TableCell>;
-                    }
-                  })}
+                
+                  })} */}
+
+<TableCell>{dt.truck.name}</TableCell>
+<TableCell >{dt.truck.registrationNumber}</TableCell>
+<TableCell >{dt.truck.category}</TableCell>
+<TableCell >{dt.truck.truckType}</TableCell>
+<TableCell >{formatDate(dt.availableFrom)}</TableCell>
                   {isShowAction && (
                     <TableCell>
                       <TableActionButton

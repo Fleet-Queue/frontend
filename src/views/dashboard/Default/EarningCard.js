@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 
-
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
 import { Avatar, Box, Grid, Typography } from '@mui/material';
@@ -12,6 +11,9 @@ import SkeletonEarningCard from 'ui-component/cards/Skeleton/EarningCard';
 // assets
 import EarningIcon from 'assets/images/icons/icons8-truck-24.png';
 import MovingIcon from '@mui/icons-material/Moving';
+import Badge from '@mui/material/Badge';
+import MailIcon from '@mui/icons-material/Mail';
+
 import { useEffect, useState } from 'react';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
@@ -52,20 +54,19 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
-const EarningCard = ({ isLoading,data }) => {
+const EarningCard = ({ isLoading, data }) => {
   const theme = useTheme();
-  const [truckData, setTruckData] = useState(data)
- useEffect(() => {
-  console.log("heyyyy")
-  console.log(isLoading)
-  console.log(data)
-  setTruckData(data)
- }, [data, isLoading])
- 
+  const [truckData, setTruckData] = useState(data);
+  useEffect(() => {
+    console.log('heyyyy');
+    console.log(isLoading);
+    console.log(data);
+    setTruckData(data);
+  }, [data, isLoading]);
 
   return (
     <>
-      {isLoading  || !truckData ?  (
+      {isLoading || !truckData ? (
         <SkeletonEarningCard />
       ) : (
         <CardWrapper border={false} content={false}>
@@ -86,26 +87,26 @@ const EarningCard = ({ isLoading,data }) => {
                       <img src={EarningIcon} alt="truck" />
                     </Avatar>
                   </Grid>
-                  
                   <Grid item>
-                    <Avatar
-                      variant="rounded"
-                      sx={{
-                        ...theme.typography.commonAvatar,
-                        ...theme.typography.largeAvatar,
-                        backgroundColor: theme.palette.secondary[800],
-                        mt: 1
-                      }}
+                    {/* Badge component with MailIcon */}
+                    <Badge
+                      color="secondary"
+                      badgeContent={truckData.truck.truckType + 'FT'}
+                      max={999}
+                      sx={{ marginTop: 1, marginRight: 1.5 }}
                     >
-                      <img src={EarningIcon} alt="truck" />
-                    </Avatar>
+                      <MailIcon />
+                    </Badge>
                   </Grid>
                 </Grid>
               </Grid>
+
               <Grid item>
                 <Grid container alignItems="center">
                   <Grid item>
-                    <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>{truckData.registrationNumber}</Typography>
+                    <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
+                      {truckData.truck.registrationNumber}
+                    </Typography>
                   </Grid>
                   <Grid item>
                     <Avatar
@@ -121,26 +122,54 @@ const EarningCard = ({ isLoading,data }) => {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item sx={{ mb: 1.25 }}>
-                <Typography
-                  sx={{
-                    fontSize: '1rem',
-                    fontWeight: 500,
-                    color: theme.palette.secondary[200]
-                  }}
-                >
-                  Category: {truckData.category}
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: '1rem',
-                    fontWeight: 500,
-                    color: theme.palette.secondary[200]
-                  }}
-                >
-                  Type: {truckData.truckType} Feet
-                </Typography>
-              </Grid>
+              
+              
+              <Grid container direction="row" justifyContent="space-between" alignItems="center">
+  <Grid item>
+    <Typography
+      sx={{
+        fontSize: '1rem',
+        fontWeight: 500,
+        color: theme.palette.secondary[200]
+      }}
+    >
+      Category: {truckData.truck.category}
+    </Typography>
+    <Typography
+      sx={{
+        fontSize: '1rem',
+        fontWeight: 500,
+        color: theme.palette.secondary[200]
+      }}
+    >
+      Date: {new Date(truckData.availableFrom).toLocaleString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  })} 
+    </Typography>
+  </Grid>
+  <Grid item>
+    <Typography
+      sx={{
+        fontSize: '1rem',
+        fontWeight: 500,
+        color: theme.palette.secondary[200]
+      }}
+    >
+      Party: {truckData.allocation.DOBookingId.partyId.name}
+    </Typography>
+    <Typography
+      sx={{
+        fontSize: '1rem',
+        fontWeight: 500,
+        color: theme.palette.secondary[200]
+      }}
+    >
+      Contact: {truckData.allocation.DOBookingId.partyId.contactNumber}
+    </Typography>
+  </Grid>
+</Grid>
             </Grid>
           </Box>
         </CardWrapper>

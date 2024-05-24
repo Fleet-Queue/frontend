@@ -3,7 +3,7 @@ import { styled, alpha } from '@mui/material/styles';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import EditIcon from '@mui/icons-material/Edit';
-import { Delete, MoreVert, Cancel, Preview, Settings } from '@mui/icons-material';
+import { Delete, MoreVert,AddCircle, Cancel, Preview, Settings } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 
 const StyledMenu = styled((props) => (
@@ -77,7 +77,21 @@ export default function TableActionButton({ data, actions = ['Edit', 'Delete'], 
             >
                 {
                     actions.map((item, ind) => {
-                        if (item.toUpperCase() == "EDIT") {
+                         if (item.toUpperCase() == "ADD TO QUEUE") {
+                            return (
+                                <MenuItem key={ind} onClick={() => handleClose(item)}
+                                sx={{
+                                    color: 'green',         // Change text color to red
+                                    '&:hover': {
+                                      backgroundColor: 'rgba(72, 113, 247, 0.1)', // Change background color on hover
+                                    },
+                                  }}>
+                                    <AddCircle style={{ color: "green" }}  />
+                                    Add To Queue
+                                </MenuItem>
+                            )
+                        }
+                        else if (item.toUpperCase() == "EDIT") {
                             return (
                                 <MenuItem key={ind} onClick={() => handleClose(item)}>
                                     <EditIcon />
@@ -86,8 +100,15 @@ export default function TableActionButton({ data, actions = ['Edit', 'Delete'], 
                             )
                         } else if (item.toUpperCase() == "DELETE") {
                             return (
-                                <MenuItem key={ind} onClick={() => handleClose(item)}>
-                                    <Delete />
+                                <MenuItem  key={ind} onClick={() => handleClose(item)} 
+                                sx={{
+                                    color: 'red',        
+                                    '&:hover': {
+                                      backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                                    },
+                                  }}
+                                    >
+                                    <Delete style={{ color: "red" }} />
                                     Delete
                                 </MenuItem>
                             )
@@ -99,6 +120,7 @@ export default function TableActionButton({ data, actions = ['Edit', 'Delete'], 
                                 </MenuItem>
                             )
                         }
+                       
                         else if (item.toUpperCase() == "CANCEL") {
                             return (
                                 <MenuItem sx={{color:'red'}}  key={ind} onClick={() => handleClose(item)}>

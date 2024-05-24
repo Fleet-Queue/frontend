@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 // material-ui
 import { useTheme, styled } from '@mui/material/styles';
-import { Avatar, Box, Grid, Typography } from '@mui/material';
+import { Avatar, Badge, Box, Grid, Typography } from '@mui/material';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
@@ -92,12 +92,18 @@ const TotalOrderLineChartCard = ({ isLoading,data }) => {
                     </Avatar>
                   </Grid>
                   
+                  <Grid item>
+            {/* Badge component with MailIcon */}
+            <Badge color="primary" badgeContent={truckData.truck.truckType+"FT"} max={999}   sx={{ marginTop: 1, marginRight: 1.5 }} >
+              
+            </Badge>
+          </Grid>
                 </Grid>
               </Grid>
               <Grid item>
                 <Grid container alignItems="center">
                   <Grid item>
-                    <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>{truckData.registrationNumber}</Typography>
+                    <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>{truckData.truck.registrationNumber}</Typography>
                   </Grid>
                   <Grid item>
                     <Avatar
@@ -121,7 +127,7 @@ const TotalOrderLineChartCard = ({ isLoading,data }) => {
                     color: theme.palette.primary[200]
                   }}
                 >
-                  Category: {truckData.category}
+                  Category: {truckData.truck.category}
                 </Typography>
                 <Typography
                   sx={{

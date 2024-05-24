@@ -8,6 +8,7 @@ import Loadable from 'ui-component/Loadable';
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 const ManageTrucks = Loadable(lazy(() => import('views/pages/manageTrucks')));
 const AllocatedTrucks = Loadable(lazy(() => import('views/pages/allocatedTrucks')));
+const TruckBooking = Loadable(lazy(() => import('views/pages/truckBooking')));
 const Parties = Loadable(lazy(() => import('views/pages/parties')));
 const Locations = Loadable(lazy(() => import('views/pages/location')));
 const DoBooking = Loadable(lazy(() => import('views/pages/doBooking')));
@@ -31,6 +32,10 @@ const MainRoutes = {
     {
       path: 'allocatedTrucks',
       element: <AllocatedTrucks />
+    },
+    {
+      path: 'truckBooking',
+      element: <TruckBooking />
     },
 
     //forwarder routes

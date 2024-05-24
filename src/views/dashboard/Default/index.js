@@ -7,35 +7,52 @@ import { Grid,Typography} from '@mui/material';
 import EarningCard from './EarningCard';
 import TotalOrderLineChartCard from './TotalOrderLineChartCard';
 import { gridSpacing } from 'store/constant';
-import {getInQueueTruck,getOngoingTruck} from '../../../utils/Service'
+import {getTruckBasedOnStatus} from '../../../utils/Service'
 import PopularCard from './PopularCard';
 import TotalGrowthBarChart from './TotalGrowthBarChart';
 import { toast } from 'react-toastify';
+// import { useNavigate } from 'react-router';
+
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const Dashboard = () => {
+  
+  // const navigate = useNavigate();
   const [isLoading, setLoading] = useState(true);
   const [inQueue, setInQueue] = useState([]);
   const [onGoing, setOnGoing] = useState([]);
+  // const [onGoingLoading, setOnGoingLoading] = useState(false);
+  // const [inQueueLoading, setInQueueLoading] = useState(false);
   const [role,setRole] = useState('')
 
  
 
   const getOngoingTrucks = () => {
-    getOngoingTruck().then((res)=>{
+    // setOnGoingLoading(true)
+    getTruckBasedOnStatus({status:'ongoing'}).then((res)=>{
       console.log(res)
 setOnGoing(res)
+// setOnGoingLoading(false)
     }).catch((err) => {
+      // if(err.response.status == 401){
+      //   console.log(err.response.status)
+      //   localStorage.clear()
+      //   navigate("/login")
+      // }
+      // setOnGoingLoading(false)
       toast.error(err.response.data.msg);
     })
   }
 
 
   const getInQueueTrucks = () => {
-    getInQueueTruck().then((res)=>{
+    // setInQueueLoading(true)
+    getTruckBasedOnStatus({status:'inqueue'}).then((res)=>{
       console.log(res)
       setInQueue(res)
+      // setInQueueLoading(false)
     }).catch((err) => {
+      // setInQueueLoading(false)
       toast.error(err.response.data.msg);
   })
   }
@@ -48,6 +65,7 @@ setOnGoing(res)
   }, []);
 
 
+  
 
   return (
     <div style={{ overflowX: 'auto' }}>
@@ -57,22 +75,28 @@ setOnGoing(res)
 
 {/* transporter dashboard */}
 
-{role === 'transporter' || role === 'both' ? (
+
        <>
        <Grid item xs={12}>
        <Grid  py={4}>
          <Typography variant="h2">Ongoing</Typography>
          </Grid>
          <Grid container spacing={gridSpacing}>
+          
    {onGoing  && onGoing.length > 0 ? (
      onGoing.map((result) => (
-       <Grid item key={result.registrationNumber} lg={4} md={4} sm={6} xs={12}>
+       <Grid item key={result._id} lg={4} md={4} sm={6} xs={12}>
          <EarningCard data={result} isLoading={isLoading} />
        </Grid>
      )) 
    ) : (
      <Grid item key={1} lg={4} md={4} sm={6} xs={12}>
-     <EarningCard  data={[]} isLoading={true} />
+      {isLoading ? (
+         <EarningCard  data={[]} isLoading={true} /> 
+      ) : (
+        <Typography variant="body1">No data available</Typography> // Show message when no data and not loading
+      )}
+    
    </Grid>
  
    )}
@@ -84,8 +108,8 @@ setOnGoing(res)
        <Grid py={3}>
          <Typography variant="h2">In Queue</Typography>
          </Grid>
-         <Grid container spacing={gridSpacing}>
-         
+         <Grid container spacing={gridSpacing} >
+     
          {inQueue  && inQueue.length > 0 ?
          (
            inQueue.map((result) => (
@@ -95,20 +119,22 @@ setOnGoing(res)
            ))
          ) : (
            <Grid item key={1} lg={4} md={4} sm={6} xs={12}>
-           <TotalOrderLineChartCard data={[]} isLoading={true} />
+             {isLoading ? (
+        <TotalOrderLineChartCard data={[]} isLoading={true} /> 
+      ) : (
+        <Typography variant="body1">No data available</Typography> // Show message when no data and not loading
+      )}
+           
          </Grid>
          )
     }
- 
-        
+
           
          </Grid>
        </Grid>
        </>
-    ) : (
-<></>
-    )
-  }
+    
+  
      
   {/* //forwarder dashboard */}
      {role === 'forwarder' || role === 'both' ? (

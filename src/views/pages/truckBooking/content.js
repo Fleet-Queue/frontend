@@ -4,23 +4,23 @@ import { tableHeaderReplace } from 'utils/tableHeaderReplace';
 // import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-const tableHeader = ['RegNo', 'party', 'location','contact','rate', 'Date'];
+const tableHeader = ['name', 'RegNo', 'category','truckType', 'availableFrom'];
 
 export default function Content({ data, updateStatus,  updateData }) {
 
   // const [selectedData, setselectedData] = useState();
-  const tableData = tableHeaderReplace(data, [ 'registrationNumber','party','location','contact','rate','Date' ], tableHeader);
+  const tableData = tableHeaderReplace(data, ['name', 'registrationNumber', 'category', 'truckType','availableFrom' ], tableHeader);
 
   const actionHandle = (e) => {
     console.log(e);
     if (e.action == 'cancel') {
       console.log(e.data._id);
       
-      updateStatus( {truckId:"661bf9b734601df26a2d1bc3", status:"inqueue" })
+      updateStatus( {TruckBookingId:e.data._id, status:"cancelled", cancelReason:"cancelled By Transporter" })
         .then((res) => {
           console.log(res.message)
           toast.success(res.message)
-          updateData({status:"allocated"});
+          updateData({status:"inqueue"});
         })
         .catch((error) => {
           console.error(error);

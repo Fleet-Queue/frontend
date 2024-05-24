@@ -3,7 +3,7 @@ import { Stack } from '@mui/material';
 import Content from './content';
 import Tools from './tools';
 import AddForm from './AddForm';
-import { gellAllLocation } from '../../../utils/Service';
+import { getAllLocation,addLocation } from '../../../utils/Service';
 
 
 
@@ -13,7 +13,7 @@ export default function Index() {
 
   const getLocation = async () => {
     try {
-      const res = await gellAllLocation();
+      const res = await getAllLocation();
       setData(res);
     } catch (err) {
       console.log(err);
@@ -26,7 +26,7 @@ export default function Index() {
 
   return (
     <Stack direction={'column'} gap={2}>
-      <AddForm open={formOpen} getLocation={getLocation} onClose={() => setFormOpen(false)} />
+      <AddForm open={formOpen} addLocation={addLocation} getLocation={getLocation} onClose={() => setFormOpen(false)} />
       <Tools buttonClick={() => setFormOpen(true)} />
       <Content data={data} updateData={getLocation} />
     </Stack>
