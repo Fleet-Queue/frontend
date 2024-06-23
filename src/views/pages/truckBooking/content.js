@@ -27,7 +27,7 @@ export default function Content({ data, updateStatus,  updateData }) {
           toast.error("Error occured while updating");
         });
     } 
-    console.log("hehehheh updating88888888888888888888888888888888888888888888")
+   
   
   };
 

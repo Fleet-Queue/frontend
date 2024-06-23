@@ -39,7 +39,6 @@ export default function Content({ data, updateData,addTruckBooking }) {
     } else {
       setselectedData();
     }
-    console.log("hehehheh updating88888888888888888888888888888888888888888888")
      
   };
 

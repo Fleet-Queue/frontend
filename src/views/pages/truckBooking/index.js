@@ -13,7 +13,7 @@ export default function Index() {
 
 const getTrucks = (data) =>{
   getTruckBooking(data).then((res)=>{
-    console.log("caleddddddddddddddddddddddddddddddddddddddddddddd")
+   
     setTruckData(res)
    }).catch((err) => {
   console.log(err)

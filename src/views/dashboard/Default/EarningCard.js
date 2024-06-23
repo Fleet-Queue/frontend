@@ -58,9 +58,7 @@ const EarningCard = ({ isLoading, data }) => {
   const theme = useTheme();
   const [truckData, setTruckData] = useState(data);
   useEffect(() => {
-    console.log('heyyyy');
-    console.log(isLoading);
-    console.log(data);
+  
     setTruckData(data);
   }, [data, isLoading]);
 

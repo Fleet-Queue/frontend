@@ -23,15 +23,18 @@ import { FormHelperText, InputLabel, MenuItem, Select, Typography } from '@mui/m
 import { Controller,useForm } from 'react-hook-form';
 import { createDo } from 'utils/Service';
 import { toast } from 'react-toastify';
-export default function AddForm(props) {
+import { getAllParties } from '../../../utils/Service';
+export default function AddBookingForm(props) {
   const [open, setOpen] = React.useState(false);
+  const [parties, setParties] = React.useState([]);
+ 
 //   const [fullWidth, setFullWidth] = React.useState(true);
   const [selectedDate, setSelectedDate] = React.useState(null);
 
   const {
     control,
     handleSubmit,
-   
+    reset,
     formState: { errors },
 } = useForm({
     defaultValues: {
@@ -62,27 +65,47 @@ export default function AddForm(props) {
   const formattedDate1 = `${year1}-${month1}-${day1}`;
 
   const handleClose = () => {
-
+   
       props.onClose()
+      reset();
     setOpen(false);
   };
 
+
+  React.useEffect(() => {
+   
+    getAllParties({companyId:props.data}).then((data)=>{
+        console.log(data)
+        setParties(data)
+         }).catch((error) => {
+      console.log(error)
+      toast.error(error)
+         })
+ }, [props.data])
+   
+ 
   React.useEffect(()=>{
 setOpen(props.open)
   },[props])
 
   const onSubmit = async  (data) => {
-    if (!selectedDate) {
-    
+    if (!selectedDate ) {
+
       toast.error("Please select a date")
       return;
     }
+    if (!props.doId ) {
+      toast.error("Delivery order Id missing")
+      return;
+    }
     const availableFrom = dayjs(selectedDate).format('YYYY-MM-DD');
-    const { type,rate } = data;
-    const partyId = props.data;
-
+    const { type,rate,party } = data;
+    // const partyId = props.data;
+    console.log({party, availableFrom, type,doId:props.doId,companyId:props.data,rate})
+    
     try {
-        await createDo({ partyId, availableFrom, truckType: type, rate: rate });
+        await createDo({ partyId:party,deliveryOrderId:props.doId, availableFrom, truckType: type, rate: rate,companyId:props.data });
+        toast.success("Do Created Successfully, now you can allocate truck");
         handleClose();
       } catch (error) {
         console.error("Failed to create DO:", error);
@@ -92,6 +115,19 @@ setOpen(props.open)
   };
 
 
+// const handleSubmitting =() => {
+// if(!selectedDate ){
+//     console.log("Please select a date")
+// }
+// const availableFrom = dayjs(selectedDate).format('YYYY-MM-DD'); // Format the date as per your API requirements
+
+// console.log(availableFrom)
+// console.log(selectedDate)
+// console.log(props.data)
+// let partyId = props.data._id
+// props.submit({partyId,availableFrom})
+// handleClose()
+// }
   return (
     <React.Fragment>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -130,6 +166,42 @@ setOpen(props.open)
               }}
              
             >
+
+
+<FormControl error={Boolean(errors.driver)}>
+                            <InputLabel id="type-select-label">Party</InputLabel>
+                            <Controller
+                                name="party"
+                                control={control}
+                               
+                                render={({ field }) => (
+                                    <Select
+                                        {...field}
+                                        labelId="type-select-label"
+                                        id="type-select"
+                                        label="party"
+                                        value={field.value || ''}
+                                        onChange={(e) => {
+                                            field.onChange(e.target.value);
+                                        }}
+                                    >
+                                  <MenuItem value=""><em>None</em></MenuItem>
+                                        {
+                                              
+                                            parties.map((data)=>(
+                                                <MenuItem key={data._id} value={data._id}>{data.name} Mob: {data.contactNumber} Address: {data.address} </MenuItem>
+                                            ))
+                                        }
+                                       
+                                    </Select>
+                                )}
+                                rules={{ required: "Party is required" }}
+                            />
+                            {errors.party && (
+                                <FormHelperText>{errors.party.message}</FormHelperText>
+                            )}
+                        </FormControl>
+
               <FormControl sx={{ mt: 2, minWidth: 120 }}>
                 <DatePicker
                   label="From Date"

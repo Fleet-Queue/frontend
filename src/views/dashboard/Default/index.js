@@ -32,14 +32,8 @@ const Dashboard = () => {
     getTruckBasedOnStatus({status:'ongoing'}).then((res)=>{
       console.log(res)
 setOnGoing(res)
-// setOnGoingLoading(false)
     }).catch((err) => {
-      // if(err.response.status == 401){
-      //   console.log(err.response.status)
-      //   localStorage.clear()
-      //   navigate("/login")
-      // }
-      // setOnGoingLoading(false)
+      
       toast.error(err.response.data.msg);
     })
   }

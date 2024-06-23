@@ -7,8 +7,11 @@ import Loadable from 'ui-component/Loadable';
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 const ManageTrucks = Loadable(lazy(() => import('views/pages/manageTrucks')));
+const ManageCompany = Loadable(lazy(() => import('views/pages/manageCompany')));
+const ManageDrivers = Loadable(lazy(() => import('views/pages/manageDrivers')));
 const AllocatedTrucks = Loadable(lazy(() => import('views/pages/allocatedTrucks')));
 const TruckBooking = Loadable(lazy(() => import('views/pages/truckBooking')));
+const DoUpload = Loadable(lazy(() => import('views/pages/doUpload')));
 const Parties = Loadable(lazy(() => import('views/pages/parties')));
 const Locations = Loadable(lazy(() => import('views/pages/location')));
 const DoBooking = Loadable(lazy(() => import('views/pages/doBooking')));
@@ -30,6 +33,14 @@ const MainRoutes = {
       element: <ManageTrucks />
     },
     {
+      path: 'manageCompany',
+      element: <ManageCompany />
+    },
+    {
+      path: 'manageDrivers',
+      element: <ManageDrivers />
+    },
+    {
       path: 'allocatedTrucks',
       element: <AllocatedTrucks />
     },
@@ -39,6 +50,10 @@ const MainRoutes = {
     },
 
     //forwarder routes
+    {
+      path: 'doUpload',
+      element: <DoUpload />
+    },
     {
       path: 'parties',
       element: <Parties />
@@ -55,6 +70,7 @@ const MainRoutes = {
       path: 'doBooking/:partyId',
       element: <DoBooking />
     },
+    
     // 404 route
     {
       path: '*',

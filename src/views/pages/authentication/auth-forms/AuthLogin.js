@@ -67,7 +67,7 @@ const FirebaseLogin = ({ adminLogin, ...others }) => {
               // res.accessToken
               let role='admin'
               if(res.user.companyId){
-                console.log(res.user.companyId)
+                
                 role = res.user.companyId.companyType
               }
               localStorage.setItem("role", role);

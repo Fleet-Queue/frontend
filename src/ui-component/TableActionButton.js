@@ -91,6 +91,20 @@ export default function TableActionButton({ data, actions = ['Edit', 'Delete'], 
                                 </MenuItem>
                             )
                         }
+                        else if (item.toUpperCase() == "ADDBOOKING") {
+                            return (
+                                <MenuItem key={ind} onClick={() => handleClose(item)}
+                                sx={{
+                                    color: 'green',         // Change text color to red
+                                    '&:hover': {
+                                      backgroundColor: 'rgba(72, 113, 247, 0.1)', // Change background color on hover
+                                    },
+                                  }}>
+                                    <AddCircle style={{ color: "green" }}  />
+                                    Add TO BOOKING
+                                </MenuItem>
+                            )
+                        }
                         else if (item.toUpperCase() == "EDIT") {
                             return (
                                 <MenuItem key={ind} onClick={() => handleClose(item)}>

@@ -4,14 +4,17 @@ import { useForm, Controller } from "react-hook-form";
 
 import { toast } from 'react-toastify';
 import StyledDialog from 'ui-component/StyledDialog';
-import { addTruck, getCompanyDrivers } from 'utils/Service';
+import { addTruck,getAllCompany, getCompanyDrivers } from 'utils/Service';
 
 export default function TruckAdForm({ getTrucks, open, onClose, isEdit = false, data={} }) {
     const [drivers, setDrivers] =useState([]);
+    const [companies, setCompanies] =useState([]);
+    const [companyId, setCompanyId] =useState('');
     const {
         control,
         handleSubmit,
         formState: { errors },
+        reset
     } = useForm({
         defaultValues: isEdit ? data["Name"] : ''
     })
@@ -22,11 +25,12 @@ export default function TruckAdForm({ getTrucks, open, onClose, isEdit = false, 
             registrationNumber:data.registrationNumber,
             driverId:data.driver,
             category:data.category,
+            companyId:data.company,
             truckType:data.type})
         .then((response) => {
           console.log(response);
           getTrucks()
-          onClose();
+          handleClose()
         }) .catch((error) => {
                 console.error(error);
                 toast.error(error);
@@ -37,43 +41,82 @@ export default function TruckAdForm({ getTrucks, open, onClose, isEdit = false, 
     }
 
 
-  
+    useEffect(() => {
+        getAllCompany({companyTypes:['transporter','both']}).then((data)=>{
+            console.log(data)
+            setCompanies(data)
+             }).catch((error) => {
+          console.log(error)
+          toast.error(error)
+             })
+     }, [])
        
-    
+     const handleClose = () => {
+        reset();
+        setCompanyId('');
+        onClose();
+    };
 
 
      useEffect(() => {
-        getCompanyDrivers().then((data)=>{
-            console.log(data)
-            setDrivers(data)
-             }).catch((error) => {
-          console.log(error)
-             })
-     }, [])
+        if (companyId) {
+            getCompanyDrivers({companyId}).then((data) => {
+                console.log(data);
+                setDrivers(data);
+            }).catch((error) => {
+                console.log(error);
+            });
+        } else {
+            setDrivers([]);
+        }
+    }, [companyId]);
      
         
     return (
         
-        <StyledDialog open={open} fullWidth onClose={()=>{
-    
-            onClose()
-        }}  title={`${isEdit ? "Edit" : "Add"} Truck`}>
+        <StyledDialog open={open} fullWidth onClose={handleClose}  title={`${isEdit ? "Edit" : "Add"} Truck`}>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Container>
                     <Stack direction={'column'} sx={{ p: 2 }} spacing={1}>
-                        {/* <Typography variant='h5'>Select Image </Typography>
-                        <MuiFileInput
-                            value={file}
-                            onChange={(e) => { selectFile(e) }}
-                            placeholder='select File'
-                            InputProps={{
-                                inputProps: {
-                                    accept: 'image/*'
-                                },
-                                startAdornment: <AttachFile />,
-                                placeholder: 'Select File'
-                            }}
-                        /> */}
+                       
+
+
+                    <FormControl error={Boolean(errors.driver)}>
+                            <InputLabel id="type-select-label">Company</InputLabel>
+                            <Controller
+                                name="company"
+                                control={control}
+                               
+                                render={({ field }) => (
+                                    <Select
+                                        {...field}
+                                        labelId="type-select-label"
+                                        id="type-select"
+                                        label="company"
+                                        value={field.value || ''}
+                                        onChange={(e) => {
+                                            field.onChange(e.target.value);
+                                            setCompanyId(e.target.value);
+                                        }}
+                                    >
+                                  <MenuItem value=""><em>None</em></MenuItem>
+                                        {
+                                              
+                                            companies.map((data)=>(
+                                                <MenuItem key={data._id} value={data._id}>{data.name} Mob: {data.contactNumber} Address: {data.address} </MenuItem>
+                                            ))
+                                        }
+                                       
+                                    </Select>
+                                )}
+                                rules={{ required: "Company is required" }}
+                            />
+                            {errors.company && (
+                                <FormHelperText>{errors.company.message}</FormHelperText>
+                            )}
+                        </FormControl>
+
+
                         <Typography variant='h5'>Truck Name</Typography>
                         <Controller
                             name="name"
@@ -109,29 +152,26 @@ export default function TruckAdForm({ getTrucks, open, onClose, isEdit = false, 
                         />
 
 
-<FormControl error={Boolean(errors.driver)}>
-                            <InputLabel id="type-select-label">Driver</InputLabel>
+<FormControl error={Boolean(errors.driver)} disabled={!companyId}>
+                            <InputLabel id="driver-select-label">Driver</InputLabel>
                             <Controller
                                 name="driver"
                                 control={control}
-                               
                                 render={({ field }) => (
                                     <Select
                                         {...field}
-                                        labelId="type-select-label"
-                                        id="type-select"
-                                        label="driver"
+                                        labelId="driver-select-label"
+                                        id="driver-select"
+                                        label="Driver"
                                         value={field.value || ''}
                                         onChange={(e) => field.onChange(e.target.value)}
                                     >
-                                  <MenuItem value=""><em>None</em></MenuItem>
-                                        {
-                                              
-                                            drivers.map((driver)=>(
-                                                <MenuItem key={driver._id} value={driver._id}>{driver.name} Mob: {driver.contactNumber} Type: {driver.licenceType} </MenuItem>
-                                            ))
-                                        }
-                                       
+                                        <MenuItem value=""><em>None</em></MenuItem>
+                                        {drivers.map((driver) => (
+                                            <MenuItem key={driver._id} value={driver._id}>
+                                                {driver.name} Mob: {driver.contactNumber} Type: {driver.licenceType}
+                                            </MenuItem>
+                                        ))}
                                     </Select>
                                 )}
                                 rules={{ required: "Driver is required" }}
@@ -140,6 +180,12 @@ export default function TruckAdForm({ getTrucks, open, onClose, isEdit = false, 
                                 <FormHelperText>{errors.driver.message}</FormHelperText>
                             )}
                         </FormControl>
+
+                        {!companyId && (
+                            <Typography variant='body2' color='error'>
+                                Please select a company first to see the drivers.
+                            </Typography>
+                        )}
 
 
 <FormControl error={Boolean(errors.category)}>

@@ -1,24 +1,29 @@
 import React from 'react';
 import StyledTable from 'ui-component/StyledTable';
 import { tableHeaderReplace } from 'utils/tableHeaderReplace';
-import PartyAddForm from './PartyAddForm';
+
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-const tableHeader = ['name', 'address',  'contactPerson','contactNumber' ];
+const tableHeader = ['Name', 'Owner Name', 'ContactNumber','Address',"CompanyName",'licenceType','licenceNumber'];
 
-export default function Content({ data, deleteAd, updateData, navigation }) {
-  const [formOpen, setFormOpen] = useState(false);
+export default function Content({ data, updateData }) {
+
   const [selectedData, setselectedData] = useState();
-  const tableData = tableHeaderReplace(data, ['name', 'address', 'contactPerson','contactNumber' ], tableHeader);
+  const tableData = tableHeaderReplace(data, ['name', 'ownerName', 'contactNumber', 'address','companyName','licenceType','licenceNumber' ], tableHeader);
 
-  const actionHandle = (e) => {
+
+
+
+  const actionHandle = async (e) => {
     console.log(e);
     if (e.action == 'delete') {
       console.log(e.data._id);
       setselectedData(e.data);
       deleteAd( e.data._id )
-        .then(() => {})
+        .then(() => {
+          updateData();
+        })
         .catch((error) => {
           console.error(error);
           toast.error(error.response.data.message);
@@ -26,26 +31,19 @@ export default function Content({ data, deleteAd, updateData, navigation }) {
     } else {
       setselectedData();
     }
-    updateData();
+   
+     
   };
 
   return (
     <>
-      <PartyAddForm
-        open={formOpen}
-        onClose={() => {
-          setFormOpen(false);
-        }}
-        data={selectedData}
-        isEdit={true}
-      />
+     
       <StyledTable
-      onClickAction={navigation}
         data={tableData}
         header={tableHeader}
         isShowSerialNo={true}
         isShowAction={true}
-        actions={['delete','Edit','UpdateStatus']}
+        actions={['Edit','delete']}
         onActionChange={actionHandle}
       />
     </>

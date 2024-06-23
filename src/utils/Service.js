@@ -13,25 +13,20 @@ const apiInstance = axios.create({
   }
 });
 
-// export async function addUser(data) {
-//   try {
-//     const response = await userInstance.post(`user`,data);
-//     return response.data;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
 
-// export async function getAllOffers(data) {
-//   try {
-//     const response = await apiInstance.get(`offer`);
-//     console.log(response.data);
-//     return response.data;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
 
+//Company
+export async function addCompany(data) {
+  const response = await apiInstance.post(`company`,data);
+  console.log(response.data);
+  return response.data;
+}
+
+export async function getAllCompany(data) {
+  const response = await apiInstance.post(`company/getAllCompany`,data);
+  console.log(response.data);
+  return response.data;
+}
 
 ////Trucks
 export async function addTruck(data) {
@@ -92,7 +87,10 @@ export async function getTruckBasedOnStatus(data) {
   return response.data;
 }
 
-
+export async function getMatchingInqueueTrucks(data) {
+  const response = await apiInstance.post(`truck/getInQueueTrucks`,data);
+  return response.data;
+}
 
 ////allocation 
 export async function getAllocationDetails(data) {
@@ -102,25 +100,7 @@ export async function getAllocationDetails(data) {
 }
 
 
-export async function deleteOffer(data) {
- 
-    const response = await apiInstance.delete(`offer/${data}`);
-    console.log(response.data);
-    return response.data;
-  }
 
-  export async function updateOffer(data) {
- 
-    const response = await apiInstance.patch(`offer`,data);
-    console.log(response.data);
-    return response.data;
-  }
-
-export async function createOffer(data) {
-  const response = await apiInstance.post(`offer`,data);
-  console.log(response.data);
-  return response.data;
-}
 
 ///users
 export async function getAllUsers() {
@@ -160,10 +140,48 @@ export async function gellAllBooking(data) {
   return response.data;
 }
 
+export async function createDo(data) {
+  const response = await apiInstance.post(`doBooking`,data);
+  console.log(response.data);
+  return response.data;
+}
+
+export async function uploadDo(data) {
+  const response = await apiInstance.post(`doBooking/uploadDO`,data);
+  console.log(response.data);
+  return response.data;
+}
+
+export async function getAllDoUpload(data) {
+  const response = await apiInstance.post(`doBooking/getAllDeliveryOrders`,data);
+  console.log(response.data);
+  return response.data;
+}
+
+
+export async function deleteDo(data) {
+  const response = await apiInstance.delete(`doBooking`,data);
+  console.log(response.data);
+  return response.data;
+}
+
 
 //driver
-export async function getCompanyDrivers() {
-  const response = await apiInstance.get(`driver/getCompanyDrivers`);
+
+export async function addDriver(data) {
+  const response = await apiInstance.post(`driver`,data);
+  console.log(response.data);
+  return response.data;
+}
+
+export async function getAllDrivers(data) {
+  const response = await apiInstance.post(`driver/getAllDrivers`,data);
+  console.log(response.data);
+  return response.data;
+}
+
+export async function getCompanyDrivers(data) {
+  const response = await apiInstance.post(`driver/getCompanyDrivers`,data);
   console.log(response.data);
   return response.data;
 }

@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { useEffect } from 'react';
-import {getAllTruck} from '../../utils/Service'
+import {getMatchingInqueueTrucks} from '../../utils/Service'
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -39,7 +39,7 @@ const VehicleSelectDialog = (props) => {
     
     
     const getTrucks = (data) =>{
-        getAllTruck(data).then((res)=>{
+      getMatchingInqueueTrucks(data).then((res)=>{
           setData(res)
           console.log(res);
          }).catch((err) => {
@@ -51,7 +51,7 @@ const VehicleSelectDialog = (props) => {
         ///checking required. api call multiple
         if(props.type){
                
-            getTrucks({status:"inqueue",type:props.type})
+            getTrucks({status:"inqueue",type:props.type,date:props.date})
         }
     }, [])
     
@@ -76,7 +76,7 @@ const VehicleSelectDialog = (props) => {
                 >
                   <CloseIcon />
                 </IconButton>
-                <Typography sx={{ ml: 2, flex: 1 }} variant="h3" component="div">
+                <Typography sx={{ ml: 2, flex: 1, color:'white' }} variant="h3" component="div">
                   Truck Allocation
                 </Typography>
                 <Button autoFocus color="inherit" onClick={handleClose}>
@@ -90,16 +90,16 @@ const VehicleSelectDialog = (props) => {
                 <>
                 <ListItemButton key={row._id}>
                 <ListItemText
-                  primary={row.name}
-                  secondary={row.registrationNumber}
+                  primary={row.truck.name}
+                  secondary={row.truck.registrationNumber}
                 />
                    <ListItemText
-                  primary={row.companyId.name}
-                  secondary={row.companyId.contactNumber}
+                  primary={row.truck.companyId.name}
+                  secondary={row.truck.companyId.contactNumber}
                 />
                    <ListItemText
-                  primary={row.category}
-                  secondary={row.truckType+" FT"}
+                  primary={row.truck.category}
+                  secondary={row.truck.truckType+" FT"}
                 />
                   <Button variant="contained" onClick={handleClickOpen}>
             Allocate

@@ -80,8 +80,8 @@ const AllocatedDetailsDialog = (props) => {
                 >
                   <CloseIcon />
                 </IconButton>
-                <Typography sx={{ ml: 2, flex: 1 }} variant="h3" component="div">
-                  Truck Allocation
+                <Typography sx={{ ml: 2, flex: 1, color:'white' }} variant="h3" component="div">
+                  Allocated Details
                 </Typography>
                 <Button autoFocus color="inherit" onClick={handleClose}>
                   Close

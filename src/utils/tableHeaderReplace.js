@@ -26,11 +26,8 @@ export const tableHeaderReplace = (data, headers1, headers2) => {
         
          return key
       });
-      console.log("--------------------------------")
-      // if(allocStatus){
-      //    newObj.allocation = <AllocButton/>
-      // }
-      console.log(newObj)
+    
+     
       return newObj;
    })
    return objMapper

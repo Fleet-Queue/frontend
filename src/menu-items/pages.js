@@ -1,5 +1,5 @@
 // assets
-import {IconAd2,IconBrandBooking,IconNote,IconClockEdit,IconLocation,IconCash,IconNavigationOff,IconDiscount2,IconTruckDelivery,IconTruckLoading } from '@tabler/icons';
+import {IconAd2,IconBuildingSkyscraper,IconBrandBooking,IconSteeringWheel,IconNote,IconClockEdit,IconLocation,IconCash,IconNavigationOff,IconDiscount2,IconTruckDelivery,IconTruckLoading } from '@tabler/icons';
 
 // constant
 const icons = {
@@ -12,13 +12,16 @@ const icons = {
   IconCash,
   IconTruckLoading,
   IconNavigationOff,
-  IconBrandBooking
+  IconBrandBooking,
+  IconBuildingSkyscraper,
+  IconSteeringWheel
 };
 
 
  const role = localStorage.getItem('role');
 console.log(role)
 const isBoth = role === 'both';
+const isAdmin = role === 'admin';
 const isTransporter = role === 'transporter';
 const isForwarder = role === 'forwarder';
 console.log('is both', isBoth, isTransporter, isForwarder)
@@ -31,11 +34,32 @@ const pages = {
   children: [
     //transporter routes
     {
+      id: 'manageCompany',
+      title: 'Manage Company',
+      type: 'item',
+      url: '/manageCompany',
+      icon: icons.IconBuildingSkyscraper,
+    },
+    {
+      id: 'manageDriver',
+      title: 'Manage Drivers',
+      type: 'item',
+      url: '/manageDrivers',
+      icon: icons.IconSteeringWheel,
+    },
+    {
       id: 'manageTrucks',
       title: 'Manage Trucks',
       type: 'item',
       url: '/manageTrucks',
       icon: icons.IconTruckDelivery,
+    },
+    {
+      id: 'parties',
+      title: 'Parties',
+      type: 'item',
+      url: '/parties',
+      icon: icons.IconNote,
     },
     {
       id: 'truckBooking',
@@ -53,10 +77,10 @@ const pages = {
     },
     //fowarder routes
     {
-      id: 'parties',
-      title: 'Parties',
+      id: 'doupload',
+      title: 'DoUploads',
       type: 'item',
-      url: '/parties',
+      url: '/doUpload',
       icon: icons.IconNote,
     },
     {
@@ -68,7 +92,7 @@ const pages = {
     },
     {
       id: 'doBooking',
-      title: 'All Do Booking',
+      title: 'Open DO Booking',
       type: 'item',
       url: '/doBooking',
       icon: icons.IconTruckDelivery,
@@ -99,11 +123,14 @@ pages.children = pages.children.filter((item) => {
   if (isBoth) {
     return true; // Render all items for 'Both' role
   }
+  if (isAdmin){
+    return  item.id === "manageCompany" || item.id === 'manageDriver' ||  item.id === 'manageTrucks'   ||  item.id === 'doupload' || item.id === 'parties' || item.id === 'doBooking';
+  }
   if (isTransporter) {
-    return item.id === 'manageTrucks' || item.id === "allocatedTrucks"; // Render for 'Transporter' role
+    return item.id === 'manageTrucks' || item.id === "allocatedTrucks" || item.id === "manageDriver" // Render for 'Transporter' role
   }
   if (isForwarder) {
-    return item.id === 'parties' || item.id === 'location' || item.id === 'rateMap' || item.id === 'doBooking' || item.id === 'allocatedDo'  || item.id === 'canceledDo'; // Render 'Log' and 'Offers' for 'Forwarder' role
+    return item.id === 'parties' ||  item.id === 'doupload'  || item.id === 'location' || item.id === 'rateMap' || item.id === 'doBooking' || item.id === 'allocatedDo'  || item.id === 'canceledDo'; 
   }
   return false; // Default case: do not render any item
 });

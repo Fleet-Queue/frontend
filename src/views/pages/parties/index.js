@@ -26,7 +26,6 @@ export default function Index() {
 
   const partyOnClick = async (id) => {
  console.log(id)
- console.log("-------------------------------------------------------------------ddddddddddddddddddddddddddddd")
 navigate("/doBooking/"+id);
   }
 

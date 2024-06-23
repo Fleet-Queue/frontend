@@ -15,6 +15,7 @@ export default function StyledTable({
   onClickAction
 }) {
   const [selectedTruckType, setSelectedTruckType] = useState(null);
+  const [selectedDate, setDate] = useState(null);
   const [selectedDo, setSelectedDo] = useState(null);
 
   const handleClick = (data)=>{
@@ -24,9 +25,10 @@ if(onClickAction){
   }
   const [open, setOpen] = useState(false);
 
-  const handleSelectTruckType = (truckType) => {
-    setSelectedTruckType(truckType);
-    console.log(truckType);
+  const handleSelectTruckType = (data) => {
+    setSelectedTruckType(data.truckType);
+    setDate(data.date)
+    console.log(data.truckType);
     setOpen(true)
   };
 
@@ -62,8 +64,7 @@ if(onClickAction){
           </TableHead>
           <TableBody>
             {data.map((dt, ind) => {
-              console.log(dt);
-              console.log('------------------------------------------');
+            
               return (
                 <TableRow onClick={()=>handleClick(dt._id)} key={ind}>
                   {isShowSerialNo && <TableCell>{ind + 1}</TableCell>}
@@ -77,7 +78,7 @@ if(onClickAction){
                     } else if (dt.status != 'allocated' && head.toUpperCase() === 'ALLOCATION') {
                       return (
                         <TableCell key={i}>
-                          <Button variant="contained" onClick={() => handleSelectTruckType(dt.truckType)}>
+                          <Button variant="contained" onClick={() => handleSelectTruckType({"truckType":dt.truckType,"date":dt.availableFrom})}>
                             Allocate
                           </Button>
                 
@@ -88,6 +89,17 @@ if(onClickAction){
                         <TableCell key={i}>
                           <Button variant="contained" onClick={() => handleSelectDoId(dt._id)}>
                           View Allocation
+                          </Button>
+                        </TableCell>
+                      );
+                      
+                    }
+                    else if (head.toUpperCase() === 'VIEW DO') {
+            
+                      return (
+                        <TableCell key={i}>
+                          <Button variant="contained" onClick={() => window.open(dt['View DO'], '_blank')}>
+                          View File
                           </Button>
                         </TableCell>
                       );
@@ -122,7 +134,7 @@ if(onClickAction){
           </TableBody>
         </Table>
       </TableContainer>
-      {selectedTruckType && <VehicleSelectDialog open={open}  close={handleTruckDetailClose} type={selectedTruckType} />}
+      {selectedTruckType && <VehicleSelectDialog open={open}  close={handleTruckDetailClose} date={selectedDate} type={selectedTruckType} />}
       {selectedDo && <AllocatedDetailsDialog open={open} close={handleDoClose} doId={selectedDo} />}
     </MainCard>
   );

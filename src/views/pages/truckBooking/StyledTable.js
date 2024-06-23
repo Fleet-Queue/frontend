@@ -57,16 +57,11 @@ if(onClickAction){
           </TableHead>
           <TableBody>
             {data.map((dt, ind) => {
-              console.log(dt);
-              console.log('------------------------------------------');
+           
               return (
                 <TableRow onClick={()=>handleClick(dt._id)} key={ind}>
                   {isShowSerialNo && <TableCell>{ind + 1}</TableCell>}
-                  {/* {header.map((head, i) => {
-                   
-                      return <TableCell key={i}>{dt[`${head}`]}</TableCell>;
-                
-                  })} */}
+                 
 
 <TableCell>{dt.truck.name}</TableCell>
 <TableCell >{dt.truck.registrationNumber}</TableCell>

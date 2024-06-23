@@ -1,18 +1,19 @@
 import React from 'react';
 import StyledTable from 'ui-component/StyledTable';
 import { tableHeaderReplace } from 'utils/tableHeaderReplace';
-import AddForm from './AddForm';
+import AddBookingForm from './AddBookingForm';
 
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { deleteDo } from 'utils/Service';
 
-const tableHeader = ['truckType', 'rate','availableFrom',"status","allocation"];
+const tableHeader = ['name', 'View DO','uploadDate',"status"];
 
 export default function Content({ partyId,data, updateData }) {
   const [formOpen, setFormOpen] = useState(false);
-  const [selectedData, setselectedData] = useState();
-  const tableData = tableHeaderReplace(data, [ 'truckType', 'rate','availableFrom',"status" ], tableHeader);
+  const [selectedData, setselectedData] = useState({});
+  const tableData = tableHeaderReplace(data, [ 'name', 'link','uploadDate',"status" ], tableHeader);
+  const admin = localStorage.getItem('role') === 'admin' ;
 
   const actionHandle = (e) => {
     console.log(e);
@@ -25,30 +26,36 @@ export default function Content({ partyId,data, updateData }) {
           console.error(error);
           toast.error(error.response.data.message);
         });
+    }else if(e.action == 'addBooking'){
+      setselectedData(e.data);
+      console.log(e.data);
+      setFormOpen(true)
+      console.log("add to booking")
+      console.log(e.data._id);
+      // updateData();
     } else {
       setselectedData();
     }
-   
     updateData(partyId);
   };
-console.log(selectedData)
+
   return (
     <>
     {
-      partyId&&
-      (
-        <AddForm
+     
+        <AddBookingForm
         open={formOpen}
         onClose={() => {
-
+        
           setFormOpen(false);
           updateData(partyId)
         }}
         isEdit={true}
         getBookings={updateData}
-        data={partyId} 
+        data={selectedData?.companyId} 
+        doId={selectedData?._id}
       />
-      )
+      
     }
      
 
@@ -58,7 +65,7 @@ console.log(selectedData)
         header={tableHeader}
         isShowSerialNo={true}
         isShowAction={true}
-        actions={['delete']}
+        actions={admin ? ['addBooking', 'delete'] : ['delete']}
         onActionChange={actionHandle}
       />
     </>

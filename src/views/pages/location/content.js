@@ -26,7 +26,6 @@ export default function Content({ data, deleteAd, updateData }) {
     } else {
       setselectedData();
     }
-    console.log("hehehheh updating88888888888888888888888888888888888888888888")
     updateData();
   };
 
