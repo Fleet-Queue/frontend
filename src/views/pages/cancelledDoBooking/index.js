@@ -15,7 +15,7 @@ export default function Index() {
 
   const getBookings = async (partyId) => {
     try {
-      let data={status:"allocated"}
+      let data={status:"cancelled"}
       if(partyId){
         data.partyId = partyId;
       }

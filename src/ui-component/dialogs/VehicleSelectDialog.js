@@ -12,7 +12,8 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { useEffect } from 'react';
-import {getMatchingInqueueTrucks} from '../../utils/Service'
+import { toast } from 'react-toastify';
+import {getMatchingInqueueTrucks,doAllocation} from '../../utils/Service'
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -27,9 +28,7 @@ const VehicleSelectDialog = (props) => {
     let maxWidth = 'md'
     const [data, setData] = React.useState([]);
 
-    const handleClickOpen = () => {
-      setOpen(true);
-    };
+  
   
     const handleClose = () => {
       setOpen(false);
@@ -37,8 +36,28 @@ const VehicleSelectDialog = (props) => {
   
     };
     
+   const handleAllocation = (data) =>{
+     console.log(data)
+     if(!props.date || !props.doId){
+      console.log(err)
+      return false;
+     }
+     doAllocation({
+      doBookingId:props.doId,
+      doDate:props.date,
+      truckBookingId:data
+     }).then((res)=>{
+   console.log(res)
+   toast.success("DO allocation successfull!")
+   handleClose()
+     }).catch((err)=>{
+      toast.error(err.response.data.message)
+      console.log(err)
+     })
+   }
     
     const getTrucks = (data) =>{
+      console.log(data)
       getMatchingInqueueTrucks(data).then((res)=>{
           setData(res)
           console.log(res);
@@ -101,7 +120,7 @@ const VehicleSelectDialog = (props) => {
                   primary={row.truck.category}
                   secondary={row.truck.truckType+" FT"}
                 />
-                  <Button variant="contained" onClick={handleClickOpen}>
+                  <Button variant="contained" onClick={()=>handleAllocation(row._id)}>
             Allocate
           </Button>
               </ListItemButton>

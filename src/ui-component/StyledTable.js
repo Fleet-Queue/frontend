@@ -12,12 +12,13 @@ export default function StyledTable({
   isShowAction = false,
   actions = ['Edit', 'Delete'],
   onActionChange,
-  onClickAction
+  onClickAction,
+  refreshData
 }) {
   const [selectedTruckType, setSelectedTruckType] = useState(null);
   const [selectedDate, setDate] = useState(null);
   const [selectedDo, setSelectedDo] = useState(null);
-
+ const [selectedBookingId,setSelectedBookingId] = useState(null);
   const handleClick = (data)=>{
 if(onClickAction){
     onClickAction(data);
@@ -28,12 +29,14 @@ if(onClickAction){
   const handleSelectTruckType = (data) => {
     setSelectedTruckType(data.truckType);
     setDate(data.date)
+    setSelectedBookingId(data.doId);
     console.log(data.truckType);
     setOpen(true)
   };
 
   const handleTruckDetailClose = () => {
     setSelectedTruckType(null);
+    refreshData()
     setOpen(false)
   };
 
@@ -78,7 +81,7 @@ if(onClickAction){
                     } else if (dt.status != 'allocated' && head.toUpperCase() === 'ALLOCATION') {
                       return (
                         <TableCell key={i}>
-                          <Button variant="contained" onClick={() => handleSelectTruckType({"truckType":dt.truckType,"date":dt.availableFrom})}>
+                          <Button variant="contained" onClick={() => handleSelectTruckType({"doId":dt._id,"truckType":dt.truckType,"date":dt.availableFrom})}>
                             Allocate
                           </Button>
                 
@@ -134,7 +137,7 @@ if(onClickAction){
           </TableBody>
         </Table>
       </TableContainer>
-      {selectedTruckType && <VehicleSelectDialog open={open}  close={handleTruckDetailClose} date={selectedDate} type={selectedTruckType} />}
+      {selectedTruckType && <VehicleSelectDialog open={open}  close={handleTruckDetailClose} doId={selectedBookingId} date={selectedDate} type={selectedTruckType} />}
       {selectedDo && <AllocatedDetailsDialog open={open} close={handleDoClose} doId={selectedDo} />}
     </MainCard>
   );

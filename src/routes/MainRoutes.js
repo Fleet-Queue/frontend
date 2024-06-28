@@ -12,9 +12,13 @@ const ManageDrivers = Loadable(lazy(() => import('views/pages/manageDrivers')));
 const AllocatedTrucks = Loadable(lazy(() => import('views/pages/allocatedTrucks')));
 const TruckBooking = Loadable(lazy(() => import('views/pages/truckBooking')));
 const DoUpload = Loadable(lazy(() => import('views/pages/doUpload')));
+const OpenDoUpload = Loadable(lazy(() => import('views/pages/openDoUpload')));
 const Parties = Loadable(lazy(() => import('views/pages/parties')));
 const Locations = Loadable(lazy(() => import('views/pages/location')));
-const DoBooking = Loadable(lazy(() => import('views/pages/doBooking')));
+const DoBooking = Loadable(lazy(() => import('views/pages/openDoBooking')));
+const AllocatedDOBooking = Loadable(lazy(() => import('views/pages/doBooking')));
+const CancelledDOBooking = Loadable(lazy(() => import('views/pages/cancelledDoBooking')));
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 
@@ -55,6 +59,10 @@ const MainRoutes = {
       element: <DoUpload />
     },
     {
+      path: 'openDoUpload',
+      element: <OpenDoUpload />
+    },
+    {
       path: 'parties',
       element: <Parties />
     },
@@ -65,6 +73,14 @@ const MainRoutes = {
     {
       path: 'doBooking',
       element: <DoBooking />
+    },
+    {
+      path: 'allocatedBooking',
+      element: <AllocatedDOBooking />
+    }, 
+    {
+      path: 'cancelledBooking',
+      element: <CancelledDOBooking />
     },
     {
       path: 'doBooking/:partyId',

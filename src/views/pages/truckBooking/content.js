@@ -8,7 +8,7 @@ const tableHeader = ['name', 'RegNo', 'category','truckType', 'availableFrom'];
 
 export default function Content({ data, updateStatus,  updateData }) {
 
-  // const [selectedData, setselectedData] = useState();
+ 
   const tableData = tableHeaderReplace(data, ['name', 'registrationNumber', 'category', 'truckType','availableFrom' ], tableHeader);
 
   const actionHandle = (e) => {

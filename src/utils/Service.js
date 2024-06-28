@@ -99,7 +99,11 @@ export async function getAllocationDetails(data) {
   return response.data;
 }
 
-
+export async function doAllocation(data) {
+  const response = await apiInstance.post(`allocation`,data);
+  console.log(response.data);
+  return response.data;
+}
 
 
 ///users

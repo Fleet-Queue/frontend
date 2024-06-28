@@ -1,29 +1,29 @@
 import React from 'react';
 import StyledTable from 'ui-component/StyledTable';
 import { tableHeaderReplace } from 'utils/tableHeaderReplace';
+// import AddForm from './AddForm';
 
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { deleteDo } from 'utils/Service';
 
-const tableHeader = ['Name', 'ContactNumber','Address',"CompanyName",'licenceType','licenceNumber'];
+const tableHeader = ['truckType', 'rate','availableFrom',"status","allocation"];
 
-export default function Content({ data, updateData }) {
-
+export default function Content({ partyId,data, updateData }) {
+  // const [formOpen, setFormOpen] = useState(false);
   const [selectedData, setselectedData] = useState();
-  const tableData = tableHeaderReplace(data, ['name', 'contactNumber', 'address','companyName','licenceType','licenceNumber' ], tableHeader);
+  const tableData = tableHeaderReplace(data, [ 'truckType', 'rate','availableFrom',"status" ], tableHeader);
 
-
-  const admin = localStorage.getItem('role') === 'admin' ;
-
-  const actionHandle = async (e) => {
-    console.log(selectedData);
+  const refreshData = ()=>{
+    updateData()
+  }
+  const actionHandle = (e) => {
+    console.log(e);
     if (e.action == 'delete') {
       console.log(e.data._id);
       setselectedData(e.data);
-      deleteAd( e.data._id )
-        .then(() => {
-          updateData();
-        })
+      deleteDo( e.data._id )
+        .then(() => {})
         .catch((error) => {
           console.error(error);
           toast.error(error.response.data.message);
@@ -32,19 +32,23 @@ export default function Content({ data, updateData }) {
       setselectedData();
     }
    
-     
+    updateData(partyId);
   };
-
+console.log(selectedData)
   return (
     <>
+   
      
+
+      
       <StyledTable
         data={tableData}
         header={tableHeader}
         isShowSerialNo={true}
-        isShowAction={admin}
-        actions={['Edit','delete']}
+        isShowAction={true}
+        actions={['delete']}
         onActionChange={actionHandle}
+        refreshData={refreshData}
       />
     </>
   );

@@ -1,5 +1,5 @@
 // assets
-import {IconAd2,IconBuildingSkyscraper,IconBrandBooking,IconSteeringWheel,IconNote,IconClockEdit,IconLocation,IconCash,IconNavigationOff,IconDiscount2,IconTruckDelivery,IconTruckLoading } from '@tabler/icons';
+import {IconAd2,IconBuildingSkyscraper,IconBrandBooking,IconSteeringWheel,IconNote,IconClockEdit,IconLocation,IconCash,IconNavigationOff,IconDiscount2,IconTruckDelivery,IconTruckLoading,IconUsers } from '@tabler/icons';
 
 // constant
 const icons = {
@@ -14,7 +14,8 @@ const icons = {
   IconNavigationOff,
   IconBrandBooking,
   IconBuildingSkyscraper,
-  IconSteeringWheel
+  IconSteeringWheel,
+  IconUsers
 };
 
 
@@ -32,7 +33,7 @@ const pages = {
   title: 'Pages',
   type: 'group',
   children: [
-    //transporter routes
+    //admin routes
     {
       id: 'manageCompany',
       title: 'Manage Company',
@@ -84,6 +85,13 @@ const pages = {
       icon: icons.IconNote,
     },
     {
+      id: 'opendoupload',
+      title: 'Open Dos',
+      type: 'item',
+      url: '/openDoUpload',
+      icon: icons.IconNote,
+    },
+    {
       id: 'location',
       title: 'Locations',
       type: 'item',
@@ -106,10 +114,16 @@ const pages = {
     },
     {
       id: 'canceledDo',
-      title: 'canceled Booking',
+      title: 'cancelled Booking',
       type: 'item',
-      url: '/canceledBooking',
+      url: '/cancelledBooking',
       icon: icons.IconNavigationOff,
+    }, {
+      id: 'manageUsers',
+      title: 'Manage Users',
+      type: 'item',
+      url: '/manageUsers',
+      icon: icons.IconUsers,
     }
   ]
 };
@@ -124,13 +138,13 @@ pages.children = pages.children.filter((item) => {
     return true; // Render all items for 'Both' role
   }
   if (isAdmin){
-    return  item.id === "manageCompany" || item.id === 'manageDriver' ||  item.id === 'manageTrucks'   ||  item.id === 'doupload' || item.id === 'parties' || item.id === 'doBooking';
+    return  item.id === "manageCompany" || item.id === 'manageDriver' ||  item.id === 'manageTrucks'   ||  item.id === 'doupload' || item.id === 'parties' || item.id === 'doBooking' || item.id === 'allocatedDo' || item.id === 'canceledDo' || item.id === 'manageUsers';
   }
   if (isTransporter) {
-    return item.id === 'manageTrucks' || item.id === "allocatedTrucks" || item.id === "manageDriver" // Render for 'Transporter' role
+    return item.id === 'manageTrucks' || item.id === "allocatedTrucks" || item.id === "manageDriver" || item.id === "truckBooking" // Render for 'Transporter' role
   }
   if (isForwarder) {
-    return item.id === 'parties' ||  item.id === 'doupload'  || item.id === 'location' || item.id === 'rateMap' || item.id === 'doBooking' || item.id === 'allocatedDo'  || item.id === 'canceledDo'; 
+    return item.id === 'parties' ||  item.id === 'doupload' ||  item.id === 'opendoupload'  || item.id === 'location' || item.id === 'rateMap' || item.id === 'allocatedDo'  || item.id === 'canceledDo'; 
   }
   return false; // Default case: do not render any item
 });

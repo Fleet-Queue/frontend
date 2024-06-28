@@ -15,7 +15,7 @@ export default function Content({ data, updateData,addTruckBooking }) {
   const tableData = tableHeaderReplace(data, ['name', 'registrationNumber', 'category', 'truckType' ], tableHeader);
 
 
-
+  const admin = localStorage.getItem('role') === 'admin' ;
 
   const actionHandle = async (e) => {
     console.log(e);
@@ -66,7 +66,7 @@ export default function Content({ data, updateData,addTruckBooking }) {
         header={tableHeader}
         isShowSerialNo={true}
         isShowAction={true}
-        actions={['Add To Queue','Edit','delete']}
+        actions={admin?['Add To Queue','Edit','delete']:['Add To Queue']}
         onActionChange={actionHandle}
       />
     </>
