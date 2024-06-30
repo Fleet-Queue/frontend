@@ -12,8 +12,8 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { useEffect } from 'react';
-import {getAllocationDetails} from '../../utils/Service'
-
+import {getAllocationDetails,changeAllocationStatus} from '../../utils/Service'
+import { toast } from 'react-toastify';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -46,9 +46,21 @@ const AllocatedDetailsDialog = (props) => {
       getAllocationDetails(data).then((res)=>{
           setData(res)
           console.log(res);
+
          }).catch((err) => {
         console.log(err)
+        toast.error(err.response.data.message)
          })
+      }
+      const handleStatusChange = (allocId,status)=>{
+  changeAllocationStatus({status,allocId}).then((res)=>{
+console.log(res)
+toast.success("status updated successfully")
+getAllocDetails({doBookingId:props.doId})
+  }).catch((err)=>{
+  console.log(err)
+  toast.error(err.response.data.message)
+  })
       }
   
     useEffect(() => {
@@ -133,9 +145,22 @@ const AllocatedDetailsDialog = (props) => {
                   secondary={formatDateTime(data.truckBookingId.availableFrom)}
                 />
                   
-                  <Button variant="contained" onClick={handleClose}>
-            Cancel
-          </Button>
+                  {
+  data.status === "allocated" ? (
+    <Button variant="contained" onClick={() => handleStatusChange(data._id, "ongoing")}>
+      Move to Live
+    </Button>
+  ) : data.status === "ongoing" ? (
+    <Button variant="contained" onClick={() => handleStatusChange(data._id, "done")}>
+      Move to Done
+    </Button>
+  ) : data.status === "expired" ? (
+    <Button variant="contained" disabled>
+      Expired
+    </Button>
+  ) : null
+}
+                 
               </ListItemButton>
               <Divider />
               </>

@@ -20,6 +20,7 @@ import {
 } from "firebase/storage";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Box } from '@mui/system';
+import { v4 as uuidv4 } from 'uuid'; 
 
 export default function AddForm(props) {
   const [open, setOpen] = React.useState(false);
@@ -46,8 +47,10 @@ export default function AddForm(props) {
       toast.error("Please choose a file");
       return;
     }
-
-    const storageRef = ref(storage, `/DoBookings/${name}`);
+    const uniqueName = `${name}-${uuidv4()}`;
+    console.log(uniqueName);
+    console.log("-------------------------------------------------------------------------------")
+    const storageRef = ref(storage, `/DoBookings/${uniqueName}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
@@ -64,7 +67,7 @@ export default function AddForm(props) {
         getDownloadURL(uploadTask.snapshot.ref).then((DownloadUrl) => {
   
           try {
-            uploadDo({ "doLink": DownloadUrl, "name": name }).then(() => {
+            uploadDo({ "doLink": DownloadUrl, "name": name,"uniqueName":uniqueName }).then(() => {
               handleClose();
             }).catch(err =>{
 console.log(err)

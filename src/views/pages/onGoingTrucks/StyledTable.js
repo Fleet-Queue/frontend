@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import MainCard from 'ui-component/cards/MainCard';
-import {  Table, TableBody, TableCell, TableContainer, TableHead, TableRow,Button } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
 import TableActionButton from 'ui-component/TableActionButton';
 import VehicleSelectDialog from 'ui-component/dialogs/VehicleSelectDialog';
 import AllocatedDetailsDialog from 'ui-component/dialogs/AllocatedDetailsDialog';
-import {changeAllocationStatus} from '../../../utils/Service'
+import { changeAllocationStatus } from '../../../utils/Service';
 import { toast } from 'react-toastify';
 
 const formatDate = (dateString) => {
@@ -25,37 +25,38 @@ export default function StyledTable({
   const [selectedTruckType, setSelectedTruckType] = useState(null);
   const [selectedDo, setSelectedDo] = useState(null);
 
-  const handleClick = (data)=>{
-if(onClickAction){
-    onClickAction(data);
-}
-  }
+  const handleClick = (data) => {
+    if (onClickAction) {
+      onClickAction(data);
+    }
+  };
   const [open, setOpen] = useState(false);
-
 
   const handleTruckDetailClose = () => {
     setSelectedTruckType(null);
-    setOpen(false)
+    setOpen(false);
   };
 
-
-  const handleStatusChange = (allocId,status)=>{
-
-    changeAllocationStatus({status,allocId}).then((res)=>{
-  console.log(res)
-  toast.success("status updated successfully")
-  refresh({status:'ongoing'})
-    }).catch((err)=>{
-    console.log(err)
-    toast.error(err.response.data.message)
-    })
-   
-        }
+  const handleStatusChange = (allocId, status) => {
+    // if (window.confirm(`Are you sure you want to change the status to ${status}?`)) {
+      changeAllocationStatus({ status, allocId })
+        .then((res) => {
+          console.log(res);
+          toast.success("Status updated successfully");
+          refresh({ status: 'allocated' });
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error(err.response.data.message);
+        });
+    // }
+  };
 
   const handleDoClose = () => {
     setSelectedDo(null);
-    setOpen(false)
+    setOpen(false);
   };
+
   return (
     <MainCard>
       <TableContainer>
@@ -73,38 +74,31 @@ if(onClickAction){
           </TableHead>
           <TableBody>
             {data.map((dt, ind) => {
-             
               return (
-                <TableRow onClick={()=>handleClick(dt._id)} key={ind}>
+                <TableRow onClick={() => handleClick(dt._id)} key={ind}>
                   {isShowSerialNo && <TableCell>{ind + 1}</TableCell>}
-                  {/* {header.map((head, i) => {
-                   
-                      return <TableCell key={i}>{dt[`${head}`]}</TableCell>;
-                
-                  })} */}
-<TableCell >{dt.truck.registrationNumber}</TableCell>
-<TableCell>{dt.allocation.DOBookingId.partyId.name}</TableCell>
-<TableCell >{dt.allocation.DOBookingId.partyId.locationId.name}</TableCell>
-<TableCell >{dt.allocation.DOBookingId.partyId.contactNumber}</TableCell>
-<TableCell >₹{dt.allocation.DOBookingId.rate}</TableCell>
- <TableCell >{formatDate(dt.availableFrom)}</TableCell> 
-<TableCell >
-{
-  dt.allocation.status === "allocated" ? (
-    <Button variant="contained" onClick={() => handleStatusChange( dt.allocation._id, "ongoing")}>
-      Move to Live
-    </Button>
-  ) :  dt.allocation.status === "ongoing" ? (
-    <Button variant="contained" onClick={() => handleStatusChange( dt.allocation._id, "done")}>
-      Move to Done
-    </Button>
-  ) :  dt.allocation.status === "expired" ? (
-    <Button variant="contained" disabled>
-      Expired
-    </Button>
-  ) : null
-}
-</TableCell>
+
+                  <TableCell>{dt.truck.registrationNumber}</TableCell>
+                  <TableCell>{dt.allocation.DOBookingId.partyId.name}</TableCell>
+                  <TableCell>{dt.allocation.DOBookingId.partyId.locationId.name}</TableCell>
+                  <TableCell>{dt.allocation.DOBookingId.partyId.contactNumber}</TableCell>
+                  <TableCell>₹{dt.allocation.DOBookingId.rate}</TableCell>
+                  <TableCell>{formatDate(dt.availableFrom)}</TableCell>
+                  <TableCell>
+                    {dt.allocation.status === "allocated" ? (
+                      <Button variant="contained" onClick={() => handleStatusChange(dt.allocation._id, "ongoing")}>
+                        Move to Live
+                      </Button>
+                    ) : dt.allocation.status === "ongoing" ? (
+                      <Button variant="contained" onClick={() => handleStatusChange(dt.allocation._id, "done")}>
+                        Move to Done
+                      </Button>
+                    ) : dt.allocation.status === "expired" ? (
+                      <Button variant="contained" disabled>
+                        Expired
+                      </Button>
+                    ) : null}
+                  </TableCell>
 
                   {isShowAction && (
                     <TableCell>
@@ -123,7 +117,7 @@ if(onClickAction){
           </TableBody>
         </Table>
       </TableContainer>
-      {selectedTruckType && <VehicleSelectDialog open={open}  close={handleTruckDetailClose} type={selectedTruckType} />}
+      {selectedTruckType && <VehicleSelectDialog open={open} close={handleTruckDetailClose} type={selectedTruckType} />}
       {selectedDo && <AllocatedDetailsDialog open={open} close={handleDoClose} doId={selectedDo} />}
     </MainCard>
   );

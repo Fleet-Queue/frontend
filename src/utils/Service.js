@@ -22,6 +22,14 @@ export async function addCompany(data) {
   return response.data;
 }
 
+export async function deleteCompany(data) {
+  console.log(data)
+  const response = await apiInstance.delete(`company/`+data,data);
+  console.log(response.data);
+  return response.data;
+}
+
+
 export async function getAllCompany(data) {
   const response = await apiInstance.post(`company/getAllCompany`,data);
   console.log(response.data);
@@ -105,6 +113,11 @@ export async function doAllocation(data) {
   return response.data;
 }
 
+export async function changeAllocationStatus(data) {
+  const response = await apiInstance.post(`allocation/changeAllocationStatus`,data);
+  console.log(response.data);
+  return response.data;
+}
 
 ///users
 export async function getAllUsers() {
@@ -165,6 +178,12 @@ export async function getAllDoUpload(data) {
 
 export async function deleteDo(data) {
   const response = await apiInstance.delete(`doBooking`,data);
+  console.log(response.data);
+  return response.data;
+}
+
+export async function deleteDeliveryOrder(data) {
+  const response = await apiInstance.delete(`doBooking/deleteDeliveryOrder/`+data);
   console.log(response.data);
   return response.data;
 }

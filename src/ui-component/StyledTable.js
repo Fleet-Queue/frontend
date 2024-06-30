@@ -48,6 +48,7 @@ if(onClickAction){
 
   const handleDoClose = () => {
     setSelectedDo(null);
+    refreshData()
     setOpen(false)
   };
   return (
@@ -98,15 +99,26 @@ if(onClickAction){
                       
                     }
                     else if (head.toUpperCase() === 'VIEW DO') {
-            
-                      return (
-                        <TableCell key={i}>
-                          <Button variant="contained" onClick={() => window.open(dt['View DO'], '_blank')}>
-                          View File
-                          </Button>
-                        </TableCell>
-                      );
+                      // Check if 'View DO' exists, otherwise use the fallback 'deliveryOrderId.doLink'
+                      const viewDoLink = dt['View DO'] || (dt.deliveryOrderId && dt.deliveryOrderId.doLink);
                       
+                      if (viewDoLink) {
+                        return (
+                          <TableCell key={i}>
+                            <Button variant="contained" onClick={() => window.open(viewDoLink, '_blank')}>
+                              View File
+                            </Button>
+                          </TableCell>
+                        );
+                      } else {
+                        return (
+                          <TableCell key={i}>
+                            <Button variant="contained" disabled>
+                              No File
+                            </Button>
+                          </TableCell>
+                        );
+                      }
                     }
                     else if (dt.status != 'isHighRangeArea' && head.toUpperCase() === 'ISHIGHRANGEAREA') {
                       return (

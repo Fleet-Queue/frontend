@@ -4,7 +4,7 @@ import { tableHeaderReplace } from 'utils/tableHeaderReplace';
 import CompanyAdForm from './CompanyAdForm';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-
+import {deleteCompany} from '../../../utils/Service'
 const tableHeader = ['Name', 'Owner Name', 'ContactNumber','Address',"CompanyType"];
 
 export default function Content({ data, updateData }) {
@@ -20,7 +20,7 @@ export default function Content({ data, updateData }) {
     if (e.action == 'delete') {
       console.log(e.data._id);
       setselectedData(e.data);
-      deleteAd( e.data._id )
+      deleteCompany( e.data._id )
         .then(() => {
           updateData();
         })
@@ -28,6 +28,8 @@ export default function Content({ data, updateData }) {
           console.error(error);
           toast.error(error.response.data.message);
         });
+    }else if(e.action == 'Edit'){
+      console.log("edit company")
     } else {
       setselectedData();
     }

@@ -10,6 +10,7 @@ const ManageTrucks = Loadable(lazy(() => import('views/pages/manageTrucks')));
 const ManageCompany = Loadable(lazy(() => import('views/pages/manageCompany')));
 const ManageDrivers = Loadable(lazy(() => import('views/pages/manageDrivers')));
 const AllocatedTrucks = Loadable(lazy(() => import('views/pages/allocatedTrucks')));
+const OnGoingTrucks = Loadable(lazy(() => import('views/pages/onGoingTrucks')));
 const TruckBooking = Loadable(lazy(() => import('views/pages/truckBooking')));
 const DoUpload = Loadable(lazy(() => import('views/pages/doUpload')));
 const OpenDoUpload = Loadable(lazy(() => import('views/pages/openDoUpload')));
@@ -47,6 +48,10 @@ const MainRoutes = {
     {
       path: 'allocatedTrucks',
       element: <AllocatedTrucks />
+    },
+    {
+      path: 'ongoingTrucks',
+      element: <OnGoingTrucks />
     },
     {
       path: 'truckBooking',

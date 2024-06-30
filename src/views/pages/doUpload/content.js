@@ -5,7 +5,12 @@ import AddBookingForm from './AddBookingForm';
 import { useNavigate } from "react-router-dom"
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { deleteDo } from 'utils/Service';
+import { deleteDeliveryOrder } from 'utils/Service';
+import {
+  ref,
+  deleteObject // Import deleteObject from Firebase
+} from "firebase/storage";
+import storage from "../../../utils/firebase-config"
 
 const tableHeader = ['name', 'View DO','uploadDate',"status"];
 
@@ -20,9 +25,15 @@ export default function Content({ partyId,data, updateData }) {
     console.log(e);
     if (e.action == 'delete') {
       console.log(e.data._id);
+      handleDelete(e.data.uniqueName)
       setselectedData(e.data);
-      deleteDo( e.data._id )
-        .then(() => {})
+      deleteDeliveryOrder( e.data._id )
+        .then((
+         
+        ) => {
+          toast.success("Do deleted Successfully")
+          updateData(partyId);
+        })
         .catch((error) => {
           console.error(error);
           toast.error(error.response.data.message);
@@ -37,9 +48,27 @@ export default function Content({ partyId,data, updateData }) {
     } else {
       setselectedData();
     }
-    updateData(partyId);
+    
   };
+  
 
+
+  
+  const handleDelete = async (fileName) => {
+    if (fileName) {
+      const storageRef = ref(storage, `/DoBookings/${fileName}`);
+      try {
+        await deleteObject(storageRef);
+        toast.success("File deleted successfully");
+       
+      } catch (error) {
+        console.error("Failed to delete file:", error);
+        toast.error("Failed to delete file");
+      }
+    } else {
+      toast.error("File not found:", fileName);
+    }
+  };
   return (
     <>
     {

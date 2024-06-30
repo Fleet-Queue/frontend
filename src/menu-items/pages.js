@@ -76,6 +76,13 @@ const pages = {
       url: '/allocatedTrucks',
       icon: icons.IconClockEdit,
     },
+    {
+      id: 'ongoingTrucks',
+      title: 'OnGoing Trucks',
+      type: 'item',
+      url: '/ongoingTrucks',
+      icon: icons.IconClockEdit,
+    },
     //fowarder routes
     {
       id: 'doupload',
@@ -141,7 +148,7 @@ pages.children = pages.children.filter((item) => {
     return  item.id === "manageCompany" || item.id === 'manageDriver' ||  item.id === 'manageTrucks'   ||  item.id === 'doupload' || item.id === 'parties' || item.id === 'doBooking' || item.id === 'allocatedDo' || item.id === 'canceledDo' || item.id === 'manageUsers';
   }
   if (isTransporter) {
-    return item.id === 'manageTrucks' || item.id === "allocatedTrucks" || item.id === "manageDriver" || item.id === "truckBooking" // Render for 'Transporter' role
+    return item.id === 'manageTrucks' || item.id === "allocatedTrucks" || item.id === "ongoingTrucks"  || item.id === "manageDriver" || item.id === "truckBooking" // Render for 'Transporter' role
   }
   if (isForwarder) {
     return item.id === 'parties' ||  item.id === 'doupload' ||  item.id === 'opendoupload'  || item.id === 'location' || item.id === 'rateMap' || item.id === 'allocatedDo'  || item.id === 'canceledDo'; 

@@ -4,12 +4,12 @@ import { tableHeaderReplace } from 'utils/tableHeaderReplace';
 // import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-const tableHeader = ['RegNo', 'party', 'location','contact','rate', 'Date','status'];
+const tableHeader = ['RegNo', 'party', 'location','contact','rate', 'date','status'];
 
 export default function Content({ data, updateStatus,  updateData }) {
 
   // const [selectedData, setselectedData] = useState();
-  const tableData = tableHeaderReplace(data, [ 'registrationNumber','party','location','contact','rate','Date','status' ], tableHeader);
+  const tableData = tableHeaderReplace(data, [ 'registrationNumber','party','location','contact','rate','date', 'status' ], tableHeader);
 
   const actionHandle = (e) => {
     console.log(e);

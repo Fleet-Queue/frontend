@@ -5,7 +5,7 @@ import AddBookingForm from './AddBookingForm';
 import { useNavigate } from "react-router-dom"
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { deleteDo } from 'utils/Service';
+import { deleteDeliveryOrder } from 'utils/Service';
 
 const tableHeader = ['name', 'View DO','uploadDate',"status"];
 
@@ -16,12 +16,16 @@ export default function Content({ partyId,data, updateData }) {
   const tableData = tableHeaderReplace(data, [ 'name', 'link','uploadDate',"status" ], tableHeader);
   const admin = localStorage.getItem('role') === 'admin' ;
 
+
+
+
+
   const actionHandle = (e) => {
     console.log(e);
     if (e.action == 'delete') {
       console.log(e.data._id);
       setselectedData(e.data);
-      deleteDo( e.data._id )
+      deleteDeliveryOrder( e.data._id )
         .then(() => {})
         .catch((error) => {
           console.error(error);
@@ -66,7 +70,7 @@ export default function Content({ partyId,data, updateData }) {
         data={tableData}
         header={tableHeader}
         isShowSerialNo={true}
-        isShowAction={true}
+        isShowAction={false}
         actions={admin ? ['addBooking', 'delete'] : ['delete']}
         onActionChange={actionHandle}
       />

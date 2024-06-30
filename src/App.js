@@ -14,15 +14,13 @@ import NavigationScroll from 'layout/NavigationScroll';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router';
 
 // ==============================|| APP ||============================== //
 
 const App = () => {
 
-  const navigate = useNavigate();
   useEffect(() => {
-    let user = JSON.parse(localStorage.getItem("user"));
+    // let user = JSON.parse(localStorage.getItem("user"));
   
 
   }, [])
