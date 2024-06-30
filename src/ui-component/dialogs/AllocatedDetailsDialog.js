@@ -144,6 +144,11 @@ getAllocDetails({doBookingId:props.doId})
                   primary={"Date on:"}
                   secondary={formatDateTime(data.truckBookingId.availableFrom)}
                 />
+
+<ListItemText
+                  primary={"Status:"}
+                  secondary={data.status}
+                />
                   
                   {
   data.status === "allocated" ? (

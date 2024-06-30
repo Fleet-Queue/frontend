@@ -4,7 +4,7 @@ import { Stack } from '@mui/material';
 import Content from './content';
 import Tools from './tools';
 // import AddForm from './AddForm';
-import { gellAllBooking } from '../../../utils/Service';
+import { getAllBooking } from '../../../utils/Service';
 
 
 
@@ -19,7 +19,7 @@ export default function Index() {
       if(partyId){
         data.partyId = partyId;
       }
-      const res = await gellAllBooking(data);
+      const res = await getAllBooking(data);
      
       setData(res);
     } catch (err) {

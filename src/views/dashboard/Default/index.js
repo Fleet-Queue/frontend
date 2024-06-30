@@ -5,9 +5,10 @@ import { Grid, Typography } from '@mui/material';
 
 // project imports
 import EarningCard from './EarningCard';
+import AllocatedOrders from './AllocatedOrders';
 import TotalOrderLineChartCard from './TotalOrderLineChartCard';
 import { gridSpacing } from 'store/constant';
-import { getTruckBasedOnStatus, getAllDoUpload } from '../../../utils/Service';
+import { getTruckBasedOnStatus, getAllDoUpload,getAllBooking } from '../../../utils/Service';
 // import PopularCard from './PopularCard';
 // import TotalGrowthBarChart from './TotalGrowthBarChart';
 import { toast } from 'react-toastify';
@@ -21,7 +22,7 @@ const Dashboard = () => {
   const [isLoading, setLoading] = useState(true);
   const [inQueue, setInQueue] = useState([]);
   const [onGoing, setOnGoing] = useState([]);
-
+const [allocatedDo,setAllocatedDo] = useState([]);
   const [doUploads, setDoUploads] = useState([]);
   // const [onGoingLoading, setOnGoingLoading] = useState(false);
   // const [inQueueLoading, setInQueueLoading] = useState(false);
@@ -31,6 +32,17 @@ const Dashboard = () => {
     getAllDoUpload({ status: 0 })
       .then((res) => {
         setDoUploads(res);
+        console.log(res);
+      })
+      .catch((err) => {
+        toast.error(err.response.data.msg);
+      });
+  };
+
+  const getAllAllocatedBookings = () => {
+    getAllBooking({ status: "allocated" })
+      .then((res) => {
+        setAllocatedDo(res);
         console.log(res);
       })
       .catch((err) => {
@@ -66,10 +78,16 @@ const Dashboard = () => {
   useEffect(() => {
     let userRole = localStorage.getItem('role');
     setRole(localStorage.getItem('role'));
+    if (userRole === "transporter") {
     getOngoingTrucks();
     getInQueueTrucks();
-    if (userRole === 'admin') {
+    }
+    if (userRole === 'admin' || userRole === 'forwarder') {
       getAlluploadedDo();
+      getAllAllocatedBookings()
+    }
+    if(userRole === 'fowarder'){
+      getAllAllocatedBookings()
     }
     setLoading(false);
     console.log(role);
@@ -132,20 +150,63 @@ const Dashboard = () => {
 )
 }
         {/* //forwarder dashboard */}
-        {/* {role === 'forwarder' || role === 'both' ? (
+        {role === 'forwarder'? (
+          <>
           <Grid item xs={12}>
+          <Grid py={3}>
+            <Typography variant="h2">Pending Dos</Typography>
+          </Grid>
+          <Grid container spacing={gridSpacing}>
+            {doUploads && doUploads.length > 0 ? (
+              doUploads.map((result) => (
+                <Grid item key={result._id} lg={4} md={4} sm={6} xs={12}>
+                  <OpenDos data={result} isLoading={isLoading} />
+                </Grid>
+              ))
+            ) : (
+              <Grid item key={1} lg={4} md={4} sm={6} xs={12}>
+                {isLoading ? (
+                  <TotalOrderLineChartCard data={[]} isLoading={true} />
+                ) : (
+                  <Typography variant="body1">No Open Dos</Typography> // Show message when no data and not loading
+                )}
+              </Grid>
+            )}
+          </Grid>
+        </Grid>
+
+
+
+        <Grid item xs={12}>
+            <Grid py={4}>
+              <Typography variant="h2">Allocated Orders</Typography>
+            </Grid>
             <Grid container spacing={gridSpacing}>
-              <Grid item xs={12} md={8}>
-                <TotalGrowthBarChart isLoading={isLoading} />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <PopularCard isLoading={isLoading} />
-              </Grid>
+              {allocatedDo && allocatedDo.length > 0 ? (
+                allocatedDo.map((result) => (
+                  <Grid item key={result._id} lg={4} md={4} sm={6} xs={12}>
+                    <AllocatedOrders data={result} isLoading={isLoading} />
+                  </Grid>
+                ))
+              ) : (
+                <Grid item key={1} lg={4} md={4} sm={6} xs={12}>
+                  {isLoading ? (
+                    <EarningCard data={[]} isLoading={true} />
+                  ) : (
+                    <Typography variant="body1">Currently No Allocated Trucks</Typography> // Show message when no data and not loading
+                  )}
+                </Grid>
+              )}
             </Grid>
           </Grid>
+        </>
         ) : (
           <></>
-        )} */}
+        )
+
+
+    
+        }
 
         {role === 'admin' ? (
           <Grid item xs={12}>

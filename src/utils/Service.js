@@ -151,7 +151,7 @@ export async function addLocation(data) {
 
 
 //doBooking
-export async function gellAllBooking(data) {
+export async function getAllBooking(data) {
   const response = await apiInstance.post(`doBooking/getAllDO`,data);
   console.log(response.data);
   return response.data;
