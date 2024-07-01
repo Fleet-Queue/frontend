@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from "react-hook-form";
 import { toast } from 'react-toastify';
 import StyledDialog from 'ui-component/StyledDialog';
-import { addDriver, getAllCompany } from 'utils/Service';
+import { addDriver,editDriver, getAllCompany } from 'utils/Service';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 // import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -20,7 +20,15 @@ export default function DriverAdForm({ getData, open, onClose, isEdit = false, d
         handleSubmit,
         formState: { errors },
     } = useForm({
-        defaultValues: isEdit ? data : {
+        defaultValues: isEdit ?  {
+            name: data.Name,
+            contactNumber: data.ContactNumber,
+            address: data.Address,
+            licenceNumber: data.licenceNumber,
+            licenceType: data.licenceType,
+            expiryDate: '',
+            companyId: '',
+        } : {
             name: '',
             contactNumber: '',
             address: '',
@@ -38,6 +46,27 @@ export default function DriverAdForm({ getData, open, onClose, isEdit = false, d
             toast.error("Please select a date")
         }
         const expiryDate = dayjs(selectedDate).format('YYYY-MM-DD'); // Format the date as per your API requirements
+       {
+        isEdit? 
+        editDriver(data._id,{
+            name: formData.name,
+            contactNumber: formData.contactNumber,
+            address: formData.address,
+            licenceNumber: formData.licenceNumber,
+            licenceType: formData.licenceType,
+            expiryDate: expiryDate,
+            companyId: formData.companyId
+        })
+        .then((response) => {
+            console.log(response);
+            getData();
+            onClose();
+        })
+        .catch((error) => {
+            console.error(error);
+            toast.error(error.message);
+        })
+        :
         addDriver({
             name: formData.name,
             contactNumber: formData.contactNumber,
@@ -56,6 +85,7 @@ export default function DriverAdForm({ getData, open, onClose, isEdit = false, d
             console.error(error);
             toast.error(error.message);
         });
+       } 
     };
 
 
@@ -78,6 +108,8 @@ export default function DriverAdForm({ getData, open, onClose, isEdit = false, d
  
     
     useEffect(() => {
+        console.log("heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+        console.log(data)
         getAllCompany({ companyTypes: ['transporter', 'both'] })
             .then((data) => {
                 console.log(data);

@@ -214,3 +214,17 @@ export async function getCompanyDrivers(data) {
   console.log(response.data);
   return response.data;
 }
+
+export async function deleteDriver(data) {
+  console.log(data)
+  const response = await apiInstance.delete(`driver/`+data,data);
+  console.log(response.data);
+  return response.data;
+}
+
+export async function editDriver(id,data) {
+  console.log(data)
+  const response = await apiInstance.patch(`driver/`+id,data);
+  console.log(response.data);
+  return response.data;
+}

@@ -4,11 +4,12 @@ import { tableHeaderReplace } from 'utils/tableHeaderReplace';
 
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-
+import {deleteDriver} from '../../../utils/Service'
+import DriverAdForm from './AdForm'
 const tableHeader = ['Name', 'ContactNumber','Address',"CompanyName",'licenceType','licenceNumber'];
 
 export default function Content({ data, updateData }) {
-
+  const [formOpen, setFormOpen] = useState(false)
   const [selectedData, setselectedData] = useState();
   const tableData = tableHeaderReplace(data, ['name', 'contactNumber', 'address','companyName','licenceType','licenceNumber' ], tableHeader);
 
@@ -16,11 +17,11 @@ export default function Content({ data, updateData }) {
   const admin = localStorage.getItem('role') === 'admin' ;
 
   const actionHandle = async (e) => {
-    console.log(selectedData);
+    console.log(e.action);
     if (e.action == 'delete') {
       console.log(e.data._id);
       setselectedData(e.data);
-      deleteAd( e.data._id )
+      deleteDriver( e.data._id )
         .then(() => {
           updateData();
         })
@@ -28,8 +29,12 @@ export default function Content({ data, updateData }) {
           console.error(error);
           toast.error(error.response.data.message);
         });
-    } else {
-      setselectedData();
+    } else if(e.action == 'Edit') {
+      console.log(e.action)
+      setFormOpen(true)
+      setselectedData(e.data);
+    }else{
+      console.log(e.action)
     }
    
      
@@ -37,7 +42,13 @@ export default function Content({ data, updateData }) {
 
   return (
     <>
-     
+     {
+      formOpen &&
+     <DriverAdForm open={formOpen} getData={updateData} data={selectedData} isEdit={true} onClose={() => { setFormOpen(false) }} />
+
+    
+     }
+
       <StyledTable
         data={tableData}
         header={tableHeader}
