@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // const baseURL = `http://${window.location.hostname}:3005/`;
-//const baseURL = `https://container-terminal-backend.onrender.com/`;
+
 const baseURL = `http://localhost:5000/`;
 console.log(window.location.hostname);
 
@@ -29,6 +29,12 @@ export async function deleteCompany(data) {
   return response.data;
 }
 
+export async function editCompany(id,data) {
+  console.log(data)
+  const response = await apiInstance.patch(`company/`+id,data);
+  console.log(response.data);
+  return response.data;
+}
 
 export async function getAllCompany(data) {
   const response = await apiInstance.post(`company/getAllCompany`,data);

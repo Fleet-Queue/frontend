@@ -3,7 +3,7 @@ import React, {  useEffect } from 'react';
 import { useForm, Controller } from "react-hook-form";
 import { toast } from 'react-toastify';
 import StyledDialog from 'ui-component/StyledDialog';
-import { addCompany } from 'utils/Service';
+import { addCompany,editCompany } from 'utils/Service';
 
 export default function CompanyAdForm({ getData, open, onClose, isEdit = false, data = {} }) {
 
@@ -11,8 +11,15 @@ export default function CompanyAdForm({ getData, open, onClose, isEdit = false, 
         control,
         handleSubmit,
         formState: { errors },
+    
     } = useForm({
-        defaultValues: isEdit ? data : {
+        defaultValues: isEdit ? {
+            name:data.Name,
+            ownerName: data['Owner Name'],
+            contactNumber: data.ContactNumber,
+            address: data.Address,
+            companyType: data.CompanyType
+        } : {
             name: '',
             ownerName: '',
             contactNumber: '',
@@ -23,27 +30,48 @@ export default function CompanyAdForm({ getData, open, onClose, isEdit = false, 
 
     const onSubmit = (formData) => {
         console.log(formData);
-        addCompany({
-            name: formData.name,
-            ownerName: formData.ownerName,
-            contactNumber: formData.contactNumber,
-            address: formData.address,
-            companyType: formData.companyType
-        })
-        .then((response) => {
-            console.log(response);
-            getData();
-            onClose();
-        })
-        .catch((error) => {
-            console.error(error);
-            toast.error(error.message);
-        });
+        {isEdit ?
+            editCompany(data._id,{
+                name: formData.name,
+                ownerName: formData.ownerName,
+                contactNumber: formData.contactNumber,
+                address: formData.address,
+                companyType: formData.companyType
+            }) .then((response) => {
+                console.log(response);
+                getData();
+                onClose();
+            })
+            .catch((error) => {
+                console.error(error);
+                toast.error(error.message);
+            })
+            :
+            addCompany({
+                name: formData.name,
+                ownerName: formData.ownerName,
+                contactNumber: formData.contactNumber,
+                address: formData.address,
+                companyType: formData.companyType
+            })
+            .then((response) => {
+                console.log(response);
+                getData();
+                onClose();
+            })
+            .catch((error) => {
+                console.error(error);
+                toast.error(error.message);
+            });
+        }
+      
     };
 
-    useEffect(() => {
-        
-    }, []);
+ 
+useEffect(() => {
+    
+}, []);
+
 
     return (
         <StyledDialog open={open} fullWidth onClose={onClose} title={`${isEdit ? "Edit" : "Add"} Company`}>

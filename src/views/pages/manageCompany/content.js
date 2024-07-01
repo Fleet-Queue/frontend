@@ -29,6 +29,8 @@ export default function Content({ data, updateData }) {
           toast.error(error.response.data.message);
         });
     }else if(e.action == 'Edit'){
+   setFormOpen(true);
+   setselectedData(e.data);
       console.log("edit company")
     } else {
       setselectedData();
@@ -38,15 +40,18 @@ export default function Content({ data, updateData }) {
 
   return (
     <>
-      {/* <CompanyAdForm
-        open={formOpen}
-        onClose={() => {
-          setFormOpen(false);
-        }}
-        data={selectedData}
-        isEdit={false}
-      />
-       */}
+      {formOpen && (
+        <CompanyAdForm
+        getData={updateData} 
+          open={formOpen}
+          onClose={() => {
+            setFormOpen(false);
+          }}
+          data={selectedData}
+          isEdit={true}
+        />
+      )}
+      
       <StyledTable
         data={tableData}
         header={tableHeader}
