@@ -4,7 +4,7 @@ import axios from 'axios';
 // const baseURL = `http://${window.location.hostname}:3005/`;
 
 //const baseURL = `http://localhost:5000/`;
-baseURL = `https://apis.fleetq.live/`
+const baseURL = `https://apis.fleetq.live/`
 console.log(window.location.hostname);
 
 const apiInstance = axios.create({
