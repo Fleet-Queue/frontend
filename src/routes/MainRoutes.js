@@ -1,4 +1,5 @@
 import { lazy } from 'react';
+import { Navigate } from 'react-router-dom';
 
 // project imports
 import MainLayout from 'layout/MainLayout';
@@ -28,6 +29,10 @@ const MainRoutes = {
   path: '/',
   element: <MainLayout />,
   children: [
+    {
+      path: '',
+      element: <Navigate to="dashboard" />
+    },
       {
       path: 'dashboard',
       element: <DashboardDefault />

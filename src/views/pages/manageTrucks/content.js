@@ -5,7 +5,7 @@ import TruckAdForm from './TruckAdForm';
 import AddTruckBookingForm from './AddTruckBookingForm';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-
+import {deleteTruck} from '../../../utils/Service'
 const tableHeader = ['name', 'RegNo', 'category','truckType'];
 
 export default function Content({ data, updateData,addTruckBooking }) {
@@ -22,7 +22,7 @@ export default function Content({ data, updateData,addTruckBooking }) {
     if (e.action == 'delete') {
       console.log(e.data._id);
       setselectedData(e.data);
-      deleteAd( e.data._id )
+      deleteTruck( e.data._id )
         .then(() => {
           updateData();
         })
@@ -36,7 +36,11 @@ export default function Content({ data, updateData,addTruckBooking }) {
       console.log("add to booking")
       console.log(e.data._id);
       // updateData();
-    } else {
+    } else if(e.action == 'Edit'){
+          console.log("Edit")
+          setFormOpen(true);
+          setselectedData(e.data)
+    } else{
       setselectedData();
     }
      
@@ -44,14 +48,18 @@ export default function Content({ data, updateData,addTruckBooking }) {
 
   return (
     <>
+    {
+      formOpen &&
       <TruckAdForm
-        open={formOpen}
-        onClose={() => {
-          setFormOpen(false);
-        }}
-        data={selectedData}
-        isEdit={false}
-      />
+      open={formOpen}
+      onClose={() => {
+        setFormOpen(false);
+      }}
+      data={selectedData}
+      isEdit={true}
+    />
+    }
+     
       <AddTruckBookingForm
        open={truckBookingOpen}
        onClose={() => {

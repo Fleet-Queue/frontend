@@ -24,7 +24,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export default function AddForm(props) {
   const [open, setOpen] = React.useState(false);
-  const [fileName, setFileName] = React.useState('');
+  const [fileNames, setFileNames] = React.useState([]);
   const [percent, setPercent] = React.useState(null);
   const { register, handleSubmit, setValue, formState: { errors } } = useForm({
     defaultValues: {},
@@ -33,7 +33,7 @@ export default function AddForm(props) {
   const handleClose = () => {
     props.onClose();
     setPercent(null);
-    setFileName('');
+    setFileNames([]);
     setOpen(false);
   };
 
@@ -41,46 +41,54 @@ export default function AddForm(props) {
     setOpen(props.open);
   }, [props.open]);
 
-  const onSubmit = async (data) => {
-    const { file, name } = data;
-    if (!file) {
-      toast.error("Please choose a file");
-      return;
-    }
+  const uploadFile = async (file, name) => {
     const uniqueName = `${name}-${uuidv4()}`;
-    console.log(uniqueName);
-    console.log("-------------------------------------------------------------------------------")
     const storageRef = ref(storage, `/DoBookings/${uniqueName}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const percent = Math.round(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        );
-        setPercent(percent);
-        console.log(percent);
-      },
-      (err) => console.log(err),
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((DownloadUrl) => {
-  
-          try {
-            uploadDo({ "doLink": DownloadUrl, "name": name,"uniqueName":uniqueName }).then(() => {
-              handleClose();
-            }).catch(err =>{
-console.log(err)
-
-             toast.error(err.response.data.message)
+    return new Promise((resolve, reject) => {
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const percent = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          setPercent(percent);
+        },
+        (err) => reject(err),
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((DownloadUrl) => {
+            uploadDo({ "doLink": DownloadUrl, "name": name,"uniqueName":uniqueName })
+              .then(() => {
+                resolve();
+              })
+              .catch((err) => {
+                reject(err);
+              });
           });
-          } catch (error) {
-            console.error("Failed to create DO:", error);
-            toast.error("Failed to create DO");
-          }
-        });
+        }
+      );
+    });
+  };
+
+  const onSubmit = async (data) => {
+    const { files, name } = data;
+    if (!files || files.length === 0) {
+      toast.error("Please choose at least one file");
+      return;
+    }
+
+    for (let file of files) {
+      try {
+        await uploadFile(file, name);
+      } catch (err) {
+        console.log(err);
+        toast.error(err.response?.data?.message || "Failed to upload file");
+        break;  // Stop on error
       }
-    );
+    }
+
+    handleClose();
   };
 
   return (
@@ -95,7 +103,7 @@ console.log(err)
           <DialogTitle>Upload DO</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Upload Delivery Order.
+              Upload Delivery Orders.
             </DialogContentText>
             <TextField
               label="Name"
@@ -111,10 +119,11 @@ console.log(err)
               style={{ display: 'none' }}
               id="raised-button-file"
               type="file"
+              multiple  // Allow multiple files
               onChange={(e) => {
-                const file = e.target.files[0];
-                setFileName(file ? file.name : '');
-                setValue("file", file);
+                const files = Array.from(e.target.files);
+                setFileNames(files.map(file => file.name));
+                setValue("files", files);
               }}
             />
             <label htmlFor="raised-button-file">
@@ -132,7 +141,9 @@ console.log(err)
                 </Box>
               )}
             </label>
-            {fileName && <FormHelperText>{fileName}</FormHelperText>}
+            {fileNames.length > 0 && fileNames.map((name, index) => (
+              <FormHelperText key={index}>{name}</FormHelperText>
+            ))}
           </DialogContent>
           <DialogActions>
             <Button variant="contained" type="submit">

@@ -16,7 +16,12 @@ export default function TruckAdForm({ getTrucks, open, onClose, isEdit = false, 
         formState: { errors },
         reset
     } = useForm({
-        defaultValues: isEdit ? data["Name"] : ''
+        defaultValues: isEdit ?{
+            name: data.name,
+            registrationNumber: data.RegNo,
+            category:data.category,
+            truckType:data.truckType
+        } : ''
     })
 
     const onSubmit = (data) => {

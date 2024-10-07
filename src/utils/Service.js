@@ -1,4 +1,5 @@
 import axios from 'axios';
+// import { Navigate } from 'react-router-dom';
 
 // const baseURL = `http://${window.location.hostname}:3005/`;
 
@@ -9,11 +10,46 @@ const apiInstance = axios.create({
   baseURL: `${baseURL}api/`,
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + localStorage.getItem('token')
   }
 });
 
 
+apiInstance.interceptors.request.use(
+  async config => {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      config.headers['Authorization'] = 'Bearer ' + token;
+    } else {
+      console.warn('Token not found in localStorage');
+    }
+
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
+
+
+apiInstance.interceptors.response.use(
+  response => {
+    return response;
+  },
+  error => {
+    if (error.response && error.response.status === 401) {
+  
+      console.log('Unauthorized, logging out...');
+     
+     localStorage.clear();
+    //  Navigate('/login')
+      window.location.href = '/login'; // redirect to login page
+    }
+
+    // Return any other error responses
+    return Promise.reject(error);
+  }
+);
 
 //Company
 export async function addCompany(data) {
@@ -57,6 +93,20 @@ export async function getAllTruck(data) {
 
 export async function updateTruck(data) {
   const response = await apiInstance.post(`truck/updateTruckStatus`,data);
+  console.log(response.data);
+  return response.data;
+}
+
+export async function deleteTruck(data) {
+  console.log(data)
+  const response = await apiInstance.delete(`truck/`+data,data);
+  console.log(response.data);
+  return response.data;
+}
+
+export async function editTruck(id,data) {
+  console.log(data)
+  const response = await apiInstance.patch(`truck/`+id,data);
   console.log(response.data);
   return response.data;
 }
