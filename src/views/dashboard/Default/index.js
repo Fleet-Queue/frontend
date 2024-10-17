@@ -410,8 +410,8 @@ const [allocatedDo,setAllocatedDo] = useState([]);
               <Typography variant="h2">Open Dos</Typography>
             </Grid>
             <Grid container spacing={gridSpacing}>
-              {doUploads && doUploads.length > 0 ? (
-                doUploads.map((result) => (
+              {openDo && openDo.length > 0 ? (
+                openDo.map((result) => (
                   <Grid item key={result._id} lg={4} md={4} sm={6} xs={12}>
                     <OpenDos data={result} isLoading={isLoading} />
                   </Grid>
