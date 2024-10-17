@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 // material-ui
 import { useTheme, styled } from '@mui/material/styles';
-import { Avatar, Box, Button, Grid, Typography } from '@mui/material';
+import { Avatar, Box, Button, Grid, Typography,Tooltip } from '@mui/material';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
@@ -68,6 +68,12 @@ const OpenDos = ({ isLoading,data }) => {
   setDoData(data)
  }, [data, isLoading])
  
+ const truncateText = (text, maxLength) => {
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) + '...';
+  }
+  return text;
+};
 
   return (
     <>
@@ -100,7 +106,19 @@ const OpenDos = ({ isLoading,data }) => {
               <Grid item   onClick={() => navigate('/doUpload')}>
                 <Grid container alignItems="center">
                   <Grid item>
-                    <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>{doData.name}</Typography>
+                  <Tooltip title={doData.name} arrow>
+                      <Typography
+                        sx={{
+                          fontSize: '2rem',
+                          fontWeight: 500,
+                          mr: 1,
+                          mt: 1.75,
+                          mb: 0.75,
+                        }}
+                      >
+                        {truncateText(doData.name, 10)}
+                      </Typography>
+                    </Tooltip>
                   </Grid>
                   <Grid item>
                     <Avatar
@@ -130,9 +148,23 @@ const OpenDos = ({ isLoading,data }) => {
                 </Typography>
 
     <Button  variant="contained"  onClick={() => window.open(doData.link)}>
-                     View Do
+                     Download DO
                 </Button>
                   </Box>
+                  <Box >
+   <Tooltip title={doData.fileName} arrow>
+<Typography
+              sx={{
+                fontSize: '1rem',
+                fontWeight: 300,
+                color: theme.palette.primary[200]
+              }}
+              >
+              fileName:  {truncateText(doData.fileName, 20)}
+            </Typography>
+            </Tooltip>
+
+              </Box>
 
                 
            

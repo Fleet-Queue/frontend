@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 // material-ui
-import { Grid, Typography } from '@mui/material';
+import { Button, Grid, Typography } from '@mui/material';
 
 // project imports
 import EarningCard from './EarningCard';
@@ -13,6 +13,8 @@ import { getTruckBasedOnStatus, getAllDoUpload,getAllBooking } from '../../../ut
 // import TotalGrowthBarChart from './TotalGrowthBarChart';
 import { toast } from 'react-toastify';
 import OpenDos from './OpenDos';
+import { Add } from '@mui/icons-material';
+import AddForm from 'views/pages/doUpload/AddForm';
 // import { useNavigate } from 'react-router';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
@@ -24,6 +26,7 @@ const Dashboard = () => {
   const [onGoing, setOnGoing] = useState([]);
 const [allocatedDo,setAllocatedDo] = useState([]);
   const [doUploads, setDoUploads] = useState([]);
+  const [formOpen, setFormOpen] = useState(false);
   // const [onGoingLoading, setOnGoingLoading] = useState(false);
   // const [inQueueLoading, setInQueueLoading] = useState(false);
   const [role, setRole] = useState('');
@@ -95,9 +98,22 @@ const [allocatedDo,setAllocatedDo] = useState([]);
 
   return (
     <div style={{ overflowX: 'auto' }}>
+
+
+{/* //Add DO Form */}
+{   
+      <AddForm  open={formOpen}  onClose={
+        () =>{
+        
+          setFormOpen(false)
+          getAlluploadedDo()
+      }
+      } />    
+  }
+
       <Grid container spacing={gridSpacing}>
         {/* transporter dashboard */}
-        {role === 'transporter'  ? (
+        {role === 'transporter' || role === 'both'  ? (
         <>
           <Grid item xs={12}>
             <Grid py={4}>
@@ -150,12 +166,20 @@ const [allocatedDo,setAllocatedDo] = useState([]);
 )
 }
         {/* //forwarder dashboard */}
-        {role === 'forwarder'? (
+        {role === 'forwarder' || role === 'both' ?  (
           <>
-          <Grid item xs={12}>
-          <Grid py={3}>
-            <Typography variant="h2">Pending Dos</Typography>
-          </Grid>
+          <Grid item xs={12}>    
+          <Grid container py={5} justifyContent="space-between" alignItems="center">
+    <Grid item>
+      <Typography variant="h2">Open DOs</Typography>
+    </Grid>
+    <Grid item>
+      <Button variant="contained" startIcon={<Add />}  onClick={() => setFormOpen(true)}  sx={{ backgroundColor: 'primary.main' }}>
+        Upload DO
+      </Button>
+    </Grid>
+  </Grid>
+          
           <Grid container spacing={gridSpacing}>
             {doUploads && doUploads.length > 0 ? (
               doUploads.map((result) => (
@@ -168,7 +192,7 @@ const [allocatedDo,setAllocatedDo] = useState([]);
                 {isLoading ? (
                   <TotalOrderLineChartCard data={[]} isLoading={true} />
                 ) : (
-                  <Typography variant="body1">No Open Dos</Typography> // Show message when no data and not loading
+                  <Typography variant="body1">No Open DOs</Typography> // Show message when no data and not loading
                 )}
               </Grid>
             )}

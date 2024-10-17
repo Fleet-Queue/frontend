@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import storage from "../../../utils/firebase-config"
-import { TextField, FormHelperText } from '@mui/material';
+import { TextField, FormHelperText, IconButton } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { uploadDo } from 'utils/Service';
 import { toast } from 'react-toastify';
@@ -18,7 +18,8 @@ import {
   uploadBytesResumable,
   getDownloadURL 
 } from "firebase/storage";
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+// import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { CloudUpload as CloudUploadIcon, Close as CloseIcon } from '@mui/icons-material';
 import { Box } from '@mui/system';
 import { v4 as uuidv4 } from 'uuid'; 
 
@@ -58,7 +59,7 @@ export default function AddForm(props) {
         (err) => reject(err),
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((DownloadUrl) => {
-            uploadDo({ "doLink": DownloadUrl, "name": name,"uniqueName":uniqueName })
+            uploadDo({ "doLink": DownloadUrl, "name": name,"uniqueName":uniqueName,fileName: file.name })
               .then(() => {
                 resolve();
               })
@@ -100,7 +101,20 @@ export default function AddForm(props) {
         onClose={handleClose}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
-          <DialogTitle>Upload DO</DialogTitle>
+          <DialogTitle>Upload DO
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          </DialogTitle>
           <DialogContent>
             <DialogContentText>
               Upload Delivery Orders.
@@ -114,6 +128,7 @@ export default function AddForm(props) {
               error={!!errors.name}
               helperText={errors.name ? 'Name is required' : ''}
             />
+            
             <input
               accept="image/*,.pdf"
               style={{ display: 'none' }}
@@ -134,7 +149,16 @@ export default function AddForm(props) {
                 height={150}
               >
                 <CloudUploadIcon style={{ fontSize: 100 }} />
+
               </Box>
+
+              <Typography
+              variant="h6"
+              align="center"
+              sx={{ marginTop: 1, marginBottom: 1 }}
+            >
+              Upload Files
+            </Typography>
               {percent !== null && (
                 <Box sx={{ width: '100%' }}>
                   <LinearProgressWithLabel value={percent} />
@@ -146,6 +170,10 @@ export default function AddForm(props) {
             ))}
           </DialogContent>
           <DialogActions>
+          <Button onClick={handleClose} color="secondary" variant="outlined">
+              Cancel
+            </Button>
+
             <Button variant="contained" type="submit">
               Submit
             </Button>

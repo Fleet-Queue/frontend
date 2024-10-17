@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
-import { Avatar, Box, Button, Grid, Typography } from '@mui/material';
+import { Avatar, Box, Button, Grid, Typography,Tooltip } from '@mui/material';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
@@ -76,6 +76,12 @@ const AllocatedOrders = ({ isLoading, data }) => {
     setOpen(true)
   };
 
+  const truncateText = (text, maxLength) => {
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + '...';
+    }
+    return text;
+  };
   return (
     <>
       {isLoading || !truckData ? (
@@ -116,9 +122,21 @@ const AllocatedOrders = ({ isLoading, data }) => {
               <Grid item>
                 <Grid container alignItems="center">
                   <Grid item>
-                    <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                      {truckData.deliveryOrderId.name}
-                    </Typography>
+
+                  <Tooltip title={truckData.deliveryOrderId.name} arrow>
+                      <Typography
+                        sx={{
+                          fontSize: '2rem',
+                          fontWeight: 500,
+                          mr: 1,
+                          mt: 1.75,
+                          mb: 0.75,
+                        }}
+                      >
+                        {truncateText(truckData.deliveryOrderId.name, 10)}
+                      </Typography>
+                    </Tooltip>
+                 
                   </Grid>
                   <Grid item>
                     <Avatar
