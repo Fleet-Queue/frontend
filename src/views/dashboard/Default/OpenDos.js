@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 // material-ui
 import { useTheme, styled } from '@mui/material/styles';
-import { Avatar, Box, Button, Grid, Typography,Tooltip } from '@mui/material';
+import { Avatar, Box, Button, Grid, Typography, Tooltip, IconButton, Menu, MenuItem } from '@mui/material';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
@@ -11,8 +11,11 @@ import TruckIcon from 'assets/images/icons/icons8-truck-24.png';
 
 // assets
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+
 const CardWrapper = styled(MainCard)(({ theme }) => ({
   backgroundColor: theme.palette.primary.dark,
   color: '#fff',
@@ -55,35 +58,41 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
   }
 }));
 
-// ==============================|| DASHBOARD - TOTAL ORDER LINE CHART CARD ||============================== //
-
-const OpenDos = ({ isLoading,data }) => {
+const OpenDos = ({ isLoading, data }) => {
   const theme = useTheme();
-  const [doData, setDoData] = useState(data)
-  const navigate = useNavigate()
- useEffect(() => {
+  const [doData, setDoData] = useState(data);
+  const navigate = useNavigate();
 
-  console.log(isLoading)
-  console.log(data)
-  setDoData(data)
- }, [data, isLoading])
- 
- const truncateText = (text, maxLength) => {
-  if (text.length > maxLength) {
-    return text.substring(0, maxLength) + '...';
-  }
-  return text;
-};
+  useEffect(() => {
+    setDoData(data);
+  }, [data, isLoading]);
+
+  const truncateText = (text, maxLength) => {
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + '...';
+    }
+    return text;
+  };
+
+  const handleUpdate = () => {
+    console.log("Update clicked");
+    // Your update logic here
+  };
+
+  const handleCancel = () => {
+    console.log("Cancel clicked");
+    // Your cancel logic here
+  };
 
   return (
     <>
-      {isLoading  || !doData ?  (
+      {isLoading || !doData ? (
         <SkeletonTotalOrderCard />
       ) : (
         <CardWrapper border={false} content={false}>
           <Box sx={{ p: 2.25 }}>
             <Grid container direction="column">
-              <Grid item   onClick={() => navigate('/doUpload')}>
+              <Grid item>
                 <Grid container justifyContent="space-between">
                   <Grid item>
                     <Avatar
@@ -94,19 +103,34 @@ const OpenDos = ({ isLoading,data }) => {
                         backgroundColor: theme.palette.primary[800],
                         mt: 1
                       }}
-                    
                     >
                       <img src={TruckIcon} alt="Notification" />
                     </Avatar>
                   </Grid>
-                  
-               
+                  <Grid item>
+                    <PopupState variant="popover" popupId="demo-popup-menu">
+                      {(popupState) => (
+                        <>
+                          <IconButton
+                            sx={{ color: 'white' }}
+                            {...bindTrigger(popupState)}
+                          >
+                            <MoreVertIcon />
+                          </IconButton>
+                          <Menu {...bindMenu(popupState)}>
+                            <MenuItem onClick={() => { handleUpdate(); popupState.close(); }}>Update</MenuItem>
+                            <MenuItem onClick={() => { handleCancel(); popupState.close(); }}>Cancel</MenuItem>
+                          </Menu>
+                        </>
+                      )}
+                    </PopupState>
+                  </Grid>
                 </Grid>
               </Grid>
-              <Grid item   onClick={() => navigate('/doUpload')}>
+              <Grid item onClick={() => navigate('/doUpload')}>
                 <Grid container alignItems="center">
                   <Grid item>
-                  <Tooltip title={doData.name} arrow>
+                    <Tooltip title={doData.name} arrow>
                       <Typography
                         sx={{
                           fontSize: '2rem',
@@ -129,47 +153,39 @@ const OpenDos = ({ isLoading,data }) => {
                         color: theme.palette.primary.dark
                       }}
                     >
-                      <HourglassBottomIcon fontSize="inherit"  />
+                      <HourglassBottomIcon fontSize="inherit" />
                     </Avatar>
                   </Grid>
                 </Grid>
               </Grid>
               <Grid item sx={{ mb: 1.25 }}>
-       <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
-
-    <Typography
-                  sx={{
-                    fontSize: '1rem',
-                    fontWeight: 500,
-                    color: theme.palette.primary[200]
-                  }}
+                <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography
+                    sx={{
+                      fontSize: '1rem',
+                      fontWeight: 500,
+                      color: theme.palette.primary[200]
+                    }}
                   >
-                  uploadDate: {doData.uploadDate}
-                </Typography>
-
-    <Button  variant="contained"  onClick={() => window.open(doData.link)}>
-                     Download DO
-                </Button>
-                  </Box>
-                  <Box >
-   <Tooltip title={doData.fileName} arrow>
-<Typography
-              sx={{
-                fontSize: '1rem',
-                fontWeight: 300,
-                color: theme.palette.primary[200]
-              }}
-              >
-              fileName:  {truncateText(doData.fileName, 20)}
-            </Typography>
-            </Tooltip>
-
-              </Box>
-
-                
-           
-               
-         
+                    uploadDate: {doData.uploadDate}
+                  </Typography>
+                  <Button variant="contained" onClick={() => window.open(doData.link)}>
+                    Download DO
+                  </Button>
+                </Box>
+                <Box>
+                  <Tooltip title={doData.fileName} arrow>
+                    <Typography
+                      sx={{
+                        fontSize: '1rem',
+                        fontWeight: 300,
+                        color: theme.palette.primary[200]
+                      }}
+                    >
+                      fileName: {truncateText(doData.fileName, 20)}
+                    </Typography>
+                  </Tooltip>
+                </Box>
               </Grid>
             </Grid>
           </Box>
