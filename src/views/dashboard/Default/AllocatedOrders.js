@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
 import { Avatar, Box, Button, Grid, Typography,Tooltip } from '@mui/material';
-
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import SkeletonEarningCard from 'ui-component/cards/Skeleton/EarningCard';
@@ -75,6 +75,33 @@ const AllocatedOrders = ({ isLoading, data }) => {
     setSelectedDo(doId);
     setOpen(true)
   };
+
+
+
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+};
+
+const handleMenuClose = () => {
+    setAnchorEl(null);
+};
+
+const handleUpdate = () => {
+    // Your update logic here
+    console.log("Update clicked");
+    handleMenuClose();
+};
+
+const handleCancel = () => {
+    // Your cancel logic here
+    console.log("Cancel clicked");
+    handleMenuClose();
+};
+
+
 
   const truncateText = (text, maxLength) => {
     if (text.length > maxLength) {
@@ -186,7 +213,7 @@ const AllocatedOrders = ({ isLoading, data }) => {
             </Button>
 
 <Button  variant="contained" color='secondary' onClick={() => window.open(truckData.deliveryOrderId.doLink)}>
-                 View Do
+                 Download Do
             </Button>
               </Box>
 

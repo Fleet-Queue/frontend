@@ -25,7 +25,13 @@ const Dashboard = () => {
   const [inQueue, setInQueue] = useState([]);
   const [onGoing, setOnGoing] = useState([]);
 const [allocatedDo,setAllocatedDo] = useState([]);
-  const [doUploads, setDoUploads] = useState([]);
+  const [openDo, setOpenDo] = useState([]);
+  const [inQueueDo, setInqueueDo] = useState([]);
+  const [onGoingDo, setOngoingDo] = useState([]);
+  const [rejectedDo, setRejectedDo] = useState([]);
+  const [cancelledDo, setCancelledDo] = useState([]);
+
+
   const [formOpen, setFormOpen] = useState(false);
   // const [onGoingLoading, setOnGoingLoading] = useState(false);
   // const [inQueueLoading, setInQueueLoading] = useState(false);
@@ -34,13 +40,60 @@ const [allocatedDo,setAllocatedDo] = useState([]);
   const getAlluploadedDo = () => {
     getAllDoUpload({ status: 0 })
       .then((res) => {
-        setDoUploads(res);
+        setOpenDo(res);
         console.log(res);
       })
       .catch((err) => {
         toast.error(err.response.data.msg);
       });
   };
+
+
+  const getAllInQueueDo = () => {
+    getAllDoUpload({ status: 1 })
+      .then((res) => {
+        setInqueueDo(res);
+        console.log(res);
+      })
+      .catch((err) => {
+        toast.error(err.response.data.msg);
+      });
+  };
+
+
+  const getAllOngoingDo = () => {
+    getAllDoUpload({ status:3 })
+      .then((res) => {
+        setOngoingDo(res);
+        console.log(res);
+      })
+      .catch((err) => {
+        toast.error(err.response.data.msg);
+      });
+  };
+
+  const getAllRejectedDo = () => {
+    getAllDoUpload({ status:5 })
+      .then((res) => {
+        setRejectedDo(res);
+        console.log(res);
+      })
+      .catch((err) => {
+        toast.error(err.response.data.msg);
+      });
+  };
+
+  const getAllCancelledDo = () => {
+    getAllDoUpload({ status:6 })
+      .then((res) => {
+        setCancelledDo(res);
+        console.log(res);
+      })
+      .catch((err) => {
+        toast.error(err.response.data.msg);
+      });
+  };
+
 
   const getAllAllocatedBookings = () => {
     getAllBooking({ status: "allocated" })
@@ -81,15 +134,21 @@ const [allocatedDo,setAllocatedDo] = useState([]);
   useEffect(() => {
     let userRole = localStorage.getItem('role');
     setRole(localStorage.getItem('role'));
-    if (userRole === "transporter") {
+    if (userRole === "transporter" || userRole === 'both') {
     getOngoingTrucks();
     getInQueueTrucks();
     }
     if (userRole === 'admin' || userRole === 'forwarder') {
+
       getAlluploadedDo();
       getAllAllocatedBookings()
     }
-    if(userRole === 'fowarder'){
+    if(userRole === 'forwarder' || userRole === 'both'){
+
+      getAllInQueueDo()
+      getAllOngoingDo()
+      getAllRejectedDo()
+      getAllCancelledDo()
       getAllAllocatedBookings()
     }
     setLoading(false);
@@ -181,8 +240,8 @@ const [allocatedDo,setAllocatedDo] = useState([]);
   </Grid>
           
           <Grid container spacing={gridSpacing}>
-            {doUploads && doUploads.length > 0 ? (
-              doUploads.map((result) => (
+            {openDo && openDo.length > 0 ? (
+              openDo.map((result) => (
                 <Grid item key={result._id} lg={4} md={4} sm={6} xs={12}>
                   <OpenDos data={result} isLoading={isLoading} />
                 </Grid>
@@ -200,10 +259,37 @@ const [allocatedDo,setAllocatedDo] = useState([]);
         </Grid>
 
 
+        <Grid item xs={12}>    
+          <Grid container py={5} justifyContent="space-between" alignItems="center">
+    <Grid item>
+      <Typography variant="h2">Inqueue DOs</Typography>
+    </Grid>
+   
+  </Grid>
+          
+          <Grid container spacing={gridSpacing}>
+            {inQueueDo && inQueueDo.length > 0 ? (
+              inQueueDo.map((result) => (
+                <Grid item key={result._id} lg={4} md={4} sm={6} xs={12}>
+                  <OpenDos data={result} isLoading={isLoading} />
+                </Grid>
+              ))
+            ) : (
+              <Grid item key={1} lg={4} md={4} sm={6} xs={12}>
+                {isLoading ? (
+                  <TotalOrderLineChartCard data={[]} isLoading={true} />
+                ) : (
+                  <Typography variant="body1">No Inqueue DOs</Typography> // Show message when no data and not loading
+                )}
+              </Grid>
+            )}
+          </Grid>
+        </Grid>
+
 
         <Grid item xs={12}>
             <Grid py={4}>
-              <Typography variant="h2">Allocated Orders</Typography>
+              <Typography variant="h2">Allocated Do</Typography>
             </Grid>
             <Grid container spacing={gridSpacing}>
               {allocatedDo && allocatedDo.length > 0 ? (
@@ -217,12 +303,98 @@ const [allocatedDo,setAllocatedDo] = useState([]);
                   {isLoading ? (
                     <EarningCard data={[]} isLoading={true} />
                   ) : (
-                    <Typography variant="body1">Currently No Allocated Trucks</Typography> // Show message when no data and not loading
+                    <Typography variant="body1">Currently No Allocated Do</Typography> // Show message when no data and not loading
                   )}
                 </Grid>
               )}
             </Grid>
           </Grid>
+
+
+        <Grid item xs={12}>    
+          <Grid container py={5} justifyContent="space-between" alignItems="center">
+    <Grid item>
+      <Typography variant="h2">Ongoing DOs</Typography>
+    </Grid>
+    
+  </Grid>
+          
+          <Grid container spacing={gridSpacing}>
+            {onGoingDo && onGoingDo.length > 0 ? (
+              onGoingDo.map((result) => (
+                <Grid item key={result._id} lg={4} md={4} sm={6} xs={12}>
+                  <OpenDos data={result} isLoading={isLoading} />
+                </Grid>
+              ))
+            ) : (
+              <Grid item key={1} lg={4} md={4} sm={6} xs={12}>
+                {isLoading ? (
+                  <TotalOrderLineChartCard data={[]} isLoading={true} />
+                ) : (
+                  <Typography variant="body1">No Ongoing DOs</Typography> // Show message when no data and not loading
+                )}
+              </Grid>
+            )}
+          </Grid>
+        </Grid>
+
+
+        <Grid item xs={12}>    
+          <Grid container py={5} justifyContent="space-between" alignItems="center">
+    <Grid item>
+      <Typography variant="h2">Rejected DOs</Typography>
+    </Grid>
+    
+  </Grid>
+          
+          <Grid container spacing={gridSpacing}>
+            {rejectedDo && rejectedDo.length > 0 ? (
+              rejectedDo.map((result) => (
+                <Grid item key={result._id} lg={4} md={4} sm={6} xs={12}>
+                  <OpenDos data={result} isLoading={isLoading} />
+                </Grid>
+              ))
+            ) : (
+              <Grid item key={1} lg={4} md={4} sm={6} xs={12}>
+                {isLoading ? (
+                  <TotalOrderLineChartCard data={[]} isLoading={true} />
+                ) : (
+                  <Typography variant="body1">No Rejected DOs</Typography> // Show message when no data and not loading
+                )}
+              </Grid>
+            )}
+          </Grid>
+        </Grid>
+
+
+        <Grid item xs={12}>    
+          <Grid container py={5} justifyContent="space-between" alignItems="center">
+    <Grid item>
+      <Typography variant="h2">Cancelled DOs</Typography>
+    </Grid>
+    
+  </Grid>
+          
+          <Grid container spacing={gridSpacing}>
+            {cancelledDo && cancelledDo.length > 0 ? (
+              cancelledDo.map((result) => (
+                <Grid item key={result._id} lg={4} md={4} sm={6} xs={12}>
+                  <OpenDos data={result} isLoading={isLoading} />
+                </Grid>
+              ))
+            ) : (
+              <Grid item key={1} lg={4} md={4} sm={6} xs={12}>
+                {isLoading ? (
+                  <TotalOrderLineChartCard data={[]} isLoading={true} />
+                ) : (
+                  <Typography variant="body1">No Cancelled DOs</Typography> // Show message when no data and not loading
+                )}
+              </Grid>
+            )}
+          </Grid>
+        </Grid>
+
+      
         </>
         ) : (
           <></>
