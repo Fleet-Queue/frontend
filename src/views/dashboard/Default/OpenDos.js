@@ -13,7 +13,7 @@ import TruckIcon from 'assets/images/icons/icons8-truck-24.png';
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+// import { useNavigate } from 'react-router';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
@@ -58,10 +58,10 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
   }
 }));
 
-const OpenDos = ({ isLoading, data }) => {
+const OpenDos = ({ isLoading, data,update,handleCancel }) => {
   const theme = useTheme();
   const [doData, setDoData] = useState(data);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     setDoData(data);
@@ -74,14 +74,16 @@ const OpenDos = ({ isLoading, data }) => {
     return text;
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = (data) => {
     console.log("Update clicked");
+    update(data)
     // Your update logic here
   };
 
-  const handleCancel = () => {
-    console.log("Cancel clicked");
-    // Your cancel logic here
+  const handleCancelClick = (data) => {
+    console.log(data)
+    console.log(data._id)
+    handleCancel(data._id,data.name)
   };
 
   return (
@@ -94,7 +96,7 @@ const OpenDos = ({ isLoading, data }) => {
             <Grid container direction="column">
               <Grid item>
                 <Grid container justifyContent="space-between">
-                  <Grid item>
+                  <Grid item onClick={() => { handleUpdate(doData);  }}>
                     <Avatar
                       variant="rounded"
                       sx={{
@@ -118,8 +120,8 @@ const OpenDos = ({ isLoading, data }) => {
                             <MoreVertIcon />
                           </IconButton>
                           <Menu {...bindMenu(popupState)}>
-                            <MenuItem onClick={() => { handleUpdate(); popupState.close(); }}>Update</MenuItem>
-                            <MenuItem onClick={() => { handleCancel(); popupState.close(); }}>Cancel</MenuItem>
+                            <MenuItem onClick={() => { handleUpdate(doData); popupState.close(); }}>Update</MenuItem>
+                            <MenuItem onClick={() => { handleCancelClick(doData); popupState.close(); }}>Cancel</MenuItem>
                           </Menu>
                         </>
                       )}
@@ -127,7 +129,7 @@ const OpenDos = ({ isLoading, data }) => {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item onClick={() => navigate('/doUpload')}>
+              <Grid item  onClick={() => { handleUpdate(doData);  }}>
                 <Grid container alignItems="center">
                   <Grid item>
                     <Tooltip title={doData.name} arrow>
@@ -158,16 +160,16 @@ const OpenDos = ({ isLoading, data }) => {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item sx={{ mb: 1.25 }}>
+              <Grid  item sx={{ mb: 1.25 }}>
                 <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography
                     sx={{
                       fontSize: '1rem',
                       fontWeight: 500,
-                      color: theme.palette.primary[200]
+                    
                     }}
                   >
-                    uploadDate: {doData.uploadDate}
+                    uploaded date: {doData.uploadDate}
                   </Typography>
                   <Button variant="contained" onClick={() => window.open(doData.link)}>
                     Download DO
@@ -179,7 +181,6 @@ const OpenDos = ({ isLoading, data }) => {
                       sx={{
                         fontSize: '1rem',
                         fontWeight: 300,
-                        color: theme.palette.primary[200]
                       }}
                     >
                       fileName: {truncateText(doData.fileName, 20)}

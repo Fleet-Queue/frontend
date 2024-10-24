@@ -8,13 +8,14 @@ import EarningCard from './EarningCard';
 import AllocatedOrders from './AllocatedOrders';
 import TotalOrderLineChartCard from './TotalOrderLineChartCard';
 import { gridSpacing } from 'store/constant';
-import { getTruckBasedOnStatus, getAllDoUpload,getAllBooking } from '../../../utils/Service';
+import { getTruckBasedOnStatus, getAllDoUpload,getAllBooking, cancelDo } from '../../../utils/Service';
 // import PopularCard from './PopularCard';
 // import TotalGrowthBarChart from './TotalGrowthBarChart';
 import { toast } from 'react-toastify';
 import OpenDos from './OpenDos';
 import { Add } from '@mui/icons-material';
 import AddForm from 'views/pages/doUpload/AddForm';
+import CancelDO from 'views/pages/doUpload/cancelDO';
 // import { useNavigate } from 'react-router';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
@@ -30,16 +31,29 @@ const [allocatedDo,setAllocatedDo] = useState([]);
   const [onGoingDo, setOngoingDo] = useState([]);
   const [rejectedDo, setRejectedDo] = useState([]);
   const [cancelledDo, setCancelledDo] = useState([]);
+  const [updData, setUpdData] = useState({});
 
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const [formOpen, setFormOpen] = useState(false);
+
+  const updateDO = (data) =>{
+    console.log(data)
+    console.log("-----------------------hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh----------------------")
+    setUpdData(data)
+      setUpd(true)
+      setFormOpen(true)
+  }
   // const [onGoingLoading, setOnGoingLoading] = useState(false);
   // const [inQueueLoading, setInQueueLoading] = useState(false);
   const [role, setRole] = useState('');
-
+  const [upd, setUpd] = useState(false);
   const getAlluploadedDo = () => {
     getAllDoUpload({ status: 0 })
       .then((res) => {
+        const limitedResults = res.slice(0, 6); 
+        setOpenDo(limitedResults); 
         setOpenDo(res);
         console.log(res);
       })
@@ -52,6 +66,7 @@ const [allocatedDo,setAllocatedDo] = useState([]);
   const getAllInQueueDo = () => {
     getAllDoUpload({ status: 1 })
       .then((res) => {
+        
         setInqueueDo(res);
         console.log(res);
       })
@@ -155,13 +170,38 @@ const [allocatedDo,setAllocatedDo] = useState([]);
     console.log(role);
   }, []);
 
+
+  const handleCancelClick = (itemId, itemName) => {
+    setSelectedItem({ id: itemId, name: itemName });
+    setDialogOpen(true);
+  };
+
+  const handleClose = () => {
+    setDialogOpen(false);
+    setSelectedItem(null); // Reset selected item
+  };
+
+  const handleConfirmCancel = (itemId,cancelReason) => {
+    
+    console.log(`Cancelled item with ID: ${itemId} for reason: ${cancelReason}`);
+    cancelDo(itemId, { cancelReason })
+    .then(() => {
+      
+      toast.success(`Successfully cancelled `);
+      getAlluploadedDo(); 
+    })
+    .catch((error) => {
+      toast.error(error.response?.data?.message || "Failed to cancel the item");
+    });
+  };
+
   return (
     <div style={{ overflowX: 'auto' }}>
 
 
 {/* //Add DO Form */}
 {   
-      <AddForm  open={formOpen}  onClose={
+      <AddForm data={updData} open={formOpen} upd={upd}  onClose={
         () =>{
         
           setFormOpen(false)
@@ -169,6 +209,17 @@ const [allocatedDo,setAllocatedDo] = useState([]);
       }
       } />    
   }
+
+
+{selectedItem && (
+        <CancelDO
+          open={dialogOpen}
+          handleClose={handleClose}
+          itemId={selectedItem.id}
+          itemName={selectedItem.name}
+          onConfirm={handleConfirmCancel}
+        />
+      )}
 
       <Grid container spacing={gridSpacing}>
         {/* transporter dashboard */}
@@ -230,10 +281,14 @@ const [allocatedDo,setAllocatedDo] = useState([]);
           <Grid item xs={12}>    
           <Grid container py={5} justifyContent="space-between" alignItems="center">
     <Grid item>
-      <Typography variant="h2">Open DOs</Typography>
+      <Typography variant="h2">Open</Typography>
     </Grid>
     <Grid item>
-      <Button variant="contained" startIcon={<Add />}  onClick={() => setFormOpen(true)}  sx={{ backgroundColor: 'primary.main' }}>
+      <Button variant="contained" startIcon={<Add />}  onClick={() =>{ 
+        setUpd(false)
+        setFormOpen(true)
+
+      }}  sx={{ backgroundColor: 'primary.main' }}>
         Upload DO
       </Button>
     </Grid>
@@ -243,7 +298,7 @@ const [allocatedDo,setAllocatedDo] = useState([]);
             {openDo && openDo.length > 0 ? (
               openDo.map((result) => (
                 <Grid item key={result._id} lg={4} md={4} sm={6} xs={12}>
-                  <OpenDos data={result} isLoading={isLoading} />
+                  <OpenDos data={result} isLoading={isLoading} handleCancel={handleCancelClick}  update={updateDO}  />
                 </Grid>
               ))
             ) : (
@@ -262,7 +317,7 @@ const [allocatedDo,setAllocatedDo] = useState([]);
         <Grid item xs={12}>    
           <Grid container py={5} justifyContent="space-between" alignItems="center">
     <Grid item>
-      <Typography variant="h2">Inqueue DOs</Typography>
+      <Typography variant="h2">Inqueue</Typography>
     </Grid>
    
   </Grid>
@@ -289,7 +344,7 @@ const [allocatedDo,setAllocatedDo] = useState([]);
 
         <Grid item xs={12}>
             <Grid py={4}>
-              <Typography variant="h2">Allocated Do</Typography>
+              <Typography variant="h2">Allocated</Typography>
             </Grid>
             <Grid container spacing={gridSpacing}>
               {allocatedDo && allocatedDo.length > 0 ? (
@@ -314,7 +369,7 @@ const [allocatedDo,setAllocatedDo] = useState([]);
         <Grid item xs={12}>    
           <Grid container py={5} justifyContent="space-between" alignItems="center">
     <Grid item>
-      <Typography variant="h2">Ongoing DOs</Typography>
+      <Typography variant="h2">Ongoing</Typography>
     </Grid>
     
   </Grid>
@@ -342,7 +397,7 @@ const [allocatedDo,setAllocatedDo] = useState([]);
         <Grid item xs={12}>    
           <Grid container py={5} justifyContent="space-between" alignItems="center">
     <Grid item>
-      <Typography variant="h2">Rejected DOs</Typography>
+      <Typography variant="h2">Rejected</Typography>
     </Grid>
     
   </Grid>
@@ -370,7 +425,7 @@ const [allocatedDo,setAllocatedDo] = useState([]);
         <Grid item xs={12}>    
           <Grid container py={5} justifyContent="space-between" alignItems="center">
     <Grid item>
-      <Typography variant="h2">Cancelled DOs</Typography>
+      <Typography variant="h2">Cancelled</Typography>
     </Grid>
     
   </Grid>

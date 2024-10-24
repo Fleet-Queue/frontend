@@ -108,7 +108,6 @@ export default function DriverAdForm({ getData, open, onClose, isEdit = false, d
  
     
     useEffect(() => {
-        console.log("heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
         console.log(data)
         getAllCompany({ companyTypes: ['transporter', 'both'] })
             .then((data) => {

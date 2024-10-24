@@ -11,6 +11,8 @@ import { getAllDoUpload } from '../../../utils/Service';
 export default function Index() {
   const [formOpen, setFormOpen] = useState(false);
   const [data, setData] = useState([]);
+  // const [upd, setUpd] = useState(false);
+  // let upd = true
   let { partyId } = useParams();
 
   const getAllPendingDo = async (partyId) => {
@@ -34,7 +36,7 @@ export default function Index() {
     <Stack direction={'column'} gap={2}>
       {
       
-          <AddForm data={partyId} open={formOpen} getBookings={getAllPendingDo} onClose={
+          <AddForm data={partyId} open={formOpen} upd={false} getBookings={getAllPendingDo} onClose={
             () =>{
             
               setFormOpen(false)

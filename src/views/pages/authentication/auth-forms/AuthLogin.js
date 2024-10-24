@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 
 // third party
-import * as Yup from 'yup';
+// import * as Yup from 'yup';
 import { Formik } from 'formik';
 
 // project imports
@@ -50,15 +50,15 @@ const FirebaseLogin = ({ adminLogin, ...others }) => {
       <Formik
         initialValues={{
           phone: '',
-          password: '',
+          password: 'A@123',
           submit: null
         }}
-        validationSchema={Yup.object().shape({
-          phone: Yup.string()
-          .matches(/^[0-9]{10}$/, 'Must be a valid 10-digit phone number')
-          .required('Phone number is required'),
-          password: Yup.string().max(255).required('Password is required')
-        })}
+        // validationSchema={Yup.object().shape({
+        //   phone: Yup.string()
+        //   .matches(/^[0-9]{10}$/, 'Must be a valid 10-digit phone number')
+        //   .required('Phone number is required'),
+        //   password: Yup.string().max(255).required('Password is required')
+        // })}
         onSubmit={async (values) => {
           try {
 
@@ -78,7 +78,7 @@ const FirebaseLogin = ({ adminLogin, ...others }) => {
 
             }).catch((err) => {
               console.log(err)
-              toast.error(err.response.data.msg);
+              toast.error(err.response.data.message);
               console.log(err)
             });
           } catch (err) {

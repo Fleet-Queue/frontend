@@ -3,8 +3,8 @@ import axios from 'axios';
 
 // const baseURL = `http://${window.location.hostname}:3005/`;
 
-//const baseURL = `http://localhost:5000/`;
-const baseURL = `https://apis.fleetq.live/`
+const baseURL = `http://localhost:5000/`;
+//const baseURL = `https://apis.fleetq.live/`
 console.log(window.location.hostname);
 
 const apiInstance = axios.create({
@@ -187,7 +187,6 @@ export async function getAllUsers() {
 
 export async function adminLogin(data) {
   const response = await apiInstance.post(`user/login`,data);
-  console.log("heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
   console.log(response)
   console.log(response.data);
   return response.data;
@@ -225,6 +224,30 @@ export async function uploadDo(data) {
   console.log(response.data);
   return response.data;
 }
+
+export async function updateDo(id, data) {
+  try {
+    const response = await apiInstance.put(`doBooking/updateDO/${id}`, data);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating delivery order:", error);
+    throw error; // Rethrow the error to handle it in the calling function if necessary
+  }
+}
+
+
+export async function cancelDo(id, data) {
+  try {
+    const response = await apiInstance.post(`doBooking/cancelDO/${id}`, data);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating delivery order:", error);
+    throw error; // Rethrow the error to handle it in the calling function if necessary
+  }
+}
+
 
 export async function getAllDoUpload(data) {
   const response = await apiInstance.post(`doBooking/getAllDeliveryOrders`,data);

@@ -11,6 +11,7 @@ export default function Content({ data, deleteAd, updateData, navigation }) {
   const [formOpen, setFormOpen] = useState(false);
   const [selectedData, setselectedData] = useState();
   const tableData = tableHeaderReplace(data, ['name', 'address', 'contactPerson','contactNumber' ], tableHeader);
+  const admin = localStorage.getItem('role') === 'admin' ;
 
   const actionHandle = (e) => {
     console.log(e);
@@ -40,11 +41,11 @@ export default function Content({ data, deleteAd, updateData, navigation }) {
         isEdit={true}
       />
       <StyledTable
-      onClickAction={navigation}
+      onClickAction={admin && navigation}
         data={tableData}
         header={tableHeader}
         isShowSerialNo={true}
-        isShowAction={true}
+        isShowAction={!admin}
         actions={['delete','Edit','UpdateStatus']}
         onActionChange={actionHandle}
       />

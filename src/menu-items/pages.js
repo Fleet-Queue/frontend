@@ -56,13 +56,6 @@ const pages = {
       icon: icons.IconTruckDelivery,
     },
     {
-      id: 'parties',
-      title: 'Parties',
-      type: 'item',
-      url: '/parties',
-      icon: icons.IconNote,
-    },
-    {
       id: 'truckBooking',
       title: 'Manage Truck Booking',
       type: 'item',
@@ -86,14 +79,14 @@ const pages = {
     //fowarder routes
     {
       id: 'doupload',
-      title: 'DoUploads',
+      title: 'DO Details',
       type: 'item',
       url: '/doUpload',
       icon: icons.IconNote,
     },
     {
       id: 'opendoupload',
-      title: 'Open Dos',
+      title: 'Open DOs',
       type: 'item',
       url: '/openDoUpload',
       icon: icons.IconNote,
@@ -131,7 +124,15 @@ const pages = {
       type: 'item',
       url: '/manageUsers',
       icon: icons.IconUsers,
-    }
+    },
+    
+    {
+      id: 'parties',
+      title: 'Parties',
+      type: 'item',
+      url: '/parties',
+      icon: icons.IconNote,
+    },
   ]
 };
 
@@ -139,10 +140,10 @@ const pages = {
 
 
 
-// Filter menu items based on role
+
 pages.children = pages.children.filter((item) => {
   if (isBoth) {
-    return true; // Render all items for 'Both' role
+    return true; 
   }
   if (isAdmin){
     return  item.id === "manageCompany" || item.id === 'manageDriver' ||  item.id === 'manageTrucks'   ||  item.id === 'doupload' || item.id === 'parties' || item.id === 'doBooking' || item.id === 'allocatedDo' || item.id === 'canceledDo' || item.id === 'manageUsers';
@@ -153,7 +154,7 @@ pages.children = pages.children.filter((item) => {
   if (isForwarder) {
     return item.id === 'parties' ||  item.id === 'doupload' ||  item.id === 'opendoupload'  || item.id === 'location' || item.id === 'rateMap' || item.id === 'allocatedDo'  || item.id === 'canceledDo'; 
   }
-  return false; // Default case: do not render any item
+  return false; 
 });
 
 export default pages;

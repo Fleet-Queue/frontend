@@ -151,10 +151,10 @@ const AllocatedOrders = ({ isLoading, data }) => {
                     sx={{
                       fontSize: '1rem',
                       fontWeight: 500,
-                      color: theme.palette.secondary[200]
+                   
                     }}
                   >
-                    uploadDate: {new Date(truckData.deliveryOrderId.createdAt).toLocaleString('en-US', {
+                     uploaded date: {new Date(truckData.deliveryOrderId.createdAt).toLocaleString('en-US', {
                       month: 'long',
                       day: 'numeric',
                       year: 'numeric'
