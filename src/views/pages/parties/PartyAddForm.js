@@ -1,199 +1,176 @@
-import { Button, Container, MenuItem, Select, Stack, TextField, Typography,  FormControl, InputLabel, FormHelperText, FormControlLabel, Switch } from '@mui/material'
-import React, { useState,useEffect } from 'react'
+import { Button, Container, MenuItem, Select, Stack, TextField, Typography, FormControl, InputLabel, FormHelperText, FormControlLabel, Switch } from '@mui/material';
+import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from "react-hook-form";
-
 import { toast } from 'react-toastify';
 import StyledDialog from 'ui-component/StyledDialog';
-import { addParty,getAllLocation  } from 'utils/Service';
+import { addParty, updateParty, getAllLocation } from 'utils/Service'; 
 
-export default function PartyAddForm({ getParty, open, onClose, isEdit = false, data={} }) {
-    const [locations, setLocations] =useState([]);
-    const [isTrailerAllowed, setIsTrailerAllowed] =useState(false);
+export default function PartyAddForm({ getParty, open, onClose, isEdit = false, data = {} }) {
+    const [locations, setLocations] = useState([]);
+    const [isTrailerAllowed, setIsTrailerAllowed] = useState(false);
+
     const {
         control,
         handleSubmit,
         formState: { errors },
+        reset,
     } = useForm({
-        defaultValues: isEdit ? data["Name"] : ''
-    })
-
-    const onSubmit = (data) => {
-    console.log(data)
-    addParty({ name:data.name,
-        address:data.address,
-        locationId:data.location,
-        contactPerson:data.contactPerson,
-        contactNumber:data.contactNumber,
-        isTrailerAllowed
-    })
-        .then((response) => {
-          console.log(response);
-          getParty()
-          onClose();
-        }) .catch((error) => {
-                console.error(error);
-                toast.error(error);
-               
-              });
-          
-        
-    }
-
-
-  
-       
+        defaultValues: {
+            name: '',
+            address: '',
+            contactPerson: '',
+            contactNumber: '',
+            location: '',
+        },
+    });
     
 
+    const onSubmit = (formData) => {
+        const payload = {
+            ...formData,
+            isTrailerAllowed,
+        };
 
-     useEffect(() => {
-        getAllLocation().then((data)=>{
-            console.log(data)
-            setLocations(data)
-             }).catch((error) => {
-          console.log(error)
-             })
-     }, [])
-     
-        
+        if (isEdit) {
+            console.log(payload)
+
+        console.log(data._id)
+            updateParty(data._id,{ name:formData.name,
+                address:formData.address,
+                locationId:formData.location,
+                contactPerson:formData.contactPerson,
+                contactNumber:formData.contactNumber,
+                isTrailerAllowed
+            })
+                 .then(() => {
+                    toast.success("Party updated successfully");
+                    getParty(); 
+                    onClose();
+                 })
+                .catch((error) => {
+                     toast.error(error.response?.data?.message || "Operation failed");
+                 });
+        } else {
+            // Call the add API if in add mode
+            addParty({ name:formData.name,
+                address:formData.address,
+                locationId:formData.location,
+                contactPerson:formData.contactPerson,
+                contactNumber:formData.contactNumber,
+                isTrailerAllowed
+            })
+                .then(() => {
+                    toast.success("Party added successfully");
+                    getParty(); // Refresh the list
+                    onClose();
+                })
+                .catch((error) => {
+                    toast.error(error.response?.data?.message || "Operation failed");
+                });
+        }
+    };
+
+    useEffect(() => {
+        // Fetch locations on mount
+        getAllLocation()
+            .then(data => setLocations(data))
+            .catch(error => console.log(error));
+    }, []);
+
+    useEffect(() => {
+        if (isEdit && data) {
+            setIsTrailerAllowed(data?.isTrailerAllowed || false);
+            reset({
+                name: data.name || '',
+                address: data.address || '',
+                contactPerson: data.contactPerson || '',
+                contactNumber: data.contactNumber || '',
+                location: data.locationId || '',
+            });
+        } 
+        // else {
+        //     reset(); // Use reset without any parameters for add mode
+        // }
+    }, [data, isEdit, reset]);
+    
+
     return (
-        
-        <StyledDialog open={open} fullWidth onClose={()=>{
-    
-            onClose()
-        }}  title={`${isEdit ? "Edit" : "Add"} Party`}>
+        <StyledDialog open={open} fullWidth onClose={onClose} title={`${isEdit ? "Edit" : "Add"} Party`}>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Container>
-                    <Stack direction={'column'} sx={{ p: 2 }} spacing={1}>
-                        {/* <Typography variant='h5'>Select Image </Typography>
-                        <MuiFileInput
-                            value={file}
-                            onChange={(e) => { selectFile(e) }}
-                            placeholder='select File'
-                            InputProps={{
-                                inputProps: {
-                                    accept: 'image/*'
-                                },
-                                startAdornment: <AttachFile />,
-                                placeholder: 'Select File'
-                            }}
-                        /> */}
+                    <Stack direction={'column'} spacing={2}>
                         <Typography variant='h5'>Party Name</Typography>
                         <Controller
                             name="name"
                             control={control}
-                            render={({ field }) => (
-                                <>
-                                    <TextField {...field} placeholder="Enter Party Name" />
-                                    {errors.name && (
-                                        <span style={{ color: '#f00' }}>
-                                            {errors.name.message}
-                                        </span>
-                                    )}
-                                </>
-                            )}
                             rules={{ required: "Party Name is required" }}
+                            render={({ field }) => <TextField {...field} placeholder="Enter Party Name" />}
                         />
+                        {errors.name && <FormHelperText error>{errors.name.message}</FormHelperText>}
 
-<Typography variant='h5'>Address</Typography>
+                        <Typography variant='h5'>Address</Typography>
                         <Controller
                             name="address"
                             control={control}
-                            render={({ field }) => (
-                                <>
-                                    <TextField {...field} placeholder="Enter party address" />
-                                    {errors.address && (
-                                        <span style={{ color: '#f00' }}>
-                                            {errors.address.message}
-                                        </span>
-                                    )}
-                                </>
-                            )}
                             rules={{ required: "Address is required" }}
+                            render={({ field }) => <TextField {...field} placeholder="Enter Party Address" />}
                         />
+                        {errors.address && <FormHelperText error>{errors.address.message}</FormHelperText>}
 
-<Typography variant='h5'>Contact Person Name</Typography>
+                        <Typography variant='h5'>Contact Person Name</Typography>
                         <Controller
                             name="contactPerson"
                             control={control}
-                            render={({ field }) => (
-                                <>
-                                    <TextField {...field} placeholder="Enter contact person name" />
-                                    {errors.contactPerson && (
-                                        <span style={{ color: '#f00' }}>
-                                            {errors.contactPerson.message}
-                                        </span>
-                                    )}
-                                </>
-                            )}
-                            rules={{ required: "contactPerson name is required" }}
+                            rules={{ required: "Contact Person is required" }}
+                            render={({ field }) => <TextField {...field} placeholder="Enter Contact Person Name" />}
                         />
+                        {errors.contactPerson && <FormHelperText error>{errors.contactPerson.message}</FormHelperText>}
 
-<Typography variant='h5'>contact Number</Typography>
+                        <Typography variant='h5'>Contact Number</Typography>
                         <Controller
                             name="contactNumber"
                             control={control}
-                            render={({ field }) => (
-                                <>
-                                    <TextField {...field} placeholder="Enter contact number" />
-                                    {errors.contactNumber && (
-                                        <span style={{ color: '#f00' }}>
-                                            {errors.contactNumber.message}
-                                        </span>
-                                    )}
-                                </>
-                            )}
-                            rules={{ required: "contactNumber is required" }}
+                            rules={{ required: "Contact Number is required" }}
+                            render={({ field }) => <TextField {...field} placeholder="Enter Contact Number" />}
                         />
+                        {errors.contactNumber && <FormHelperText error>{errors.contactNumber.message}</FormHelperText>}
 
-<FormControl error={Boolean(errors.location)}>
-                            <InputLabel id="type-select-label">Location</InputLabel>
-                            <Controller
-                                name="location"
-                                control={control}
-                               
-                                render={({ field }) => (
-                                    <Select
-                                        {...field}
-                                        labelId="type-select-label"
-                                        id="type-select"
-                                        label="location"
-                                        value={field.value || ''}
-                                        onChange={(e) => field.onChange(e.target.value)}
-                                    >
-                                  <MenuItem value=""><em>None</em></MenuItem>
-                                        {
-                                              
-                                              locations.map((location)=>(
-                                                <MenuItem key={location._id} value={location._id}>{location.name} </MenuItem>
-                                            ))
-                                        }
-                                       
-                                    </Select>
-                                )}
-                                rules={{ required: "Location is required" }}
+                        <FormControl>
+    <InputLabel>Location</InputLabel>
+    <Controller
+        name="location"
+        control={control}
+        rules={{ required: "Location is required" }}
+        render={({ field }) => (
+            <Select {...field}>
+                <MenuItem value="">
+                    <em>None</em>
+                </MenuItem>
+                {locations.map((location) => (
+                    <MenuItem key={location._id} value={location._id}>
+                        {location.name}
+                    </MenuItem>
+                ))}
+            </Select>
+        )}
+    />
+    {errors.location && <FormHelperText error>{errors.location.message}</FormHelperText>}
+</FormControl>
+
+
+                        <FormControl>
+                            <FormControlLabel
+                                control={<Switch checked={isTrailerAllowed} onChange={() => setIsTrailerAllowed(!isTrailerAllowed)} />}
+                                label="Is Trailer Allowed"
                             />
-                            {errors.location && (
-                                <FormHelperText>{errors.location.message}</FormHelperText>
-                            )}
                         </FormControl>
 
-
-                        <FormControl >
-                        <FormControlLabel
-              sx={{ mt: 1 }}
-              control={
-                <Switch checked={isTrailerAllowed} onChange={()=>setIsTrailerAllowed(!isTrailerAllowed)} />
-              }
-              label="Is TrailerAllowed"
-            />
-             </FormControl>
-
-
-                   
-                        <Button variant='contained' type='submit' sx={{ width: '150px' }}>Add</Button>
+                        <Button variant='contained' type='submit'>
+                            {isEdit ? "Update" : "Add"}
+                        </Button>
                     </Stack>
                 </Container>
             </form>
         </StyledDialog>
-    )
+    );
 }

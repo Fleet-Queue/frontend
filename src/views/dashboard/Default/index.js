@@ -146,6 +146,8 @@ const [allocatedDo,setAllocatedDo] = useState([]);
         toast.error(err.response.data.msg);
       });
   };
+  const admin = localStorage.getItem('role') === 'admin' ;
+
   useEffect(() => {
     let userRole = localStorage.getItem('role');
     setRole(localStorage.getItem('role'));
@@ -218,6 +220,7 @@ const [allocatedDo,setAllocatedDo] = useState([]);
           itemId={selectedItem.id}
           itemName={selectedItem.name}
           onConfirm={handleConfirmCancel}
+          formHeading ={admin?"reject":"cancel"}
         />
       )}
 
@@ -326,7 +329,7 @@ const [allocatedDo,setAllocatedDo] = useState([]);
             {inQueueDo && inQueueDo.length > 0 ? (
               inQueueDo.map((result) => (
                 <Grid item key={result._id} lg={4} md={4} sm={6} xs={12}>
-                  <OpenDos data={result} isLoading={isLoading} />
+                  <OpenDos data={result} isLoading={isLoading} handleCancel={handleCancelClick} />
                 </Grid>
               ))
             ) : (
@@ -468,7 +471,7 @@ const [allocatedDo,setAllocatedDo] = useState([]);
               {openDo && openDo.length > 0 ? (
                 openDo.map((result) => (
                   <Grid item key={result._id} lg={4} md={4} sm={6} xs={12}>
-                    <OpenDos data={result} isLoading={isLoading} />
+                    <OpenDos data={result} isLoading={isLoading} handleCancel={handleCancelClick} />
                   </Grid>
                 ))
               ) : (

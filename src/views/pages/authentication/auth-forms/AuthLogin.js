@@ -74,8 +74,12 @@ const FirebaseLogin = ({ adminLogin, ...others }) => {
               localStorage.setItem("token", res.accessToken);
               localStorage.setItem("user",  JSON.stringify(res.user));
              toast.success("Login Success");
+             if(role == "admin"){
+              navigate("/doUpload")
+             }else{
              navigate("/dashboard")
-
+             }
+ 
             }).catch((err) => {
               console.log(err)
               toast.error(err.response.data.message);

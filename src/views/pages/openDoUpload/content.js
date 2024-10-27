@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { deleteDeliveryOrder } from 'utils/Service';
 
-const tableHeader = ['name', 'View DO','uploadDate',"status"];
+const tableHeader = ['name', 'view DO','upload date',"status"];
 
 export default function Content({ partyId,data, updateData }) {
   const [formOpen, setFormOpen] = useState(false);

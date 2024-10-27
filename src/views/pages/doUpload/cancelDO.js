@@ -2,27 +2,27 @@
 import React, { useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, TextField } from '@mui/material';
 
-const CancelDialog = ({ open, handleClose, itemId, itemName, onConfirm }) => {
+const CancelDialog = ({ open, handleClose, itemId, itemName, onConfirm,formHeading="cancel" }) => {
   const [cancelReason, setCancelReason] = useState('');
 
   const handleConfirm = () => {
     if (cancelReason.trim() === '') {
-      alert("Please provide a reason for cancellation."); // Simple alert for empty reason
+      alert("Please provide a reason for cancellation."); 
       return;
     }
-    onConfirm(itemId, cancelReason); // Pass the reason along with the item ID
-    handleClose(); // Close the dialog
+    onConfirm(itemId, cancelReason); 
+    handleClose(); 
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Cancel Item</DialogTitle>
+      <DialogTitle>{formHeading} Item</DialogTitle>
       <DialogContent>
-        <Typography>   Are you sure you want to cancel the order for <strong>{itemName}</strong>?</Typography>
+        <Typography>   Are you sure you want to {formHeading} the order for <strong>{itemName}</strong>?</Typography>
         <TextField
           autoFocus
           margin="dense"
-          label="Cancel Reason"
+          label=" Reason"
           type="text"
           fullWidth
           variant="outlined"
@@ -32,10 +32,10 @@ const CancelDialog = ({ open, handleClose, itemId, itemName, onConfirm }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">
-          Cancel
+          back
         </Button>
-        <Button onClick={handleConfirm} color="secondary">
-          Confirm Cancel
+        <Button onClick={handleConfirm} color="error">
+          Confirm {formHeading}
         </Button>
       </DialogActions>
     </Dialog>

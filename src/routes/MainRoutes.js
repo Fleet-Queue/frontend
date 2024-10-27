@@ -38,30 +38,7 @@ const MainRoutes = {
       element: <DashboardDefault />
     },
     //transporter routes
-    {
-      path: 'manageTrucks',
-      element: <ManageTrucks />
-    },
-    {
-      path: 'manageCompany',
-      element: <ManageCompany />
-    },
-    {
-      path: 'manageDrivers',
-      element: <ManageDrivers />
-    },
-    {
-      path: 'allocatedTrucks',
-      element: <AllocatedTrucks />
-    },
-    {
-      path: 'ongoingTrucks',
-      element: <OnGoingTrucks />
-    },
-    {
-      path: 'truckBooking',
-      element: <TruckBooking />
-    },
+    
 
     //forwarder routes
     {
@@ -95,6 +72,32 @@ const MainRoutes = {
     {
       path: 'doBooking/:partyId',
       element: <DoBooking />
+    },
+
+
+    {
+      path: 'manageTrucks',
+      element: <ManageTrucks />
+    },
+    {
+      path: 'manageCompany',
+      element: <ManageCompany />
+    },
+    {
+      path: 'manageDrivers',
+      element: <ManageDrivers />
+    },
+    {
+      path: 'allocatedTrucks',
+      element: <AllocatedTrucks />
+    },
+    {
+      path: 'ongoingTrucks',
+      element: <OnGoingTrucks />
+    },
+    {
+      path: 'truckBooking',
+      element: <TruckBooking />
     },
     
     // 404 route

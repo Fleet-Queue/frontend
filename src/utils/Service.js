@@ -144,6 +144,23 @@ export async function addParty(data) {
   return response.data;
 }
 
+export async function deleteParty(id) {
+  const response = await apiInstance.delete(`party/${id}`);
+  console.log(response.data);
+  return response.data;
+}
+
+export async function updateParty(id,data) {
+  const response = await apiInstance.post(`party/${id}`,data);
+  console.log(response.data);
+  return response.data;
+}
+
+export async function updatePartyStatus(id) {
+  const response = await apiInstance.put(`party/updateStatus/${id}`);
+  console.log(response.data);
+  return response.data;
+}
 
 
 //////Dashboard API

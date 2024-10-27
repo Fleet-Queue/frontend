@@ -14,6 +14,7 @@ import Slide from '@mui/material/Slide';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import {getMatchingInqueueTrucks,doAllocation} from '../../utils/Service'
+import { Box } from '@mui/system';
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -104,7 +105,13 @@ const VehicleSelectDialog = (props) => {
               </Toolbar>
             </AppBar>
             <List>
-              
+            {data.length === 0 && (
+              <Box sx={{   display: 'flex',justifyContent: 'center' }}>
+
+  <Typography>No Trucks Inqueue within the date and type</Typography>
+              </Box>
+)}
+      
             { data.map((row)=>(
                 <>
                 <ListItemButton key={row._id}>

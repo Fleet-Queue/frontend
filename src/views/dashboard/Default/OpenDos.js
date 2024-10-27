@@ -62,6 +62,7 @@ const OpenDos = ({ isLoading, data,update,handleCancel }) => {
   const theme = useTheme();
   const [doData, setDoData] = useState(data);
   // const navigate = useNavigate();
+  const admin = localStorage.getItem('role') === 'admin' ;
 
   useEffect(() => {
     setDoData(data);
@@ -121,7 +122,9 @@ const OpenDos = ({ isLoading, data,update,handleCancel }) => {
                           </IconButton>
                           <Menu {...bindMenu(popupState)}>
                             <MenuItem onClick={() => { handleUpdate(doData); popupState.close(); }}>Update</MenuItem>
-                            <MenuItem onClick={() => { handleCancelClick(doData); popupState.close(); }}>Cancel</MenuItem>
+                            {admin ? (<MenuItem onClick={() => { handleCancelClick(doData); popupState.close(); }}>Reject</MenuItem>) :
+                            <MenuItem onClick={() => { handleCancelClick(doData); popupState.close(); }}>Cancel</MenuItem> }
+                            
                           </Menu>
                         </>
                       )}
@@ -187,6 +190,22 @@ const OpenDos = ({ isLoading, data,update,handleCancel }) => {
                     </Typography>
                   </Tooltip>
                 </Box>
+{
+
+doData.status == 6 || doData.status == 5 &&
+                <Box>
+                  <Tooltip title={doData.fileName} arrow>
+                    <Typography
+                      sx={{
+                        fontSize: '1rem',
+                        fontWeight: 300,
+                      }}
+                    >
+                      Reason: {truncateText(doData.fileName, 20)}
+                    </Typography>
+                  </Tooltip>
+                </Box>
+              }
               </Grid>
             </Grid>
           </Box>

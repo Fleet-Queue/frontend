@@ -2,7 +2,7 @@ import React from 'react';
 import StyledTable from 'ui-component/StyledTable';
 import { tableHeaderReplace } from 'utils/tableHeaderReplace';
 import AddBookingForm from './AddBookingForm';
-import { useNavigate } from "react-router-dom"
+// import { useNavigate } from "react-router-dom"
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { cancelDo, deleteDeliveryOrder } from 'utils/Service';
@@ -14,7 +14,7 @@ import storage from "../../../utils/firebase-config"
 import CancelDialog from './cancelDO';
 import AddForm from './AddForm';
 
-const tableHeader = ['name', 'View DO','uploadDate',"status"];
+const tableHeader = ['DO No.','name', 'view DO','avaiable from','upload date','type',"status"];
 
 export default function Content({ partyId,data, updateData }) {
   const [formOpen, setFormOpen] = useState(false);
@@ -22,10 +22,11 @@ export default function Content({ partyId,data, updateData }) {
   const [selectedData, setselectedData] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [formHead,setFormHead] = useState("cancel");
   const [updData, setUpdData] = useState({});
   const [upd, setUpd] = useState(false);
-  const navigate = useNavigate()
-  const tableData = tableHeaderReplace(data, [ 'name', 'link','uploadDate',"status" ], tableHeader);
+  // const navigate = useNavigate()
+  const tableData = tableHeaderReplace(data, [ 'doNumber', 'name', 'link','availableFrom','uploadDate','type',"status" ], tableHeader);
   const admin = localStorage.getItem('role') === 'admin' ;
 
   const handleCancelClick = (itemId, itemName) => {
@@ -49,13 +50,14 @@ export default function Content({ partyId,data, updateData }) {
   const handleConfirmCancel = (itemId,cancelReason) => {
     
     console.log(`Cancelled item with ID: ${itemId} for reason: ${cancelReason}`);
-    cancelDo(itemId, { cancelReason })
+    cancelDo(itemId, { cancelReason})
     .then(() => {
       
       toast.success(`Successfully cancelled `);
-      getAlluploadedDo(); 
+      updateData(partyId); 
     })
     .catch((error) => {
+      console.log(error)
       toast.error(error.response?.data?.message || "Failed to cancel the item");
     });
   };
@@ -87,7 +89,8 @@ export default function Content({ partyId,data, updateData }) {
     }else if (e.action == 'update'){
       console.log("hey")
       updateDO(data)
-    }else if(e.action == 'cancel'){
+    }else if(e.action == 'cancel' || e.action == "reject"){
+      setFormHead(e.action)
       console.log("cancel")
       handleCancelClick(e.data._id,e.data.fileName)
     } else {
@@ -123,7 +126,7 @@ export default function Content({ partyId,data, updateData }) {
         () =>{
         
           setUpdFormOpen(false)
-          getAlluploadedDo()
+          updateData(partyId)
       }
       } />    
   }
@@ -136,7 +139,6 @@ export default function Content({ partyId,data, updateData }) {
         
           setFormOpen(false);
           updateData(partyId)
-          navigate('/doBooking')
         }}
         isEdit={true}
         getBookings={updateData}
@@ -155,6 +157,7 @@ export default function Content({ partyId,data, updateData }) {
           itemId={selectedItem.id}
           itemName={selectedItem.name}
           onConfirm={handleConfirmCancel}
+          formHeading = {formHead}
         />
       )}
      
@@ -165,7 +168,7 @@ export default function Content({ partyId,data, updateData }) {
         header={tableHeader}
         isShowSerialNo={true}
         isShowAction={true}
-        actions={admin ? ['addBooking', 'delete','cancel'] : ['update','delete','cancel']}
+        actions={admin ? ['addBooking','reject'] : ['update','delete','cancel']}
         onActionChange={actionHandle}
       />
     </>

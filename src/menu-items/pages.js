@@ -33,49 +33,7 @@ const pages = {
   title: 'Pages',
   type: 'group',
   children: [
-    //admin routes
-    {
-      id: 'manageCompany',
-      title: 'Manage Company',
-      type: 'item',
-      url: '/manageCompany',
-      icon: icons.IconBuildingSkyscraper,
-    },
-    {
-      id: 'manageDriver',
-      title: 'Manage Drivers',
-      type: 'item',
-      url: '/manageDrivers',
-      icon: icons.IconSteeringWheel,
-    },
-    {
-      id: 'manageTrucks',
-      title: 'Manage Trucks',
-      type: 'item',
-      url: '/manageTrucks',
-      icon: icons.IconTruckDelivery,
-    },
-    {
-      id: 'truckBooking',
-      title: 'Manage Truck Booking',
-      type: 'item',
-      url: '/truckBooking',
-      icon: icons.IconBrandBooking,
-    },
-    {
-      id: 'allocatedTrucks',
-      title: 'Allocated Trucks',
-      type: 'item',
-      url: '/allocatedTrucks',
-      icon: icons.IconClockEdit,
-    },
-    {
-      id: 'ongoingTrucks',
-      title: 'OnGoing Trucks',
-      type: 'item',
-      url: '/ongoingTrucks',
-      icon: icons.IconClockEdit,
-    },
+   
     //fowarder routes
     {
       id: 'doupload',
@@ -124,6 +82,49 @@ const pages = {
       type: 'item',
       url: '/manageUsers',
       icon: icons.IconUsers,
+    },
+     //admin routes
+     {
+      id: 'manageCompany',
+      title: 'Manage Company',
+      type: 'item',
+      url: '/manageCompany',
+      icon: icons.IconBuildingSkyscraper,
+    },
+    {
+      id: 'manageDriver',
+      title: 'Manage Drivers',
+      type: 'item',
+      url: '/manageDrivers',
+      icon: icons.IconSteeringWheel,
+    },
+    {
+      id: 'manageTrucks',
+      title: 'Manage Trucks',
+      type: 'item',
+      url: '/manageTrucks',
+      icon: icons.IconTruckDelivery,
+    },
+    {
+      id: 'truckBooking',
+      title: 'Manage Truck Booking',
+      type: 'item',
+      url: '/truckBooking',
+      icon: icons.IconBrandBooking,
+    },
+    {
+      id: 'allocatedTrucks',
+      title: 'Allocated Trucks',
+      type: 'item',
+      url: '/allocatedTrucks',
+      icon: icons.IconClockEdit,
+    },
+    {
+      id: 'ongoingTrucks',
+      title: 'OnGoing Trucks',
+      type: 'item',
+      url: '/ongoingTrucks',
+      icon: icons.IconClockEdit,
     },
     
     {

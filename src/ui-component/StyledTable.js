@@ -36,6 +36,7 @@ if(onClickAction){
 
   const handleTruckDetailClose = () => {
     setSelectedTruckType(null);
+    console.log("heeeeeeeeeeeeeeeeeeeeeeeey")
     refreshData()
     setOpen(false)
   };
@@ -100,7 +101,7 @@ if(onClickAction){
                     }
                     else if (head.toUpperCase() === 'VIEW DO') {
                       // Check if 'View DO' exists, otherwise use the fallback 'deliveryOrderId.doLink'
-                      const viewDoLink = dt['View DO'] || (dt.deliveryOrderId && dt.deliveryOrderId.doLink);
+                      const viewDoLink = dt['view DO'] || (dt.deliveryOrderId && dt.deliveryOrderId.doLink);
                       
                       if (viewDoLink) {
                         return (
@@ -124,6 +125,15 @@ if(onClickAction){
                       return (
                         <TableCell key={i}>
                     {dt[`${head}`]?'Yes':'No'}
+                
+                        </TableCell>
+                      );
+                    }
+                    else if (head.toUpperCase() === 'STATUS' ) {
+                     
+                      return (
+                        <TableCell key={i}>
+                    {dt[`${head}`]?'Active':'Inactive'}
                 
                         </TableCell>
                       );
