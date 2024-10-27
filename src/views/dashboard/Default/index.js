@@ -39,8 +39,6 @@ const [allocatedDo,setAllocatedDo] = useState([]);
   const [formOpen, setFormOpen] = useState(false);
 
   const updateDO = (data) =>{
-    console.log(data)
-    console.log("-----------------------hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh----------------------")
     setUpdData(data)
       setUpd(true)
       setFormOpen(true)
