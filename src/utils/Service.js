@@ -266,6 +266,53 @@ export async function cancelDo(id, data) {
 }
 
 
+export async function cancelDOBooking(id, data) {
+  try {
+    const response = await apiInstance.post(`doBooking/cancelDOBooking/${id}`, data);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error cancelling Do booking:", error);
+    throw error; // Rethrow the error to handle it in the calling function if necessary
+  }
+}
+
+export async function reOpenDOBooking(id) {
+  try {
+    const response = await apiInstance.post(`doBooking/reopen-do-booking/${id}`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error cancelling Do booking:", error);
+    throw error; // Rethrow the error to handle it in the calling function if necessary
+  }
+}
+
+
+export async function CancelAllocatedBooking(id, data) {
+  try {
+    const response = await apiInstance.post(`allocation/cancel-allocated-booking/${id}`, data);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error cancelling Do booking:", error);
+    throw error; // Rethrow the error to handle it in the calling function if necessary
+  }
+}
+
+
+export async function ReAllocateBooking(id) {
+  try {
+    const response = await apiInstance.post(`allocation/re-allocate-booking/${id}`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error cancelling Do booking:", error);
+    throw error; // Rethrow the error to handle it in the calling function if necessary
+  }
+}
+
+
 export async function getAllDoUpload(data) {
   const response = await apiInstance.post(`doBooking/getAllDeliveryOrders`,data);
   console.log(response.data);

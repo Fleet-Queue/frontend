@@ -10,7 +10,7 @@ export default function Tools({buttonClick,partyId}) {
             <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
                 <Typography variant='h3' color={'secondary.main'}>Allocated DO Bookings</Typography>
                 {
-                    partyId&&(
+                   false && partyId&&(
 
                         <Button variant='contained' startIcon={<Add />} sx={{ backgroundColor: 'secondary.main' }} onClick={buttonClick}>Add DO</Button>
                     )

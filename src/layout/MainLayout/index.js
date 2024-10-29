@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet,useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
 import { AppBar, Box, CssBaseline, Toolbar, useMediaQuery } from '@mui/material';
@@ -63,9 +63,11 @@ const MainLayout = () => {
   const handleLeftDrawerToggle = () => {
     dispatch({ type: SET_MENU, opened: !leftDrawerOpened });
   };
+  const [navItem,setNavItem] = useState({})
 
 
   useEffect(() => {
+setNavItem(navigation())
     let user = JSON.parse(localStorage.getItem("user"));
   
     if(!user){
@@ -98,7 +100,7 @@ const MainLayout = () => {
       {/* main content */}
       <Main theme={theme} open={leftDrawerOpened}>
         {/* breadcrumb */}
-        <Breadcrumbs separator={IconChevronRight} navigation={navigation} icon title rightAlign />
+        <Breadcrumbs separator={IconChevronRight} navigation={navItem} icon title rightAlign />
         <Outlet />
       </Main>
       {/* <Customization /> */}

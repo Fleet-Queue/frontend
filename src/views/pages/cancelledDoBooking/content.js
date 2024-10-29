@@ -7,12 +7,12 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { deleteDo } from 'utils/Service';
 
-const tableHeader = ['truckType', 'rate','availableFrom',"status","allocation"];
+const tableHeader = ['DO number','truckType', 'rate','availableFrom',"status","reason",'View DO'];
 
 export default function Content({ partyId,data, updateData }) {
   // const [formOpen, setFormOpen] = useState(false);
   const [selectedData, setselectedData] = useState();
-  const tableData = tableHeaderReplace(data, [ 'truckType', 'rate','availableFrom',"status" ], tableHeader);
+  const tableData = tableHeaderReplace(data, [ 'doNumber', 'truckType', 'rate','availableFrom',"status","reason" ], tableHeader);
 
   const refreshData = ()=>{
     updateData()
@@ -45,8 +45,8 @@ console.log(selectedData)
         data={tableData}
         header={tableHeader}
         isShowSerialNo={true}
-        isShowAction={true}
-        actions={['delete']}
+        isShowAction={false}
+        actions={['']}
         onActionChange={actionHandle}
         refreshData={refreshData}
       />

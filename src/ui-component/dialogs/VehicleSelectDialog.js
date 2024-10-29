@@ -39,8 +39,9 @@ const VehicleSelectDialog = (props) => {
     
    const handleAllocation = (data) =>{
      console.log(data)
+     console.log(props)
      if(!props.date || !props.doId){
-      console.log(err)
+      console.log("date not found")
       return false;
      }
      doAllocation({

@@ -27,6 +27,9 @@ if(onClickAction){
   const [open, setOpen] = useState(false);
 
   const handleSelectTruckType = (data) => {
+    console.log("select alloccccccccccccccccccccccc")
+    console.log(data)
+    console.log("heeeeeeeeeeeeeeeeeeeeeeedataaaaaaaaaaaaaaaa")
     setSelectedTruckType(data.truckType);
     setDate(data.date)
     setSelectedBookingId(data.doId);
@@ -81,9 +84,13 @@ if(onClickAction){
                         </TableCell>
                       );
                     } else if (dt.status != 'allocated' && head.toUpperCase() === 'ALLOCATION') {
+                      console.log("dfffffffffffffffffffffffffffffffffffff")
+                      console.log(dt);          
                       return (
+                       
+                        
                         <TableCell key={i}>
-                          <Button variant="contained" onClick={() => handleSelectTruckType({"doId":dt._id,"truckType":dt.truckType,"date":dt.availableFrom})}>
+                          <Button variant="contained" onClick={() => handleSelectTruckType({"doId":dt._id,"truckType":dt.truckType,"date":dt["available from"]})}>
                             Allocate
                           </Button>
                 

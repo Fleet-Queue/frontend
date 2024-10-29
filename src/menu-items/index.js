@@ -5,8 +5,11 @@ import pages from './pages';
 
 // ==============================|| MENU ITEMS ||============================== //
 
-const menuItems = {
-  items: [dashboard, pages]
-};
 
-export default menuItems;
+export default function menuItems(){
+
+  return  {
+    items: [dashboard, pages()]
+  };
+  
+}
