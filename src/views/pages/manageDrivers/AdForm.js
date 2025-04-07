@@ -1,4 +1,4 @@
-import { Button, Container, MenuItem, Select, Stack, TextField, Typography, FormControl, InputLabel, FormHelperText } from '@mui/material';
+import { Button, Container, MenuItem, Select, Stack, TextField, Typography, FormControl, FormHelperText } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from "react-hook-form";
 import { toast } from 'react-toastify';
@@ -26,15 +26,15 @@ export default function DriverAdForm({ getData, open, onClose, isEdit = false, d
             address: data.Address,
             licenceNumber: data.licenceNumber,
             licenceType: data.licenceType,
-            expiryDate: '',
-            companyId: '',
+            expiryDate: data.expiryDate ? dayjs(data.expiryDate) : null, 
+            companyId: data.companyId,
         } : {
             name: '',
             contactNumber: '',
             address: '',
             licenceNumber: '',
             licenceType: '',
-            expiryDate: '',
+            expiryDate: null ,
             companyId: '',
         }
     });
@@ -44,6 +44,7 @@ export default function DriverAdForm({ getData, open, onClose, isEdit = false, d
         if(!selectedDate ){
             console.log("Please select a date")
             toast.error("Please select a date")
+            return 
         }
         const expiryDate = dayjs(selectedDate).format('YYYY-MM-DD'); // Format the date as per your API requirements
        {
@@ -89,7 +90,7 @@ export default function DriverAdForm({ getData, open, onClose, isEdit = false, d
     };
 
 
-    const [selectedDate, setSelectedDate] = React.useState(null);
+    const [selectedDate, setSelectedDate] = React.useState(dayjs(data.expiryDate) || null);
 
 
     const currentDate = new Date();
@@ -203,7 +204,6 @@ export default function DriverAdForm({ getData, open, onClose, isEdit = false, d
 
 <Typography variant='h5'>Licence Type</Typography>
                         <FormControl error={Boolean(errors.licenceType)}>
-                            <InputLabel id="licenceType-select-label">Licence Type</InputLabel>
                             <Controller
                                 name="licenceType"
                                 control={control}
@@ -212,7 +212,6 @@ export default function DriverAdForm({ getData, open, onClose, isEdit = false, d
                                         {...field}
                                         labelId="licenceType-select-label"
                                         id="licenceType-select"
-                                        label="Licence Type"
                                         value={field.value || ''}
                                         onChange={(e) => field.onChange(e.target.value)}
                                     >
@@ -248,8 +247,7 @@ export default function DriverAdForm({ getData, open, onClose, isEdit = false, d
                         /> */}
                         <FormControl sx={{ mt: 2, minWidth: 120 }}>
             <DatePicker
-        label="From Date"
-        value={selectedDate}
+          value={selectedDate || dayjs(data.expiryDate)}
         onChange={(newValue) => setSelectedDate(newValue)}
         minDate={dayjs(formattedDate)}
        
@@ -258,8 +256,9 @@ export default function DriverAdForm({ getData, open, onClose, isEdit = false, d
 
             </FormControl>
 
+
+            <Typography variant='h5'>Company</Typography>
                         <FormControl error={Boolean(errors.companyId)}>
-                            <InputLabel id="company-select-label">Company</InputLabel>
                             <Controller
                                 name="companyId"
                                 control={control}
@@ -268,7 +267,6 @@ export default function DriverAdForm({ getData, open, onClose, isEdit = false, d
                                         {...field}
                                         labelId="company-select-label"
                                         id="company-select"
-                                        label="Company"
                                         value={field.value || ''}
                                         onChange={(e) => field.onChange(e.target.value)}
                                     >

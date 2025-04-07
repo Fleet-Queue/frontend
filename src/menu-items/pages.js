@@ -80,7 +80,8 @@ export default function Pages (){
         type: 'item',
         url: '/cancelledBooking',
         icon: icons.IconNavigationOff,
-      }, {
+      },
+       {
         id: 'manageUsers',
         title: 'Manage Users',
         type: 'item',
@@ -149,7 +150,7 @@ export default function Pages (){
       return true; 
     }
     if (isAdmin){
-      return  item.id === "manageCompany" || item.id === 'manageDriver' ||  item.id === 'manageTrucks'   ||  item.id === 'doupload' || item.id === 'parties' || item.id === 'doBooking' || item.id === 'allocatedDo' || item.id === 'canceledDo' || item.id === 'manageUsers';
+      return  item.id === "manageCompany" || item.id === 'manageDriver' ||  item.id === 'manageTrucks'   ||  item.id === 'doupload' || item.id === 'parties' || item.id === 'doBooking' || item.id === 'allocatedDo' || item.id === 'canceledDo' /*|| item.id === 'manageUsers'*/;
     }
     if (isTransporter) {
       return item.id === 'manageTrucks' || item.id === "allocatedTrucks" || item.id === "ongoingTrucks"  || item.id === "manageDriver" || item.id === "truckBooking" // Render for 'Transporter' role

@@ -18,7 +18,6 @@ import { drawerWidth } from 'store/constant';
 const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
   const theme = useTheme();
   const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
-  console.log("menuuuuu22222222222222222222222222uuuuuuuuIUtem")
   const drawer = (
     <>
       <Box sx={{ display: { xs: 'block', md: 'none' } }}>

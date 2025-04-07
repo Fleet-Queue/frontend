@@ -6,13 +6,13 @@ import AddTruckBookingForm from './AddTruckBookingForm';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import {deleteTruck} from '../../../utils/Service'
-const tableHeader = ['name', 'RegNo', 'category','truckType'];
+const tableHeader = ['name', 'RegNo', 'category','truckType','company'];
 
 export default function Content({ data, updateData,addTruckBooking }) {
   const [formOpen, setFormOpen] = useState(false);
   const [truckBookingOpen, setTruckBookingOpen] = useState(false);
   const [selectedData, setselectedData] = useState();
-  const tableData = tableHeaderReplace(data, ['name', 'registrationNumber', 'category', 'truckType' ], tableHeader);
+  const tableData = tableHeaderReplace(data, ['name', 'registrationNumber', 'category', 'truckType','companyName' ], tableHeader);
 
 
   const admin = localStorage.getItem('role') === 'admin' ;
@@ -51,8 +51,10 @@ export default function Content({ data, updateData,addTruckBooking }) {
     {
       formOpen &&
       <TruckAdForm
+      getTrucks={updateData}
       open={formOpen}
       onClose={() => {
+        updateData()
         setFormOpen(false);
       }}
       data={selectedData}

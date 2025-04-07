@@ -26,8 +26,6 @@ setNavItem(menuItem().items.map((item) => {
   }
 }))
   },[])
-  console.log(menuItem)
-  console.log("menuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuIUtem")
   
 
   return <>{navItem}</>;
