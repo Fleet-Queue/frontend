@@ -113,9 +113,12 @@ const VehicleSelectDialog = (props) => {
               </Box>
 )}
       
-            { data.map((row)=>(
+            { data.map((row,idx)=>(
                 <>
                 <ListItemButton key={row._id}>
+                <ListItemText
+                  primary={idx+1}
+                />
                 <ListItemText
                   primary={row.truck.name}
                   secondary={row.truck.registrationNumber}
