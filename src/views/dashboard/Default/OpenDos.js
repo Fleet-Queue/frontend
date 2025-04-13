@@ -110,6 +110,7 @@ const OpenDos = ({ isLoading, data,update,handleCancel }) => {
                       <img src={TruckIcon} alt="Notification" />
                     </Avatar>
                   </Grid>
+                  {doData.status !== 'rejected' && doData.status !== 'cancelled' && (
                   <Grid item>
                     <PopupState variant="popover" popupId="demo-popup-menu">
                       {(popupState) => (
@@ -120,8 +121,9 @@ const OpenDos = ({ isLoading, data,update,handleCancel }) => {
                           >
                             <MoreVertIcon />
                           </IconButton>
+             
                           <Menu {...bindMenu(popupState)}>
-                            <MenuItem onClick={() => { handleUpdate(doData); popupState.close(); }}>Update</MenuItem>
+                    <MenuItem onClick={() => { handleUpdate(doData); popupState.close(); }}>Update</MenuItem>
                             {admin ? (<MenuItem onClick={() => { handleCancelClick(doData); popupState.close(); }}>Reject</MenuItem>) :
                             <MenuItem onClick={() => { handleCancelClick(doData); popupState.close(); }}>Cancel</MenuItem> }
                             
@@ -130,6 +132,7 @@ const OpenDos = ({ isLoading, data,update,handleCancel }) => {
                       )}
                     </PopupState>
                   </Grid>
+                   )}
                 </Grid>
               </Grid>
               <Grid item  onClick={() => { handleUpdate(doData);  }}>
@@ -172,7 +175,7 @@ const OpenDos = ({ isLoading, data,update,handleCancel }) => {
                     
                     }}
                   >
-                    uploaded date: {doData.uploadDate}
+                    Uploaded Date: {doData.uploadDate}
                   </Typography>
                   <Button variant="contained" onClick={() => window.open(doData.link)}>
                     Download DO
@@ -186,22 +189,22 @@ const OpenDos = ({ isLoading, data,update,handleCancel }) => {
                         fontWeight: 300,
                       }}
                     >
-                      fileName: {truncateText(doData.fileName, 20)}
+                      File Name: {truncateText(doData.fileName, 20)}
                     </Typography>
                   </Tooltip>
                 </Box>
+               
 {
-
-doData.status == 6 || doData.status == 5 &&
+(doData.status === 'cancelled' || doData.status === 'rejected')&&
                 <Box>
-                  <Tooltip title={doData.fileName} arrow>
+                  <Tooltip title={doData.cancelReason} arrow>
                     <Typography
                       sx={{
                         fontSize: '1rem',
                         fontWeight: 300,
                       }}
                     >
-                      Reason: {truncateText(doData.fileName, 20)}
+                      Reason: {truncateText(doData.cancelReason, 20)}
                     </Typography>
                   </Tooltip>
                 </Box>

@@ -29,7 +29,7 @@ export default function AddBookingForm(props) {
   const [parties, setParties] = React.useState([]);
  
 //   const [fullWidth, setFullWidth] = React.useState(true);
-  const [selectedDate, setSelectedDate] = React.useState(null);
+  const [selectedDate, setSelectedDate] = React.useState(dayjs());
 
   const {
     control,
@@ -39,6 +39,7 @@ export default function AddBookingForm(props) {
 } = useForm({
     defaultValues: {
         type: 20, // Default value for type
+        rate: 0
       },
 })
 
@@ -77,6 +78,13 @@ export default function AddBookingForm(props) {
     getAllParties({companyId:props.data}).then((data)=>{
         console.log(data)
         setParties(data)
+        if (data && data.length > 0) {
+          // Default to the first party if none selected
+          reset((formValues) => ({
+            ...formValues,
+            party: data[0]._id,
+          }));
+        }
          }).catch((error) => {
       console.log(error)
       toast.error(error)
@@ -138,7 +146,11 @@ setOpen(props.open)
         onClose={handleClose}
       >
          <form onSubmit={handleSubmit(onSubmit)}>
-        <DialogTitle>ADD Booking</DialogTitle>
+        <DialogTitle>
+        <Typography variant="h3" fontWeight="bold">
+    ADD Booking
+  </Typography>
+        </DialogTitle>
           <IconButton
             aria-label="close"
             onClick={handleClose}
@@ -153,7 +165,7 @@ setOpen(props.open)
           </IconButton>
           <DialogContent>
             <DialogContentText>
-              Upload Delivery Order
+              {/* Upload Delivery Orderd */}
             </DialogContentText>
             <Box
               noValidate

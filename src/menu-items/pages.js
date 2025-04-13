@@ -25,6 +25,10 @@ const icons = {
 
 export default function Pages (){
   const role = localStorage.getItem('role');
+  if (!role) {
+    window.location.href = '/login';
+    return null;
+  }
   console.log(role)
   const isBoth = role === 'both';
   const isAdmin = role === 'admin';
@@ -146,24 +150,31 @@ export default function Pages (){
 
 
   pages.children = pages.children.filter((item) => {
+    const transporterItems = ['manageTrucks', 'allocatedTrucks', 'ongoingTrucks', 'manageDriver', 'truckBooking'];
+    const forwarderItems = ['parties', 'doupload', 'opendoupload', 'location', 'rateMap', 'allocatedDo', 'canceledDo'];
+  
     if (isBoth) {
-      return true; 
+      // Show only items common to both roles
+      return transporterItems.includes(item.id) || forwarderItems.includes(item.id);
     }
-    if (isAdmin){
-      return  item.id === "manageCompany" || item.id === 'manageDriver' ||  item.id === 'manageTrucks'   ||  item.id === 'doupload' || item.id === 'parties' || item.id === 'doBooking' || item.id === 'allocatedDo' || item.id === 'canceledDo' /*|| item.id === 'manageUsers'*/;
+  
+    if (isAdmin) {
+      return ['manageCompany', 'manageDriver', 'manageTrucks', 'doupload', 'parties', 'doBooking', 'allocatedDo', 'canceledDo'].includes(item.id);
     }
+  
     if (isTransporter) {
-      return item.id === 'manageTrucks' || item.id === "allocatedTrucks" || item.id === "ongoingTrucks"  || item.id === "manageDriver" || item.id === "truckBooking" // Render for 'Transporter' role
+      return transporterItems.includes(item.id);
     }
+  
     if (isForwarder) {
-      return item.id === 'parties' ||  item.id === 'doupload' ||  item.id === 'opendoupload'  || item.id === 'location' || item.id === 'rateMap' || item.id === 'allocatedDo'  || item.id === 'canceledDo'; 
+      return forwarderItems.includes(item.id);
     }
-    return false; 
+  
+    return false;
   });
   
-
+  return pages;
   
-  return pages
 }
   
   

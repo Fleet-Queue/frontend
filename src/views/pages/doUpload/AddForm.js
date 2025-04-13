@@ -34,6 +34,7 @@ export default function AddForm(props) {
   const { register, handleSubmit, setValue, formState: { errors } } = useForm({
     defaultValues: {
       name: props.data?.name || '',
+      location: props.data?.location || '',
       selectData: props.data?.selectData || '20',
       dateAvailableFrom: props.data?.dateAvailableFrom || today,
     },
@@ -54,17 +55,19 @@ export default function AddForm(props) {
   React.useEffect(() => {
     if (props.upd) {
       setValue('name', props.data.name || ''); 
+      setValue('location', props.data.location || ''); // Set the existing location value
       setValue('selectData', props.data.selectData || "20") // Set the existing value for "Select Data"
       setDateAvailable(props.data.dateAvailableFrom || today); 
       setSingleFile(props.data.link || null); // Populate file URL if updating
     } else {
       setValue('name', ''); 
+      setValue('location', ''); // Reset location for new creation
       setValue('selectData', "20");
       setDateAvailable(today); 
     }
   }, [props]);
 
-  const uploadFile = async (file, name,availableFrom,type) => {
+  const uploadFile = async (file, name,location,availableFrom,type) => {
     const uniqueName = `${name}-${uuidv4()}`;
     const storageRef = ref(storage, `/DoBookings/${uniqueName}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
@@ -85,6 +88,7 @@ export default function AddForm(props) {
               updateDo(props.data._id, { 
                 doLink: DownloadUrl, 
                 name: name, 
+                location: location,
                 uniqueName: uniqueName, 
                 fileName: file.name,
                 availableFrom:availableFrom,
@@ -100,6 +104,7 @@ export default function AddForm(props) {
               uploadDo({ 
                 doLink: DownloadUrl, 
                 name: name, 
+                location: location,
                 uniqueName: uniqueName, 
                 fileName: file.name,
                 availableFrom:availableFrom,
@@ -119,7 +124,7 @@ export default function AddForm(props) {
   };
 
   const onSubmit = async (data) => {
-    const { name,dateAvailableFrom,selectData } = data;
+    const { name,dateAvailableFrom,selectData, location } = data;
     console.log(data)
     // Handle multiple file uploads for creation
     if (!props.upd) {
@@ -131,7 +136,7 @@ export default function AddForm(props) {
       for (let file of files) {
         try {
           console.log("heyyy")
-          await uploadFile(file, name,dateAvailableFrom,selectData );
+          await uploadFile(file, name,location, dateAvailableFrom,selectData );
         } catch (err) {
           console.log(err);
         
@@ -149,7 +154,7 @@ export default function AddForm(props) {
       }
       
       try {
-        await uploadFile(fileToUpload || singleFile, name);
+        await uploadFile(fileToUpload || singleFile, name, location);
         toast.success("DO updated successfully!");
       } catch (err) {
         console.log(err);
@@ -230,10 +235,20 @@ export default function AddForm(props) {
               helperText={errors.name ? 'Name is required' : ''}
             />
             
+            <TextField
+              label="Location"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              {...register("location", { required: true })}
+              error={!!errors.location}
+              helperText={errors.location ? 'Location is required' : ''}
+            />
+
               {/* Select Data Input */}
               <TextField
               select
-              label="Select Data"
+              label="Select Truck Type"
               fullWidth
               margin="normal"
               {...register("selectData", { required: true })} 

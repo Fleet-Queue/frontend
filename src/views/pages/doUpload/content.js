@@ -14,7 +14,7 @@ import storage from "../../../utils/firebase-config"
 import CancelDialog from './cancelDO';
 import AddForm from './AddForm';
 
-const tableHeader = ['DO No.','name', 'view DO','avaiable from','upload date','type',"status"];
+const tableHeader = ['DO No.','name', 'view DO','avaiable from','upload date','type','location',"status"];
 
 export default function Content({ partyId,data, updateData }) {
   const [formOpen, setFormOpen] = useState(false);
@@ -26,7 +26,7 @@ export default function Content({ partyId,data, updateData }) {
   const [updData, setUpdData] = useState({});
   const [upd, setUpd] = useState(false);
   // const navigate = useNavigate()
-  const tableData = tableHeaderReplace(data, [ 'doNumber', 'name', 'link','availableFrom','uploadDate','type',"status" ], tableHeader);
+  const tableData = tableHeaderReplace(data, [ 'doNumber', 'name', 'link','availableFrom','uploadDate','type','location',"status" ], tableHeader);
   const admin = localStorage.getItem('role') === 'admin' ;
 
   const handleCancelClick = (itemId, itemName) => {
@@ -37,7 +37,6 @@ export default function Content({ partyId,data, updateData }) {
 
   const updateDO = (data) =>{
     console.log(data[0])
-    console.log("-------------tttttttttttttttttttttttttttt--------------------------------")
     setUpdData(data[0])
       setUpd(true)
       setUpdFormOpen(true)
