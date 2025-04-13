@@ -72,8 +72,26 @@ export default function AddBookingForm(props) {
     setOpen(false);
   };
 
+  React.useEffect(() => {
+    if (props.doData) {
+      const availableFromStr = props.doData["available from"]; // Accessing spaced key
+      const type = props.doData.type;
+  
+      if (availableFromStr) {
+        const parsedDate = dayjs(availableFromStr, "DD/MM/YYYY");
+        setSelectedDate(parsedDate);
+      }
+  
+      reset((formValues) => ({
+        ...formValues,
+        type: type || 20,
+      }));
+    }
+  }, [props.doData, reset]);
+  
 
   React.useEffect(() => {
+
    
     getAllParties({companyId:props.data}).then((data)=>{
         console.log(data)

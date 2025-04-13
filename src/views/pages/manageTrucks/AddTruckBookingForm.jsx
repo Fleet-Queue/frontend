@@ -23,7 +23,8 @@ import dayjs from 'dayjs';
 export default function AddTruckBookingForm(props) {
   const [open, setOpen] = React.useState(false);
 //   const [fullWidth, setFullWidth] = React.useState(true);
-  const [selectedDate, setSelectedDate] = React.useState(null);
+const [selectedDate, setSelectedDate] = React.useState(dayjs());
+
 
 
   const currentDate = new Date();

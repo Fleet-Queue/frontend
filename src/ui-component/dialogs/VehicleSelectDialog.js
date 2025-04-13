@@ -71,7 +71,7 @@ const VehicleSelectDialog = (props) => {
     useEffect(() => {
         ///checking required. api call multiple
         if(props.type){
-               
+               console.log(props)
             getTrucks({status:"inqueue",type:props.type,date:props.date})
         }
     }, [])

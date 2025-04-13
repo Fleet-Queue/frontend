@@ -141,6 +141,7 @@ export default function Content({ partyId,data, updateData }) {
         }}
         isEdit={true}
         getBookings={updateData}
+        doData={selectedData}
         data={selectedData?.companyId} 
         doId={selectedData?._id}
       />
