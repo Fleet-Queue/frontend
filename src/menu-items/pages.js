@@ -57,13 +57,7 @@ export default function Pages (){
         url: '/openDoUpload',
         icon: icons.IconNote,
       },
-      {
-        id: 'location',
-        title: 'Locations',
-        type: 'item',
-        url: '/location',
-        icon: icons.IconLocation,
-      },
+
       {
         id: 'doBooking',
         title: 'Open DO Booking',
@@ -84,6 +78,13 @@ export default function Pages (){
         type: 'item',
         url: '/cancelledBooking',
         icon: icons.IconNavigationOff,
+      },
+      {
+        id: 'location',
+        title: 'Locations',
+        type: 'item',
+        url: '/location',
+        icon: icons.IconLocation,
       },
        {
         id: 'manageUsers',
@@ -159,7 +160,7 @@ export default function Pages (){
     }
   
     if (isAdmin) {
-      return ['manageCompany', 'manageDriver', 'manageTrucks', 'doupload', 'parties', 'doBooking', 'allocatedDo', 'canceledDo'].includes(item.id);
+      return ['manageCompany', 'manageDriver', 'manageTrucks', 'doupload','location',  'doBooking', 'allocatedDo', 'canceledDo','manageUsers'].includes(item.id);
     }
   
     if (isTransporter) {

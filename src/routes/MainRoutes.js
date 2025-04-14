@@ -20,7 +20,7 @@ const Locations = Loadable(lazy(() => import('views/pages/location')));
 const DoBooking = Loadable(lazy(() => import('views/pages/openDoBooking')));
 const AllocatedDOBooking = Loadable(lazy(() => import('views/pages/doBooking')));
 const CancelledDOBooking = Loadable(lazy(() => import('views/pages/cancelledDoBooking')));
-
+const ManageUsers = Loadable(lazy(() => import('views/pages/manageUsers')));
 // ==============================|| MAIN ROUTING ||============================== //
 
 
@@ -99,11 +99,15 @@ const MainRoutes = {
       path: 'truckBooking',
       element: <TruckBooking />
     },
+    {
+      path: 'manageUsers',
+      element: <ManageUsers />
+    },
     
     // 404 route
     {
       path: '*',
-      element: <DoBooking />
+      element: <DashboardDefault />
     }
   ]
 };

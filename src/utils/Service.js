@@ -186,11 +186,30 @@ export async function changeAllocationStatus(data) {
 }
 
 ///users
-export async function getAllUsers() {
-  const response = await apiInstance.get(`user`);
 
+// Add new user
+export async function addUser(data) {
+  const response = await apiInstance.post('user', data);
   return response.data;
 }
+
+// Edit existing user
+export async function editUser(data) {
+  const response = await apiInstance.post('user/editUser', data);
+  return response.data;
+}
+
+export async function getAllUsers(query) {
+  const response = await apiInstance.get(`user/getAllUsers${query ? `?companyId=${query}` : ''}`);
+  return response.data;
+}
+
+
+export async function deleteUser(id) {
+  const response = await apiInstance.delete(`user/${id}`);
+  return response.data;
+}
+
 
 ///admin
 
