@@ -22,6 +22,7 @@ const getTrucks = () =>{
 }
 
 const addTruckBooking = (data) =>{
+  console.log("heeeeeeeeeee")
   AddTruckBooking({truckId:data.truckId,availableFrom:data.availableFrom}).then(()=>{
     toast.success("Truck Added to Queue");
   }).catch((err) => {

@@ -1,0 +1,115 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Box, 
+  Grid, 
+  FormControl, 
+  InputLabel, 
+  Select, 
+  MenuItem,
+  Typography 
+} from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import StyledTable from 'ui-component/StyledTable';
+import { 
+    // getMatchingInqueueTrucks, use this for fetch truck available between dates
+    getTruckQueue
+ } from 'utils/Service';
+
+const tableHeader = [
+    'Sl No',
+    'Truck Name',
+    'Registration Number',
+    'Company',
+    'Contact',
+    'Type',
+    'Category'
+  ];
+export default function QueueList() {
+
+
+  const [truckType, setTruckType] = useState(20);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+  const [queueData, setQueueData] = useState([]);
+
+  const fetchQueueData = () => {
+    const data = {
+      type: truckType,
+      date: selectedDate.format('DD/MM/YYYY')
+    };
+
+    getTruckQueue(data)
+      .then((res) => {
+        console.log(res)
+        setQueueData(res);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  useEffect(() => {
+    fetchQueueData();
+  }, [truckType, selectedDate]);
+
+const tableData = queueData.map((item, index) => {
+    console.log('Mapping item:', item); // Debug log
+    return {
+      'Sl No': index + 1,
+      'Truck Name': item.truck.name,
+      'Registration Number': item.truck.registrationNumber,
+      'Company': item.truck.companyId.name,
+      'Contact': item.truck.companyId.contactNumber,
+      'Type': `${item.truck.truckType} FT`,
+      'Category': item.truck.category
+    };
+  });
+
+  return (
+    <>
+      <Box sx={{ mb: 2 }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={6}>
+            <FormControl fullWidth size="small">
+              <InputLabel>Truck Type</InputLabel>
+              <Select
+                value={truckType}
+                label="Truck Type"
+                onChange={(e) => setTruckType(e.target.value)}
+              >
+                <MenuItem value={20}>20 FT</MenuItem>
+                <MenuItem value={40}>40 FT</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Select Date"
+                value={selectedDate}
+                onChange={(newValue) => setSelectedDate(newValue)}
+                disabled
+                slotProps={{ textField: { size: 'small', fullWidth: true } }}
+              />
+            </LocalizationProvider>
+          </Grid>
+        </Grid>
+      </Box>
+
+      {queueData.length === 0 ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+          <Typography>No Trucks in Queue for selected criteria</Typography>
+        </Box>
+      ) : (
+        <StyledTable
+          data={tableData}
+          header={tableHeader}
+          isShowSerialNo={false}
+          isShowAction={false}
+        />
+      )}
+    </>
+  );
+}

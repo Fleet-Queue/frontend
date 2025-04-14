@@ -1,5 +1,5 @@
 import React from 'react';
-import StyledTable from 'ui-component/StyledTable';
+import StyledTable from './StyledTable';
 import { tableHeaderReplace } from 'utils/tableHeaderReplace';
 import TruckAdForm from './TruckAdForm';
 import { TextField, Box, Grid } from '@mui/material'; // Add Grid to imports
@@ -7,7 +7,7 @@ import { TextField, Box, Grid } from '@mui/material'; // Add Grid to imports
 import AddTruckBookingForm from './AddTruckBookingForm';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import {deleteTruck} from '../../../utils/Service'
+import { deleteTruck} from '../../../utils/Service'
 const tableHeader = ['name', 'RegNo', 'category','truckType','company'];
 
 export default function Content({ data, updateData,addTruckBooking }) {
@@ -16,6 +16,7 @@ export default function Content({ data, updateData,addTruckBooking }) {
   const [selectedData, setselectedData] = useState();
   const [searchReg, setSearchReg] = useState('');
   const [searchCompany, setSearchCompany] = useState('');
+
 
 
 
@@ -124,6 +125,7 @@ export default function Content({ data, updateData,addTruckBooking }) {
         isShowAction={true}
         actions={admin?['Add To Queue','Edit','delete']:['Add To Queue','Edit']}
         onActionChange={actionHandle}
+        addTruckBooking={addTruckBooking}
       />
     </>
   );

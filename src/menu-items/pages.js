@@ -1,5 +1,5 @@
 // assets
-import {IconAd2,IconBuildingSkyscraper,IconBrandBooking,IconSteeringWheel,IconNote,IconClockEdit,IconLocation,IconCash,IconNavigationOff,IconDiscount2,IconTruckDelivery,IconTruckLoading,IconUsers } from '@tabler/icons';
+import {IconAd2,IconBuildingSkyscraper,IconBrandBooking,IconSortDescending2,IconSteeringWheel,IconNote,IconClockEdit,IconLocation,IconCash,IconNavigationOff,IconDiscount2,IconTruckDelivery,IconTruckLoading,IconUsers } from '@tabler/icons';
 
 // constant
 const icons = {
@@ -15,7 +15,8 @@ const icons = {
   IconBrandBooking,
   IconBuildingSkyscraper,
   IconSteeringWheel,
-  IconUsers
+  IconUsers,
+  IconSortDescending2
 };
 
 
@@ -80,6 +81,20 @@ export default function Pages (){
         icon: icons.IconNavigationOff,
       },
       {
+        id: 'truckQueue',
+        title: 'Truck Queue',
+        type: 'item',
+        url: '/truckQueue',
+        icon: icons.IconSortDescending2,
+      },
+      {
+        id: 'manageTrucks',
+        title: 'Manage Trucks',
+        type: 'item',
+        url: '/manageTrucks',
+        icon: icons.IconTruckDelivery,
+      },
+      {
         id: 'location',
         title: 'Locations',
         type: 'item',
@@ -108,13 +123,7 @@ export default function Pages (){
         url: '/manageDrivers',
         icon: icons.IconSteeringWheel,
       },
-      {
-        id: 'manageTrucks',
-        title: 'Manage Trucks',
-        type: 'item',
-        url: '/manageTrucks',
-        icon: icons.IconTruckDelivery,
-      },
+     
       {
         id: 'truckBooking',
         title: 'Manage Truck Booking',
@@ -151,8 +160,8 @@ export default function Pages (){
 
 
   pages.children = pages.children.filter((item) => {
-    const transporterItems = ['manageTrucks', 'allocatedTrucks', 'ongoingTrucks', 'manageDriver', 'truckBooking'];
-    const forwarderItems = ['parties', 'doupload', 'opendoupload', 'location', 'rateMap', 'allocatedDo', 'canceledDo'];
+    const transporterItems = ['truckQueue','manageTrucks', 'allocatedTrucks', 'ongoingTrucks', 'manageDriver', 'truckBooking'];
+    const forwarderItems = ['truckQueue','parties', 'doupload', 'opendoupload', 'location', 'rateMap', 'allocatedDo', 'canceledDo'];
   
     if (isBoth) {
       // Show only items common to both roles
@@ -160,7 +169,7 @@ export default function Pages (){
     }
   
     if (isAdmin) {
-      return ['manageCompany', 'manageDriver', 'manageTrucks', 'doupload','location',  'doBooking', 'allocatedDo', 'canceledDo','manageUsers'].includes(item.id);
+      return ['truckQueue','manageCompany', 'manageDriver', 'manageTrucks', 'doupload','location',  'doBooking', 'allocatedDo', 'canceledDo','manageUsers'].includes(item.id);
     }
   
     if (isTransporter) {

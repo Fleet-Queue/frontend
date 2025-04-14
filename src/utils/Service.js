@@ -166,6 +166,12 @@ export async function getMatchingInqueueTrucks(data) {
   return response.data;
 }
 
+
+
+export async function getTruckQueue(data) {
+  const response = await apiInstance.post(`truck/getTruckQueue`, data);
+  return response.data;
+}
 ////allocation
 export async function getAllocationDetails(data) {
   const response = await apiInstance.post(`allocation/getAllocationDetails`, data);

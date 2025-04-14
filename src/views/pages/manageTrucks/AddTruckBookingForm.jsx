@@ -71,9 +71,6 @@ if(!selectedDate ){
 }
 const availableFrom = dayjs(selectedDate).format('YYYY-MM-DD'); // Format the date as per your API requirements
 
-console.log(availableFrom)
-console.log(selectedDate)
-console.log(props.data)
 let truckId = props.data._id
 props.submit({truckId,availableFrom})
 handleClose()
@@ -117,6 +114,7 @@ handleClose()
             <FormControl sx={{ mt: 2, minWidth: 120 }}>
             <DatePicker
         label="From Date"
+        disabled
         value={selectedDate}
         onChange={(newValue) => setSelectedDate(newValue)}
         minDate={dayjs(formattedDate)}
