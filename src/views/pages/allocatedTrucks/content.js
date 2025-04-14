@@ -16,16 +16,16 @@ export default function Content({ data, updateStatus,  updateData }) {
     if (e.action == 'cancel') {
       console.log(e.data._id);
       
-      updateStatus( {truckId:"661bf9b734601df26a2d1bc3", status:"inqueue" })
-        .then((res) => {
-          console.log(res.message)
-          toast.success(res.message)
-          updateData({status:"allocated"});
-        })
-        .catch((error) => {
-          console.error(error);
-          toast.error("Error occured while updating");
-        });
+      // updateStatus( {truckId:"661bf9b734601df26a2d1bc3", status:"inqueue" })
+      //   .then((res) => {
+      //     console.log(res.message)
+      //     toast.success(res.message)
+      //     updateData({status:"allocated"});
+      //   })
+      //   .catch((error) => {
+      //     console.error(error);
+      //     toast.error("Error occured while updating");
+      //   });
     } 
   
   

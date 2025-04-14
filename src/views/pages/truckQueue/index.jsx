@@ -17,6 +17,9 @@ import {
     // getMatchingInqueueTrucks, use this for fetch truck available between dates
     getTruckQueue
  } from 'utils/Service';
+ import { utils as XLSXUtils, write as XLSXWrite } from 'xlsx';
+ import { Button } from '@mui/material';
+ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
 const tableHeader = [
     'Sl No',
@@ -67,8 +70,58 @@ const tableData = queueData.map((item, index) => {
     };
   });
 
+
+
+
+
+  const handleExport = () => {
+    // Transform data for Excel
+    const excelData = queueData.map((item, index) => ({
+      'Sl No': index + 1,
+      'Registration Number': item.truck.registrationNumber,
+      'Type': `${item.truck.truckType} FT`,
+      'Queue Added Date': dayjs(item.createdAt).format('DD/MM/YYYY HH:mm')
+    }));
+
+    // Create workbook and worksheet
+    const workbook = XLSXUtils.book_new();
+    const worksheet = XLSXUtils.json_to_sheet(excelData);
+
+    // Add worksheet to workbook
+    XLSXUtils.book_append_sheet(workbook, worksheet, `${truckType}FT Trucks`);
+
+    // Generate Excel file
+    const excelBuffer = XLSXWrite(workbook, { bookType: 'xlsx', type: 'array' });
+    const date = selectedDate.format('DD-MM-YYYY');
+    const fileName = `Truck_Queue_${truckType}FT_${date}.xlsx`;
+
+    // Create download link
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    link.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   return (
     <>
+      <Box sx={{ mb: 2 }}>
+        <Grid container spacing={2}>
+          {/* ...existing Grid items for truck type and date... */}
+          <Grid item xs={12}>
+            <Button 
+              variant="contained" 
+              startIcon={<FileDownloadIcon />}
+              onClick={handleExport}
+              sx={{ float: 'right', mb: 2 }}
+            >
+              Export to Excel
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
       <Box sx={{ mb: 2 }}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>

@@ -2,7 +2,10 @@ import React from 'react';
 import StyledTable from 'ui-component/StyledTable';
 import { tableHeaderReplace } from 'utils/tableHeaderReplace';
 // import AddForm from './AddForm';
-
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { Box, Grid } from '@mui/material';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { CancelAllocatedBooking, ReAllocateBooking } from 'utils/Service';
@@ -10,7 +13,7 @@ import CancelDialog from '../doUpload/cancelDO';
 
 const tableHeader = ['name', 'View DO','availableFrom',"status","allocation"];
 
-export default function Content({ partyId,data, updateData }) {
+export default function Content({ partyId,data, updateData ,selectedDate, setSelectedDate }) {
    const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedData, setSelectedData] = useState();
   const tableData = tableHeaderReplace(data, [ 'truckType', 'link','availableFrom',"status" ], tableHeader);
@@ -41,7 +44,7 @@ export default function Content({ partyId,data, updateData }) {
   };
 
   const refreshData = ()=>{
-    updateData()
+    updateData(partyId, selectedDate.format('DD/MM/YYYY'))
   }
   const actionHandle = (e) => {
     console.log(e);
@@ -73,22 +76,21 @@ export default function Content({ partyId,data, updateData }) {
 console.log(selectedData)
   return (
     <>
-    {/* {
-      partyId&&
-      (
-        <AddForm
-        open={formOpen}
-        onClose={() => {
+    <Box sx={{ mb: 2 }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={6}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Select Date"
+                value={selectedDate}
+                onChange={(newValue) => setSelectedDate(newValue)}
+                slotProps={{ textField: { size: 'small', fullWidth: true } }}
+              />
+            </LocalizationProvider>
+          </Grid>
+        </Grid>
+      </Box>
 
-          setFormOpen(false);
-          updateData(partyId)
-        }}
-        isEdit={true}
-        getBookings={updateData}
-        data={partyId} 
-      />
-      )
-    } */}
      
      {selectedData && (
         <CancelDialog

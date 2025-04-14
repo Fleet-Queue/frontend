@@ -5,20 +5,22 @@ import Content from './content';
 import Tools from './tools';
 // import AddForm from './AddForm';
 import { getAllBooking } from '../../../utils/Service';
-
+import dayjs from 'dayjs';
 
 
 export default function Index() {
   // const [formOpen, setFormOpen] = useState(false);
   const [data, setData] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
   let { partyId } = useParams();
 
-  const getBookings = async (partyId) => {
+  const getBookings = async (partyId, date = selectedDate.format('DD/MM/YYYY')) => {
     try {
-      let data={status:"allocated"}
+      let data={status:"allocated",date}
       if(partyId){
         data.partyId = partyId;
       }
+    
       const res = await getAllBooking(data);
      
       setData(res);
@@ -27,9 +29,11 @@ export default function Index() {
     }
   };
 
+
   useEffect(() => {
     getBookings(partyId);
-  }, []);
+  }, [selectedDate]); // Add selectedDate as dependency
+
 
   return (
     <Stack direction={'column'} gap={2}>
@@ -46,7 +50,7 @@ export default function Index() {
         )
       } */}
       <Tools partyId={partyId} /* buttonClick={() => setFormOpen(true)}*/ />
-      <Content partyId={partyId} data={data} updateData={getBookings} />
+      <Content  selectedDate={selectedDate} setSelectedDate={setSelectedDate} partyId={partyId} data={data} updateData={getBookings} />
     </Stack>
   );
 }
