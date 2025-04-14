@@ -23,6 +23,7 @@ import {
       control,
       handleSubmit,
       formState: { errors },
+      reset
     } = useForm({
       defaultValues: isEdit
         ? {
@@ -77,16 +78,22 @@ import {
         .then(() => {
           toast.success(`User ${isEdit ? 'updated' : 'added'} successfully`);
           getData();
-          onClose();
+          handleClose();
+      
         })
         .catch((error) => {
           console.error(error);
-          toast.error(error.message || 'Something went wrong');
+          toast.error(error.response?.data?.message || 'Something went wrong');
         });
     };
   
+    const handleClose = () => {
+      onClose();
+      reset();
+    };
+
     return (
-      <StyledDialog open={open} fullWidth onClose={onClose} title={`${isEdit ? 'Edit' : 'Add'} User`}>
+      <StyledDialog open={open} fullWidth onClose={handleClose} title={`${isEdit ? 'Edit' : 'Add'} User`}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Container>
             <Stack direction="column" sx={{ p: 2 }} spacing={2}>
@@ -98,7 +105,7 @@ import {
                 render={({ field }) => <TextField {...field} placeholder="Enter Name" error={!!errors.name} helperText={errors.name?.message} />}
               />
   
-              <Typography variant="h5">Username</Typography>
+              <Typography variant="h5">User Name</Typography>
               <Controller
                 name="userName"
                 control={control}
