@@ -8,8 +8,13 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Box, Grid } from '@mui/material';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { CancelAllocatedBooking, ReAllocateBooking } from 'utils/Service';
+import { CancelAllocatedBooking, getAllocationDetails, ReAllocateBooking } from 'utils/Service';
 import CancelDialog from '../doUpload/cancelDO';
+import { utils as XLSXUtils, write as XLSXWrite } from 'xlsx';
+import { Button } from '@mui/material';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import dayjs from 'dayjs';
+// ...existing imports...
 
 const tableHeader = ['name', 'View DO','availableFrom',"status","allocation"];
 
@@ -74,10 +79,73 @@ export default function Content({ partyId,data, updateData ,selectedDate, setSel
     updateData(partyId);
   };
 console.log(selectedData)
+
+
+
+
+
+
+const handleExport = () => {
+  const exportData = []; // Array to hold final data for export
+
+  // Function to fetch allocation details and process export data
+  const fetchAllocationDetails = async (item) => {
+    try {
+      const allocationDetails = await getAllocationDetails({ doBookingId: item._id });
+      // Map and merge the allocation details into the export data
+      const exportItem = {
+        'Sl No': exportData.length + 1,
+        'Registration Number': allocationDetails.truckBookingId?.truck?.registrationNumber || 'N/A',
+        'Company': item.deliveryOrderId?.companyId?.name || 'N/A',
+        'Company Phone ': item.deliveryOrderId?.companyId?.contactNumber?.toString() || 'N/A',
+        'DO Number': item.deliveryOrderId?.doNumber || '',
+        'Location' : item.deliveryOrderId?.location || 'N/A',
+        'Truck Type': `${item.truckType} FT`,
+        'Status': item.status,
+        'Allocation Date': dayjs(item.updatedAt).format('DD/MM/YYYY HH:mm'),
+        'Truck Company': allocationDetails?.truckBookingId?.truck?.companyId?.name || 'N/A',
+      };
+
+      // Push the merged data into exportData array
+      exportData.push(exportItem);
+
+      // If all data is processed, generate the Excel file
+      if (exportData.length === data.length) {
+        const workbook = XLSXUtils.book_new();
+        const worksheet = XLSXUtils.json_to_sheet(exportData);
+        XLSXUtils.book_append_sheet(workbook, worksheet, 'Bookings');
+
+        const excelBuffer = XLSXWrite(workbook, { bookType: 'xlsx', type: 'array' });
+        const date = selectedDate.format('DD-MM-YYYY');
+        const fileName = `Allocated_Bookings_${date}.xlsx`;
+
+        // Create download link
+        const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        link.click();
+        window.URL.revokeObjectURL(url);
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error(err.response?.data?.message || 'Failed to fetch allocation details');
+    }
+  };
+
+  // Loop through all data and fetch allocation details for each item
+  data.forEach((item) => {
+    fetchAllocationDetails(item);
+  });
+};
+
+
   return (
     <>
-    <Box sx={{ mb: 2 }}>
-        <Grid container spacing={2}>
+
+<Box sx={{ mb: 2 }}>
+        <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} md={6}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
@@ -88,8 +156,20 @@ console.log(selectedData)
               />
             </LocalizationProvider>
           </Grid>
+          <Grid item xs={12} md={6}>
+            <Button 
+              variant="contained" 
+              startIcon={<FileDownloadIcon />}
+              onClick={handleExport}
+              sx={{ float: 'right' }}
+            >
+              Export to Excel
+            </Button>
+          </Grid>
         </Grid>
       </Box>
+
+
 
      
      {selectedData && (

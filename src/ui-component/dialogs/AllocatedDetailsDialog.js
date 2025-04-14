@@ -152,11 +152,11 @@ getAllocDetails({doBookingId:props.doId})
                   
                   {
   data.status === "allocated" ? (
-    <Button variant="contained" onClick={() => handleStatusChange(data._id, "ongoing")}>
+    <Button variant="contained" disabled onClick={() => handleStatusChange(data._id, "ongoing")}>
       Move to Live
     </Button>
   ) : data.status === "ongoing" ? (
-    <Button variant="contained" onClick={() => handleStatusChange(data._id, "done")}>
+    <Button variant="contained" disabled onClick={() => handleStatusChange(data._id, "done")}>
       Move to Done
     </Button>
   ) : data.status === "expired" ? (

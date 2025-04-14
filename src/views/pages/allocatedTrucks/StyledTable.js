@@ -91,11 +91,11 @@ if(onClickAction){
 <TableCell >
 {
   dt.allocation.status === "allocated" ? (
-    <Button variant="contained" onClick={() => handleStatusChange( dt.allocation._id, "ongoing")}>
+    <Button variant="contained" disabled onClick={() => handleStatusChange( dt.allocation._id, "ongoing")}>
       Move to Live
     </Button>
   ) :  dt.allocation.status === "ongoing" ? (
-    <Button variant="contained" onClick={() => handleStatusChange( dt.allocation._id, "done")}>
+    <Button variant="contained" disabled onClick={() => handleStatusChange( dt.allocation._id, "done")}>
       Move to Done
     </Button>
   ) :  dt.allocation.status === "expired" ? (
