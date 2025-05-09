@@ -223,59 +223,7 @@ const [allocatedDo,setAllocatedDo] = useState([]);
       )}
 
       <Grid container spacing={gridSpacing}>
-        {/* transporter dashboard */}
-        {role === 'transporter' || role === 'both'  ? (
-        <>
-          <Grid item xs={12}>
-            <Grid py={4}>
-              <Typography variant="h2">Ongoing</Typography>
-            </Grid>
-            <Grid container spacing={gridSpacing}>
-              {onGoing && onGoing.length > 0 ? (
-                onGoing.map((result) => (
-                  <Grid item key={result._id} lg={4} md={4} sm={6} xs={12}>
-                    <EarningCard data={result} isLoading={isLoading} />
-                  </Grid>
-                ))
-              ) : (
-                <Grid item key={1} lg={4} md={4} sm={6} xs={12}>
-                  {isLoading ? (
-                    <EarningCard data={[]} isLoading={true} />
-                  ) : (
-                    <Typography variant="body1">Currently No Ongoing Trucks</Typography> // Show message when no data and not loading
-                  )}
-                </Grid>
-              )}
-            </Grid>
-          </Grid>
-
-          <Grid item xs={12}>
-            <Grid py={3}>
-              <Typography variant="h2">In Queue</Typography>
-            </Grid>
-            <Grid container spacing={gridSpacing}>
-              {inQueue && inQueue.length > 0 ? (
-                inQueue.map((result) => (
-                  <Grid item key={result.registrationNumber} lg={4} md={4} sm={6} xs={12}>
-                    <TotalOrderLineChartCard data={result} isLoading={isLoading} />
-                  </Grid>
-                ))
-              ) : (
-                <Grid item key={1} lg={4} md={4} sm={6} xs={12}>
-                  {isLoading ? (
-                    <TotalOrderLineChartCard data={[]} isLoading={true} />
-                  ) : (
-                    <Typography variant="body1">Currently No Inqueue available</Typography> // Show message when no data and not loading
-                  )}
-                </Grid>
-              )}
-            </Grid>
-          </Grid>
-        </>
-):(
-  <></>
-)
-}
+   
         {/* //forwarder dashboard */}
         {role === 'forwarder' || role === 'both' ?  (
           <>
@@ -367,7 +315,7 @@ const [allocatedDo,setAllocatedDo] = useState([]);
           </Grid>
 
 
-        <Grid item xs={12}>    
+        {/* <Grid item xs={12}>    
           <Grid container py={5} justifyContent="space-between" alignItems="center">
     <Grid item>
       <Typography variant="h2">Ongoing</Typography>
@@ -392,7 +340,7 @@ const [allocatedDo,setAllocatedDo] = useState([]);
               </Grid>
             )}
           </Grid>
-        </Grid>
+        </Grid> */}
 
 
         <Grid item xs={12}>    
@@ -459,6 +407,61 @@ const [allocatedDo,setAllocatedDo] = useState([]);
 
     
         }
+
+
+             {/* transporter dashboard */}
+             {role === 'transporter' || role === 'both'  ? (
+        <>
+          {/* <Grid item xs={12}>
+            <Grid py={4}>
+              <Typography variant="h2">Ongoing</Typography>
+            </Grid>
+            <Grid container spacing={gridSpacing}>
+              {onGoing && onGoing.length > 0 ? (
+                onGoing.map((result) => (
+                  <Grid item key={result._id} lg={4} md={4} sm={6} xs={12}>
+                    <EarningCard data={result} isLoading={isLoading} />
+                  </Grid>
+                ))
+              ) : (
+                <Grid item key={1} lg={4} md={4} sm={6} xs={12}>
+                  {isLoading ? (
+                    <EarningCard data={[]} isLoading={true} />
+                  ) : (
+                    <Typography variant="body1">Currently No Ongoing Trucks</Typography> // Show message when no data and not loading
+                  )}
+                </Grid>
+              )}
+            </Grid>
+          </Grid> */}
+
+          <Grid item xs={12}>
+            <Grid py={3}>
+              <Typography variant="h2">In Queue</Typography>
+            </Grid>
+            <Grid container spacing={gridSpacing}>
+              {inQueue && inQueue.length > 0 ? (
+                inQueue.map((result) => (
+                  <Grid item key={result.registrationNumber} lg={4} md={4} sm={6} xs={12}>
+                    <TotalOrderLineChartCard data={result} isLoading={isLoading} />
+                  </Grid>
+                ))
+              ) : (
+                <Grid item key={1} lg={4} md={4} sm={6} xs={12}>
+                  {isLoading ? (
+                    <TotalOrderLineChartCard data={[]} isLoading={true} />
+                  ) : (
+                    <Typography variant="body1">Currently No Inqueue available</Typography> // Show message when no data and not loading
+                  )}
+                </Grid>
+              )}
+            </Grid>
+          </Grid>
+        </>
+):(
+  <></>
+)
+}
 
         {role === 'admin' ? (
           <Grid item xs={12}>

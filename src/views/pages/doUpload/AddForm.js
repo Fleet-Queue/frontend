@@ -24,27 +24,29 @@ import { v4 as uuidv4 } from 'uuid';
 
 export default function AddForm(props) {
   const [open, setOpen] = React.useState(false);
-  const [files, setFiles] = React.useState([]); // State for multiple files
-  const [singleFile, setSingleFile] = React.useState(null); // State for single file during update
+  const [file, setFile] = React.useState(null); // Single file state
   const [percent, setPercent] = React.useState(null);
-    // Define initial values for "Select Data" and "Date Available From"
-    const today = new Date().toISOString().split('T')[0];
-    const [dateAvailable, setDateAvailable] = React.useState(today);
+  const [currentUploadIndex, setCurrentUploadIndex] = React.useState(0);
+  const [totalUploads, setTotalUploads] = React.useState(0);
+  const [isUploading, setIsUploading] = React.useState(false);
+  // Define initial values for "Select Data" and "Date Available From"
+  const today = new Date().toISOString().split('T')[0];
+  const [dateAvailable, setDateAvailable] = React.useState(today);
   
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm({
+  const { register, handleSubmit, setValue, formState: { errors }, watch } = useForm({
     defaultValues: {
       name: props.data?.name || '',
       location: props.data?.location || '',
       selectData: props.data?.selectData || '20',
       dateAvailableFrom: props.data?.dateAvailableFrom || today,
+      numberOfOrders: props.data?.numberOfOrders || 1,
     },
   });
 
   const handleClose = () => {
     props.onClose();
     setPercent(null);
-    setFiles([]); // Reset multiple files state
-    setSingleFile(null); // Reset single file state
+    setFile(null); // Reset file state
     setOpen(false);
   };
 
@@ -55,23 +57,26 @@ export default function AddForm(props) {
   React.useEffect(() => {
     if (props.upd) {
       setValue('name', props.data.name || ''); 
-      setValue('location', props.data.location || ''); // Set the existing location value
-      setValue('selectData', props.data.selectData || "20") // Set the existing value for "Select Data"
+      setValue('location', props.data.location || ''); 
+      setValue('selectData', props.data.selectData || "20");
+      setValue('numberOfOrders', props.data.numberOfOrders || 1);
       setDateAvailable(props.data.dateAvailableFrom || today); 
-      setSingleFile(props.data.link || null); // Populate file URL if updating
+      // Keep track of existing file info but don't set as a file object
     } else {
       setValue('name', ''); 
-      setValue('location', ''); // Reset location for new creation
+      setValue('location', ''); 
       setValue('selectData', "20");
+      setValue('numberOfOrders', 1);
       setDateAvailable(today); 
+      setFile(null);
     }
   }, [props]);
 
-  const uploadFile = async (file, name,location,availableFrom,type) => {
+  const uploadFile = async (file, name, location, availableFrom, type) => {
     const uniqueName = `${name}-${uuidv4()}`;
     const storageRef = ref(storage, `/DoBookings/${uniqueName}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
-   console.log(type)
+
     return new Promise((resolve, reject) => {
       uploadTask.on(
         "state_changed",
@@ -91,8 +96,8 @@ export default function AddForm(props) {
                 location: location,
                 uniqueName: uniqueName, 
                 fileName: file.name,
-                availableFrom:availableFrom,
-                type:type 
+                availableFrom: availableFrom,
+                type: type 
               })
               .then(() => {
                 resolve();
@@ -107,8 +112,8 @@ export default function AddForm(props) {
                 location: location,
                 uniqueName: uniqueName, 
                 fileName: file.name,
-                availableFrom:availableFrom,
-                type:type 
+                availableFrom: availableFrom,
+                type: type 
               })
               .then(() => {
                 resolve();
@@ -124,76 +129,79 @@ export default function AddForm(props) {
   };
 
   const onSubmit = async (data) => {
-    const { name,dateAvailableFrom,selectData, location } = data;
-    console.log(data)
-    // Handle multiple file uploads for creation
+    const { name, dateAvailableFrom, selectData, location, numberOfOrders } = data;
+    
+    // For both create and update, check if a file is selected
+    if (!file && !props.upd) {
+      toast.error("Please choose a file to upload");
+      return;
+    }
+    
+    // Set upload status tracking variables
+    setIsUploading(true);
+    setTotalUploads(parseInt(numberOfOrders));
+    setCurrentUploadIndex(0);
+    
+    // Only proceed with uploads for new records (creation)
     if (!props.upd) {
-      if (files.length === 0) {
-        toast.error("Please choose at least one file to upload");
-        return;
-      }
-
-      for (let file of files) {
-        try {
-          console.log("heyyy")
-          await uploadFile(file, name,location, dateAvailableFrom,selectData );
-        } catch (err) {
-          console.log(err);
-        
-          toast.error(err.response?.data?.message || "Failed to upload file");
-          break;  // Stop on error
-        }
-      }
-      toast.success("DO uploaded successfully!");
-    } else { // Handle single file upload for updates
-      const fileToUpload = singleFile && files.length > 0 ? files[0] : null;
-
-      if (!fileToUpload && !singleFile) {
-        toast.error("Please choose a file to upload or retain the existing one.");
-        return;
-      }
-      
       try {
-        await uploadFile(fileToUpload || singleFile, name, location);
-        toast.success("DO updated successfully!");
+        // Loop through the number of orders and upload the same file multiple times
+        for (let i = 0; i < parseInt(numberOfOrders); i++) {
+          setCurrentUploadIndex(i + 1);
+          
+          // Show toast notification for each upload
+          toast.info(`Uploading file ${i + 1} of ${numberOfOrders}...`, {
+            autoClose: 2000
+          });
+          
+          await uploadFile(file, name, location, dateAvailableFrom, selectData);
+        }
+        
+        toast.success(`${numberOfOrders} delivery orders uploaded successfully!`);
       } catch (err) {
         console.log(err);
-        toast.error(err.response?.data?.message || "Failed to update file");
+        toast.error(err.response?.data?.message || "Failed to upload file");
       }
-    }
-
-    handleClose();
-  };
-
-  const handleRemoveFile = (index) => {
-    const removedFile = files[index];
-    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index)); // Remove the selected file
-
-    // Create a new File object to allow the user to select it again
-    const dataTransfer = new DataTransfer();
-    for (let i = 0; i < files.length; i++) {
-      if (i !== index) {
-        dataTransfer.items.add(files[i]);
+    } else {
+      // For updates, maintain the original behavior
+      if (file) {
+        try {
+          await uploadFile(file, name, location, dateAvailableFrom, selectData);
+          toast.success("DO updated successfully!");
+        } catch (err) {
+          console.log(err);
+          toast.error(err.response?.data?.message || "Failed to upload file");
+        }
+      } else {
+        // If updating but no new file was selected, just update the other fields
+        try {
+          await updateDo(props.data._id, {
+            name: name,
+            location: location,
+            availableFrom: dateAvailableFrom,
+            type: selectData,
+            numberOfOrders: numberOfOrders
+          });
+          toast.success("DO updated successfully!");
+        } catch (err) {
+          console.log(err);
+          toast.error(err.response?.data?.message || "Failed to update DO");
+        }
       }
     }
     
-    // Set the input value to the updated file list
-    const fileInput = document.getElementById('multiple-file-upload');
-    fileInput.files = dataTransfer.files;
-
-    toast.success(`${removedFile.name} removed successfully.`);
+    setIsUploading(false);
+    handleClose();
   };
 
   const handlePreview = () => {
-    if (props.upd && singleFile) {
+    if (props.upd && !file && props.data.doLink) {
       // Open the existing file URL in a new tab for updates
-      window.open(singleFile, '_blank');
-    } else {
-      // Create object URLs for selected files and open in new tabs
-      files.forEach((file) => {
-        const fileUrl = URL.createObjectURL(file);
-        window.open(fileUrl, '_blank');
-      });
+      window.open(props.data.doLink, '_blank');
+    } else if (file) {
+      // Create object URL for selected file and open in new tab
+      const fileUrl = URL.createObjectURL(file);
+      window.open(fileUrl, '_blank');
     }
   };
 
@@ -245,17 +253,17 @@ export default function AddForm(props) {
               helperText={errors.location ? 'Location is required' : ''}
             />
 
-              {/* Select Data Input */}
-              <TextField
+            {/* Select Data Input */}
+            <TextField
               select
               label="Select Truck Type"
               fullWidth
               margin="normal"
               {...register("selectData", { required: true })} 
-              onChange={(e) => setValue('selectData', e.target.value)} // Update react-hook-form value
+              onChange={(e) => setValue('selectData', e.target.value)}
               error={!!errors.selectData}
               helperText={errors.selectData ? 'Select data is required' : ''}
-              defaultValue="20" // Default select value
+              defaultValue="20"
             >
               <MenuItem value="20">20</MenuItem>
               <MenuItem value="40">40</MenuItem>
@@ -268,123 +276,122 @@ export default function AddForm(props) {
               fullWidth
               margin="normal"
               InputLabelProps={{ shrink: true }}
-              value={dateAvailable} // Set value to current date
+              value={dateAvailable}
               onChange={(e) => setDateAvailable(e.target.value)}
               {...register("dateAvailableFrom", { required: true })}
               error={!!errors.dateAvailableFrom}
               helperText={errors.dateAvailableFrom ? 'Date is required' : ''}
-              min={today} // Disable past dates
+              min={today}
             />
-            {!props.upd ? ( // Allow multiple file uploads for new creation
-              <>
-                <input
-                  accept="image/*,.pdf"
-                  style={{ display: 'none' }}
-                  id="multiple-file-upload"
-                  type="file"
-                  multiple
-                  onChange={(e) => {
-                    const selectedFiles = Array.from(e.target.files);
-                    setFiles(selectedFiles); // Set multiple files
-                    setValue("files", selectedFiles); // Set form value if needed
-                  }}
-                />
-                <label htmlFor="multiple-file-upload">
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    height={150}
-                    sx={{ border: '1px dashed grey', cursor: 'pointer' }}
-                  >
-                    <CloudUploadIcon style={{ fontSize: 100 }} />
-                  </Box>
-                  <Typography
-                    variant="h6"
-                    align="center"
-                    sx={{ marginTop: 1, marginBottom: 1 }}
-                  >
-                    {files.length > 0 ? `Selected Files: ${files.map(f => f.name).join(', ')}` : "Upload Files"}
-                  </Typography>
-                </label>
-                {files.length > 0 && (
-                  <Box mt={2}>
-                    {files.map((file, index) => (
-                      <Box key={index} display="flex" alignItems="center" justifyContent="space-between">
-                        <Typography variant="body2">{file.name}</Typography>
-                        <Button variant="outlined" color="error" onClick={() => handleRemoveFile(index)}>
-                          Remove
-                        </Button>
-                      </Box>
-                    ))}
-                  </Box>
-                )}
-              </>
-            ) : ( // Allow single file upload for updates
-              <>
-                {/* Show existing file name initially */}
-                {singleFile && !files.length && (
-                  <Typography variant="body1">
-                    Existing File: {props.data.fileName} {/* Show original file name */}
-                  </Typography>
-                )}
-
-
-{props.upd && files.length > 0 && (
-  <Typography variant="body1">
-    Updated File: {files[0].name} 
-  </Typography>
-)}
-                <input
-                  accept="image/*,.pdf"
-                  style={{ display: 'none' }}
-                  id="single-file-upload"
-                  type="file"
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    setFiles([file]); 
-                    setSingleFile(file.name); 
-                  }}
-                />
-                <label htmlFor="single-file-upload">
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    height={150}
-                    sx={{ border: '1px dashed grey', cursor: 'pointer', marginTop: 2 }}
-                  >
-                    <CloudUploadIcon style={{ fontSize: 100 }} />
-                  </Box>
-                  <Typography
-                    variant="h6"
-                    align="center"
-                    sx={{ marginTop: 1, marginBottom: 1 }}
-                  >
-                    Upload New File
-                  </Typography>
-                </label>
-                {!files.length &&
-                <Button variant="contained" color="primary" onClick={handlePreview} style={{ marginTop: 10 }}>
-                
+            
+            {/* Number of Orders - Only show for new uploads */}
+            {!props.upd && (
+              <TextField
+                label="Number of Orders"
+                type="number"
+                fullWidth
+                margin="normal"
+                InputProps={{ inputProps: { min: 1 } }}
+                {...register("numberOfOrders", { 
+                  required: true,
+                  min: { value: 1, message: 'Minimum 1 order required' },
+                  validate: value => parseInt(value) > 0 || 'Must be a positive number'
+                })}
+                error={!!errors.numberOfOrders}
+                helperText={errors.numberOfOrders ? errors.numberOfOrders.message || 'Number of orders is required' : ''}
+              />
+            )}
+            
+            {/* File upload section - same for both new and update */}
+            <input
+              accept="image/*,.pdf"
+              style={{ display: 'none' }}
+              id="file-upload"
+              type="file"
+              onChange={(e) => {
+                const selectedFile = e.target.files[0];
+                if (selectedFile) {
+                  setFile(selectedFile);
+                }
+              }}
+            />
+            
+            {/* Show existing file info for updates */}
+            {props.upd && !file && props.data.fileName && (
+              <Box mt={2} mb={2}>
+                <Typography variant="body1">
+                  Current File: {props.data.fileName}
+                </Typography>
+                <Button 
+                  variant="contained" 
+                  color="primary" 
+                  onClick={handlePreview} 
+                  sx={{ mt: 1 }}
+                >
                   Preview Existing File
                 </Button>
-                }
-              </>
+              </Box>
             )}
+            
+            {/* Show selected file info */}
+            {file && (
+              <Box mt={2} mb={2}>
+                <Typography variant="body1">
+                  {props.upd ? "New File: " : "Selected File: "}{file.name}
+                </Typography>
+                <Button 
+                  variant="contained" 
+                  color="primary" 
+                  onClick={handlePreview}
+                  sx={{ mt: 1 }}
+                >
+                  Preview File
+                </Button>
+              </Box>
+            )}
+            
+            {/* Upload button/area */}
+            <label htmlFor="file-upload">
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                height={150}
+                sx={{ 
+                  border: '1px dashed grey', 
+                  cursor: 'pointer', 
+                  marginTop: 2,
+                  backgroundColor: file ? '#f0f8ff' : 'transparent'
+                }}
+              >
+                <CloudUploadIcon style={{ fontSize: 100 }} />
+              </Box>
+              <Typography
+                variant="h6"
+                align="center"
+                sx={{ marginTop: 1, marginBottom: 1 }}
+              >
+                {props.upd ? "Upload New File" : "Upload File"}
+              </Typography>
+            </label>
 
             {percent !== null && (
               <Box sx={{ width: '100%', marginTop: 2 }}>
                 <LinearProgressWithLabel value={percent} />
+                {isUploading && !props.upd && (
+                  <Typography variant="body2" align="center" sx={{ mt: 1 }}>
+                    Uploading file {currentUploadIndex} of {totalUploads}
+                  </Typography>
+                )}
               </Box>
             )}
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} color="secondary" variant="outlined">
+            <Button onClick={handleClose} color="secondary" variant="outlined" disabled={isUploading}>
               Cancel
             </Button>
-            <Button variant="contained" type="submit">
-              Submit
+            <Button variant="contained" type="submit" disabled={isUploading}>
+              {isUploading ? 'Uploading...' : 'Submit'}
             </Button>
           </DialogActions>
         </form>

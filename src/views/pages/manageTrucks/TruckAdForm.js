@@ -183,7 +183,6 @@ export default function TruckAdForm({ getTrucks, open, onClose, isEdit = false, 
                     ))}
                   </Select>
                 )}
-                rules={{ required: 'Driver is required' }}
               />
               {errors.driverId && <FormHelperText>{errors.driverId.message}</FormHelperText>}
             </FormControl>

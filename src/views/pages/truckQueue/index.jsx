@@ -28,7 +28,8 @@ const tableHeader = [
     'Company',
     'Contact',
     'Type',
-    'Category'
+    'Category',
+    'Queue Added on'
   ];
 export default function QueueList() {
 
@@ -66,7 +67,8 @@ const tableData = queueData.map((item, index) => {
       'Company': item.truck.companyId.name,
       'Contact': item.truck.companyId.contactNumber,
       'Type': `${item.truck.truckType} FT`,
-      'Category': item.truck.category
+      'Category': item.truck.category,
+      'Queue Added on': dayjs(item.createdAt).format('DD/MM/YYYY hh:mm A')
     };
   });
 
