@@ -1,154 +1,183 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemButton from '@mui/material/ListItemButton';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
+import {
+  Dialog,
+  DialogContent,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Button,
+  List,
+  ListItem,
+  Divider,
+  Grid,
+  Box,
+  Stack,
+  useMediaQuery,
+  useTheme,
+  Slide
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import Slide from '@mui/material/Slide';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import {getMatchingInqueueTrucks,doAllocation} from '../../utils/Service'
-import { Box } from '@mui/system';
-
+import { getMatchingInqueueTrucks, doAllocation } from '../../utils/Service';
+import dayjs from 'dayjs';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
-const VehicleSelectDialog = (props) => {
+const VehicleSelectDialog = ({ open: propOpen, close, date, doId, type }) => {
+  const [open, setOpen] = React.useState(propOpen);
+  const [data, setData] = React.useState([]);
+  const theme = useTheme();
+  const isXs = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const handleClose = () => {
+    setOpen(false);
+    close();
+  };
 
-    const [open, setOpen] = React.useState(props.open);
+  const handleAllocation = (truckBookingId) => {
+    if (!date || !doId) {
+      toast.error("Date or DO ID missing");
+      return;
+    }
 
-    let maxWidth = 'md'
-    const [data, setData] = React.useState([]);
+    doAllocation({ doBookingId: doId, doDate: date, truckBookingId })
+      .then(() => {
+        toast.success("DO allocation successful!");
+        handleClose();
+      })
+      .catch((err) => {
+        toast.error(err?.response?.data?.message || "Allocation failed");
+        console.error(err);
+      });
+  };
 
-  
-  
-    const handleClose = () => {
-      setOpen(false);
-      props.close()
-  
-    };
-    
-   const handleAllocation = (data) =>{
-     console.log(data)
-     console.log(props)
-     if(!props.date || !props.doId){
-      console.log("date not found")
-      return false;
-     }
-     doAllocation({
-      doBookingId:props.doId,
-      doDate:props.date,
-      truckBookingId:data
-     }).then((res)=>{
-   console.log(res)
-   toast.success("DO allocation successfull!")
-   handleClose()
-     }).catch((err)=>{
-      toast.error(err.response.data.message)
-      console.log(err)
-     })
-   }
-    
-    const getTrucks = (data) =>{
-      console.log(data)
-      getMatchingInqueueTrucks(data).then((res)=>{
-          setData(res)
-          console.log(res);
-         }).catch((err) => {
-        console.log(err)
-         })
-      }
-  
-    useEffect(() => {
-        ///checking required. api call multiple
-        if(props.type){
-               console.log(props)
-            getTrucks({status:"inqueue",type:props.type,date:props.date})
-        }
-    }, [])
-    
+  const getTrucks = () => {
+    if (!type || !date) return;
+    getMatchingInqueueTrucks({ status: "inqueue", type, date })
+      .then((res) => setData(res))
+      .catch(console.error);
+  };
 
-    return (
-        <React.Fragment>
-         
-          <Dialog
-           fullWidth={true}
-           maxWidth={maxWidth}
-            open={open}
-            onClose={handleClose}
-            TransitionComponent={Transition}
-          >
-            <AppBar sx={{ position: 'relative' }}>
-              <Toolbar>
-                <IconButton
-                  edge="start"
-                  color="inherit"
-                  onClick={handleClose}
-                  aria-label="close"
-                >
-                  <CloseIcon />
-                </IconButton>
-                <Typography sx={{ ml: 2, flex: 1, color:'white' }} variant="h3" component="div">
-                  Truck Allocation
-                </Typography>
-                <Button autoFocus color="inherit" onClick={handleClose}>
-                  Close
-                </Button>
-              </Toolbar>
-            </AppBar>
-            <List>
-            {data.length === 0 && (
-              <Box sx={{   display: 'flex',justifyContent: 'center' }}>
+  useEffect(() => {
+    getTrucks();
+  }, []);
 
-  <Typography>No Trucks Inqueue within the date and type</Typography>
-              </Box>
-)}
-      
-            { data.map((row,idx)=>(
-                <>
-                <ListItemButton key={row._id}>
-                <ListItemText
-                  primary={idx+1}
-                />
-                <ListItemText
-                  primary={row.truck.name}
-                  secondary={row.truck.registrationNumber}
-                />
-                   <ListItemText
-                  primary={row.truck.companyId.name}
-                  secondary={row.truck.companyId.contactNumber}
-                />
-                   <ListItemText
-                  primary={row.truck.category}
-                  secondary={row.truck.truckType+" FT"}
-                />
-                  <Button variant="contained" onClick={()=>handleAllocation(row._id)}>
-            Allocate
+  return (
+    <Dialog
+      fullWidth
+      maxWidth="md"
+      open={open}
+      onClose={handleClose}
+      TransitionComponent={Transition}
+    >
+      <AppBar sx={{ position: 'relative' }}>
+        <Toolbar>
+          <IconButton edge="start" color="inherit" onClick={handleClose}>
+            <CloseIcon />
+          </IconButton>
+          <Typography sx={{ ml: 2, flex: 1, color: 'white' }} variant="h3">
+            Truck Allocation
+          </Typography>
+          <Button color="inherit" onClick={handleClose}>
+            Close
           </Button>
-              </ListItemButton>
-              <Divider />
-              </>
+        </Toolbar>
+      </AppBar>
+
+      <DialogContent dividers>
+        {data.length === 0 ? (
+          <Box display="flex" justifyContent="center" py={4}>
+            <Typography variant="subtitle1" color="text.secondary">
+              No trucks in queue for the selected date and type.
+            </Typography>
+          </Box>
+        ) : (
+          <List>
+            {data.map((row, idx) => (
+              <React.Fragment key={row._id}>
+                <ListItem disableGutters sx={{ 
+  bgcolor: idx % 2 === 0 ? 'background.default' : 'grey.100', 
+  borderRadius: 1, 
+  px: 2, 
+  py: 1 
+}}>
+                  <Box width="100%">
+                    <Grid container spacing={2} alignItems="center">
+                      <Grid item xs={12} sm={1}>
+                     <Box
+  sx={{
+    display: 'inline-block',
+    bgcolor: 'primary.dark',
+    color: 'primary.contrastText',
+    px: 1.2,
+    py: 0.5,
+    borderRadius: 1,
+    fontWeight: 600,
+    fontSize: '0.95rem',
+  }}
+>
+  #{idx + 1}
+</Box>
+
+                      </Grid>
+
+                      <Grid item xs={12} sm={3}>
+                        <Stack spacing={0.5}>
+                          <Typography variant="body1" fontWeight={500}>
+                            {row.truck.name}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {row.truck.registrationNumber}
+                          </Typography>
+                        </Stack>
+                      </Grid>
+
+                      <Grid item xs={9} sm={3}>
+                        <Stack spacing={0.5}>
+                          <Typography variant="body1">{row.truck.companyId.name}</Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {row.truck.companyId.contactNumber}
+                          </Typography>
+                        </Stack>
+                      </Grid>
+
+                      <Grid item xs={3} sm={3}>
+                        <Stack spacing={0.5}>
+                          <Typography variant="body1">{row.truck.category}</Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {row.truck.truckType} FT
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {dayjs(row.createdAt).format('DD/MM/YYYY hh:mm:ss A')} 
+                          </Typography>
+                        </Stack>
+                      </Grid>
+
+                      <Grid item xs={12} sm={2}>
+                        <Button
+                          fullWidth={isXs}
+                          variant="contained"
+                          color="primary"
+                          onClick={() => handleAllocation(row._id)}
+                        >
+                          Allocate
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </ListItem>
+                <Divider sx={{ my: 1 }} />
+              </React.Fragment>
             ))}
-            
+          </List>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+};
 
-           
-
-            </List>
-          </Dialog>
-        </React.Fragment>
-      );
-}
-
-export default VehicleSelectDialog
-
-
-
+export default VehicleSelectDialog;

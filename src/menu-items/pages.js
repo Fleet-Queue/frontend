@@ -68,7 +68,7 @@ export default function Pages (){
       },
       {
         id: 'allocatedDo',
-        title: 'allocated Booking',
+        title: 'Allocated Booking',
         type: 'item',
         url: '/allocatedBooking',
         icon: icons.IconTruckLoading,

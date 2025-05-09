@@ -4,7 +4,7 @@ import { Stack } from '@mui/material';
 import Content from './content';
 import Tools from './tools';
 // import AddForm from './AddForm';
-import { getAllBooking } from '../../../utils/Service';
+import { getAllAllocatedBookings } from '../../../utils/Service';
 import dayjs from 'dayjs';
 
 
@@ -21,7 +21,7 @@ export default function Index() {
         data.partyId = partyId;
       }
     
-      const res = await getAllBooking(data);
+      const res = await getAllAllocatedBookings(data);
      
       setData(res);
     } catch (err) {

@@ -3,8 +3,8 @@ import axios from 'axios';
 
 // const baseURL = `http://${window.location.hostname}:3005/`;
 
-//const baseURL = `http://localhost:5000/`;
-const baseURL = `https://apis.fleetq.live/`
+const baseURL = `http://localhost:5000/`;
+//const baseURL = `https://apis.fleetq.live/`
 
 
 const apiInstance = axios.create({
@@ -242,6 +242,11 @@ export async function addLocation(data) {
 export async function getAllBooking(data) {
   const response = await apiInstance.post(`doBooking/getAllDO`, data);
 
+  return response.data;
+}
+
+export async function getAllAllocatedBookings(data){
+  const response = await apiInstance.post(`allocation/get-All-AllocationDetails`, data);
   return response.data;
 }
 

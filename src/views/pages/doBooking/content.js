@@ -16,12 +16,12 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import dayjs from 'dayjs';
 // ...existing imports...
 
-const tableHeader = ['name', 'View DO','availableFrom',"status","allocation"];
+const tableHeader = ['Do No.','Name','Location','Company Name','name', 'View DO','availableFrom',"status","allocation"];
 
 export default function Content({ partyId,data, updateData ,selectedDate, setSelectedDate }) {
    const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedData, setSelectedData] = useState();
-  const tableData = tableHeaderReplace(data, [ 'truckType', 'link','availableFrom',"status" ], tableHeader);
+  const tableData = tableHeaderReplace(data, [ 'doNumber','name','location','companyName','truckType', 'link','availableFrom',"status" ], tableHeader);
 
 
 

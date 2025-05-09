@@ -68,7 +68,7 @@ const tableData = queueData.map((item, index) => {
       'Contact': item.truck.companyId.contactNumber,
       'Type': `${item.truck.truckType} FT`,
       'Category': item.truck.category,
-      'Queue Added on': dayjs(item.createdAt).format('DD/MM/YYYY hh:mm A')
+      'Queue Added on': dayjs(item.createdAt).format('DD/MM/YYYY hh:mm:ss A')
     };
   });
 
@@ -82,7 +82,7 @@ const tableData = queueData.map((item, index) => {
       'Sl No': index + 1,
       'Registration Number': item.truck.registrationNumber,
       'Type': `${item.truck.truckType} FT`,
-      'Queue Added Date': dayjs(item.createdAt).format('DD/MM/YYYY HH:mm')
+      'Queue Added Date': dayjs(item.createdAt).format('DD/MM/YYYY HH:mm A' )
     }));
 
     // Create workbook and worksheet

@@ -8,13 +8,13 @@ import { toast } from 'react-toastify';
 import { cancelDOBooking, reOpenDOBooking } from 'utils/Service';
 import CancelDialog from '../doUpload/cancelDO';
 
-const tableHeader = ['truckType', 'rate','available from',"status","allocation","view DO"];
+const tableHeader = ['Do No.','Name','Location','Company Name','truckType', 'rate','available from',"status","allocation","view DO"];
 
 export default function Content({ partyId,data, updateData }) {
   // const [formOpen, setFormOpen] = useState(false);
   const [selectedData, setSelectedData] = useState();
   const [dialog, setDialog] = useState(false);
-  const tableData = tableHeaderReplace(data, [ 'truckType', 'rate','availableFrom',"status"  ], tableHeader);
+  const tableData = tableHeaderReplace(data, [ 'doNumber','name','location','companyName','truckType', 'rate','availableFrom',"status"  ], tableHeader);
 
 
   const handleClose = () => {
