@@ -315,7 +315,7 @@ const [allocatedDo,setAllocatedDo] = useState([]);
           </Grid>
 
 
-        {/* <Grid item xs={12}>    
+        <Grid item xs={12}>    
           <Grid container py={5} justifyContent="space-between" alignItems="center">
     <Grid item>
       <Typography variant="h2">Ongoing</Typography>
@@ -340,7 +340,7 @@ const [allocatedDo,setAllocatedDo] = useState([]);
               </Grid>
             )}
           </Grid>
-        </Grid> */}
+        </Grid>
 
 
         <Grid item xs={12}>    
@@ -412,7 +412,7 @@ const [allocatedDo,setAllocatedDo] = useState([]);
              {/* transporter dashboard */}
              {role === 'transporter' || role === 'both'  ? (
         <>
-          {/* <Grid item xs={12}>
+          <Grid item xs={12}>
             <Grid py={4}>
               <Typography variant="h2">Ongoing</Typography>
             </Grid>
@@ -433,7 +433,7 @@ const [allocatedDo,setAllocatedDo] = useState([]);
                 </Grid>
               )}
             </Grid>
-          </Grid> */}
+          </Grid>
 
           <Grid item xs={12}>
             <Grid py={3}>

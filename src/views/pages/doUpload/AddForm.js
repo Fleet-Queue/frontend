@@ -33,7 +33,7 @@ export default function AddForm(props) {
   const today = new Date().toISOString().split('T')[0];
   const [dateAvailable, setDateAvailable] = React.useState(today);
   
-  const { register, handleSubmit, setValue, formState: { errors }, watch } = useForm({
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm({
     defaultValues: {
       name: props.data?.name || '',
       location: props.data?.location || '',
