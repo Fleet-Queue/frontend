@@ -1,8 +1,8 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import { Divider, Grid, Stack, Typography, useMediaQuery } from '@mui/material';
+import { Divider, Grid, Stack, Link, Typography, useMediaQuery } from '@mui/material';
 
 // project imports
 import AuthWrapper1 from '../AuthWrapper1';
@@ -41,9 +41,9 @@ const Login = () => {
               <AuthCardWrapper>
                 <Grid container spacing={2} alignItems="center" justifyContent="center">
                   <Grid item sx={{ mb: 3 }}>
-                    <Link to="#">
+                    <RouterLink to="#">
                       <Logo />
-                    </Link>
+                    </RouterLink>
                   </Grid>
                   <Grid item xs={12}>
                     <Grid container direction={matchDownSM ? 'column-reverse' : 'row'} alignItems="center" justifyContent="center">
@@ -66,8 +66,18 @@ const Login = () => {
                     <Divider />
                   </Grid>
                   <Grid item xs={12}>
-
-                  </Grid>
+                  <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2 }}>
+                    Powered By{' '}
+                    <Link
+                      href="https://insigntechsolutions.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      underline="hover"
+                    >
+                      insigntechsolutions.com
+                    </Link>
+                  </Typography>
+                </Grid>
                 </Grid>
               </AuthCardWrapper>
             </Grid>

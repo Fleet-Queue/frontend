@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
 import { AppBar, Box, CssBaseline, Toolbar, useMediaQuery } from '@mui/material';
+import Footer from './Footer'; // Add this import
 
 // project imports
 import Breadcrumbs from 'ui-component/extended/Breadcrumbs';
@@ -76,8 +77,8 @@ setNavItem(navigation())
   }, [])
   
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
+   <Box sx={{ display: 'flex' }}>
+       <CssBaseline />
       {/* header */}
       <AppBar
         enableColorOnDark
@@ -101,7 +102,10 @@ setNavItem(navigation())
       <Main theme={theme} open={leftDrawerOpened}>
         {/* breadcrumb */}
         <Breadcrumbs separator={IconChevronRight} navigation={navItem} icon title rightAlign />
+       <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Outlet />
+      </Box>
+         <Footer /> 
       </Main>
       {/* <Customization /> */}
     </Box>
