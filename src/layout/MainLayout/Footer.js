@@ -1,19 +1,19 @@
 import React from 'react';
-import { Box, Typography, Link } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 export default function Footer() {
   return (
     <Box sx={{ py: 2, textAlign: 'center', bgcolor: 'background.paper' }}>
       <Typography variant="body2" color="text.secondary">
-        Powered By{' '}
-        <Link
+        Powered By{' Insign Tech Solutions '}
+        {/* <Link
           href="https://insigntechsolutions.com/"
           target="_blank"
           rel="noopener noreferrer"
           underline="hover"
         >
           insigntechsolutions.com
-        </Link>
+        </Link> */}
       </Typography>
     </Box>
   );

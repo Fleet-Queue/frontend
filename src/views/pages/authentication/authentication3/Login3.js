@@ -2,7 +2,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import { Divider, Grid, Stack, Link, Typography, useMediaQuery } from '@mui/material';
+import { Divider, Grid, Stack, Typography, useMediaQuery } from '@mui/material';
 
 // project imports
 import AuthWrapper1 from '../AuthWrapper1';
@@ -67,15 +67,15 @@ const Login = () => {
                   </Grid>
                   <Grid item xs={12}>
                   <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2 }}>
-                    Powered By{' '}
-                    <Link
+                    Powered By{' Insign Tech Solutions '}
+                    {/* <Link
                       href="https://insigntechsolutions.com/"
                       target="_blank"
                       rel="noopener noreferrer"
                       underline="hover"
                     >
                       insigntechsolutions.com
-                    </Link>
+                    </Link> */}
                   </Typography>
                 </Grid>
                 </Grid>
