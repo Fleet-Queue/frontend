@@ -2,7 +2,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import { Divider, Grid, Stack, Typography, useMediaQuery } from '@mui/material';
+import { Divider, Grid, Link, Stack, Typography, useMediaQuery } from '@mui/material';
 
 // project imports
 import AuthWrapper1 from '../AuthWrapper1';
@@ -65,19 +65,38 @@ const Login = () => {
                   <Grid item xs={12}>
                     <Divider />
                   </Grid>
-                  <Grid item xs={12}>
+                   <Grid item xs={12}>
                   <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2 }}>
-                    Powered By{' Insign Tech Solutions '}
-                    {/* <Link
+                    {/* Contact Us  */}
+                    {''} 
+                    <Link
+                      href="https://insigntechsolutions.com/#contact"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      underline="hover"
+                    >
+                      Contact Us
+                    </Link>
+                  </Typography>
+                </Grid>
+                  <Grid item xs={12}>
+                  <Typography variant="body2" color="text.secondary" align="center" >
+                    Powered By{' '}
+                    
+                    <Link
                       href="https://insigntechsolutions.com/"
                       target="_blank"
                       rel="noopener noreferrer"
                       underline="hover"
                     >
-                      insigntechsolutions.com
-                    </Link> */}
+                       Insign Tech Solutions 
+                    </Link>
                   </Typography>
+                  <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2 }}>
+                    24/1701, KC Arcade, Near TV Centre, Csez P.O, Kakkanad, Ernakulam – 682037.
+                    </Typography>
                 </Grid>
+                
                 </Grid>
               </AuthCardWrapper>
             </Grid>
